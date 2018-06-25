@@ -29,9 +29,9 @@
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
-                Navigation Two
+                Navigation <Two></Two>
             </template>
-            <MenuItem name="2-1">Option 5</MenuItem>
+                    <MenuItem name="2-1">Option 5</MenuItem>
             <MenuItem name="2-2">Option 6</MenuItem>
             <Submenu name="3">
                 <template slot="title">Submenu</template>

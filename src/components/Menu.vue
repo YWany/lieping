@@ -29,7 +29,7 @@
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
-                财务 <Two></Two>
+                Navigation Two
             </template>
             <MenuItem name="2-1">发票管理</MenuItem>
             <MenuItem name="2-2">付款通知书</MenuItem>
@@ -95,7 +95,6 @@
 
 <script>
 // import { isWeiXin } from '@/utils'
-import { iview } from "iview"
 export default {
     name: 'allmenu',
     props: {
@@ -106,9 +105,7 @@ export default {
             theme: "dark"
         }
     },
-    components: {
-        iview
-    },
+    components: {},
     activated() {},
     methods: {
         clickItem() {

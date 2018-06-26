@@ -16,16 +16,15 @@
 </template>
 
 <script>
-import { iview } from "iview";
-import loginForm from "@/components/login-form/login-form.vue";
+import loginForm from "@/components/login-form/login-form.vue"
 export default {
     components: {
         loginForm
     },
     methods: {
         handleSubmit({ userName, password }) {
-            console.log(userName, password);
-            this.$router.push("index");
+            console.log(userName, password)
+            this.$router.push("index")
         }
     }
 };

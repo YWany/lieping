@@ -7,7 +7,6 @@
 <script>
 import "@/assets/css/reset.css"
 import "@/assets/css/index.less"
-
 export default {
     data() {
         return {}
@@ -23,4 +22,8 @@ export default {
 };
 </script>
 
-<style lang="less"></style>
+<style lang="less">
+    .ivu-message {
+        padding-left: 200px;
+    }
+</style>

@@ -29,7 +29,7 @@
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
-                Navigation <Two></Two>
+                Navigation Two
             </template>
                     <MenuItem name="2-1">Option 5</MenuItem>
             <MenuItem name="2-2">Option 6</MenuItem>
@@ -74,7 +74,6 @@
 
 <script>
 // import { isWeiXin } from '@/utils'
-import { iview } from "iview"
 export default {
     name: 'allmenu',
     props: {
@@ -85,9 +84,7 @@ export default {
             theme: "dark"
         }
     },
-    components: {
-        iview
-    },
+    components: {},
     activated() {},
     methods: {
         clickItem() {

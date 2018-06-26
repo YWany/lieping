@@ -37,7 +37,6 @@
 <script>
 import "@/assets/css/reset.css"
 import "@/assets/css/index.less"
-import { iview } from "iview"
 import Allmenu from "@/components/Menu.vue"
 
 export default {
@@ -47,7 +46,6 @@ export default {
         };
     },
     components: {
-        iview,
         Allmenu
     },
     methods: {
@@ -141,8 +139,5 @@ export default {
             }
         }
     }
-}
-.ivu-message {
-    padding-left: 200px;
 }
 </style>

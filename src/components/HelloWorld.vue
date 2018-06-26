@@ -63,18 +63,18 @@ export default {
 
         this.$Message.success("哈哈哈啊哈哈哈")
         
-        // this.$Message.info({
-        //     content: 'Tips for manual closing',
-        //     duration: 5,
-        //     closable: true
-        // })
+        this.$Message.info({
+            content: 'Tips always here ~ ~',
+            duration: 5,
+            closable: true
+        })
     },
 
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">
+<style scoped lang="less">  
 .hello {
     text-align: center
 }

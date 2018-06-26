@@ -2,7 +2,7 @@
     <div class="home">
         <img src="@/assets/images/logo.png">
         <HelloWorld msg="Qianlima" />
-        <h1>commit 2018-s06-25 10:30</h1>
+        <h1>commit 2018-06-25 10:30</h1>
     </div>
 </template>
 

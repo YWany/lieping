@@ -1,18 +1,18 @@
 /* global module */
-var target = 'https://shi.huamijie.com'
+var target = 'https://192.168.1.200'
 
 module.exports = {
     lintOnSave: false,
     devServer: {
-        port: 8888,
+        port: 8088,
         https: false,
         hotOnly: false,
         proxy: {
-            '/sw': {
+            '/boquma-web': {
                 target,
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/sw': '/sw'
+                    '^/boquma-web': '/boquma-web'
                 }
             }
         }

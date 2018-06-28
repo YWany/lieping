@@ -4,7 +4,7 @@
             <div class="logo">
                 <img src="@/assets/images/logo.png" alt="">
             </div>
-            <h3 class="sys-name">千里马猎头智慧系1统</h3>
+            <h3 class="sys-name">千里马猎头智慧系统</h3>
             <div class="loginp-msg">
                 <div class="avatar fl">
                     <img src="@/assets/images/logo.png" alt="">
@@ -38,7 +38,6 @@
 import "@/assets/css/reset.css"
 import "@/assets/css/index.less"
 import Allmenu from "@/components/Menu.vue"
-
 export default {
     data() {
         return {
@@ -77,7 +76,7 @@ export default {
         height: 49px;
         line-height: 49px;
         font-size: 14px;
-        background-color: #fff;//#495060l\;
+        background-color: #fff;//#495060;
         color: #fff;
         box-shadow: 0 0 10px #ddd;
         .logo {

@@ -29,7 +29,7 @@
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
-                Navigation Two
+                财务
             </template>
             <MenuItem name="2-1">发票管理</MenuItem>
             <MenuItem name="2-2">付款通知书</MenuItem>

@@ -36,5 +36,15 @@ export default {
             })
             .then(doSucc)
             .then(doError)
+    },
+    put(method, url, data = {}) {
+        return axios({
+                ...baseConfig,
+                method: method,
+                url: url,
+                data: qs.stringify(data)
+            })
+            .then(doSucc)
+            .then(doError)
     }
 }

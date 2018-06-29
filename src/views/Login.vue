@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import api from "@/api"
 import loginForm from "@/components/login-form/login-form.vue"
 export default {
     components: {
@@ -23,8 +24,17 @@ export default {
     },
     methods: {
         handleSubmit({ userName, password }) {
-            console.log(userName, password)
-            this.$router.push("index")
+            var datas = {
+                account: userName,
+                pwd: password,
+                captchaCode: 123456
+            }
+            api.axs("post", "login", datas)
+            .then(({ data: { data, code } }) => {
+                if (code === SUCCESS) {
+                    this.$router.push("index")
+                }
+            })
         }
     }
 };

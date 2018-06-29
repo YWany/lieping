@@ -53,13 +53,12 @@ export default {
         }
     },
     mounted() {
-        api
-            .axs("post", "getLatestNotice", { name: "lalal", age: 8 })
-            .then(({ data: { data, code } }) => {
-                if (code === 1001) {
-                    this.datas = data
-                }
-            })
+        api.put("post", "/sw/general/getLatestNotice", { name: "lalal", age: 8 })
+        .then(({ data: { data, code } }) => {
+            if (code === 1001) {
+                this.datas = data
+            }
+        })
 
         this.$Message.success("哈哈哈啊哈哈哈")
         

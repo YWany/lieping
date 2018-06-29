@@ -1,31 +1,29 @@
 <template>
 <div class="menu">
-	<Menu :theme="theme" accordion :active-name=$route.path @on-select='clickItem'>
+	<Menu :theme="theme" accordion :active-name="currentm" :open-names="[subm]" @on-select='clickItem'>
         <MenuItem name="9999">&nbsp;</MenuItem>
-        <router-link to='index'>
+        <router-link to='/index'>
             <MenuItem name="/index">
             <Icon type="document-text"></Icon>
             导航菜单1
             </MenuItem>
         </router-link>
-        <router-link to='about'>
+        <router-link to='/about'>
             <MenuItem name="/about">
             <Icon type="chatbubbles"></Icon>
             导航菜单2
             </MenuItem>
         </router-link>
-        <router-link to='about'>
-            <MenuItem name="/index1">
-            <Icon type="chatbubbles"></Icon>
-            导航菜单3
-            </MenuItem>
-        </router-link>
-        <router-link to='about'>
-            <MenuItem name="/about2">
-            <Icon type="chatbubbles"></Icon>
-            导航菜单4
-            </MenuItem>
-        </router-link>
+        <Submenu name="customer">
+            <template slot="title">
+                <Icon type="person-stalker"></Icon>
+                客户
+            </template>
+            <router-link to='/customer/cooperation'><MenuItem name="/customer/cooperation">合作中客户</MenuItem></router-link>
+            <router-link to='/customer/contract'><MenuItem name="/customer/contract">客户合同</MenuItem></router-link>
+            <router-link to='/customer/jobDoing'><MenuItem name="/customer/jobDoing">职位进展</MenuItem></router-link>
+            <router-link to=''><MenuItem name="">我的客户</MenuItem></router-link>
+        </Submenu>
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
@@ -102,10 +100,21 @@ export default {
     },
     data() {
         return {
-            theme: "dark"
+            theme: "dark",
+            subm: (this.$route.path).split('/')[1]
         }
     },
     components: {},
+    computed: {
+        currentm() {
+            var cur = (this.$route.path).split('/')
+            if (cur.length > 2) {
+                return '/' + cur[1] + '/' + cur[2]
+            } else {
+                return this.$route.path
+            }
+        }
+    },
     activated() {},
     methods: {
         clickItem() {

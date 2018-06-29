@@ -1,5 +1,5 @@
 /* global module */
-var target = 'https://192.168.1.200'
+var target = 'http://192.168.1.200:8088'
 
 module.exports = {
     lintOnSave: false,
@@ -8,6 +8,13 @@ module.exports = {
         https: false,
         hotOnly: false,
         proxy: {
+            '/sw': {
+                target: 'https://shi.huamijie.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/sw': '/sw'
+                }
+            },
             '/boquma-web': {
                 target,
                 changeOrigin: true,

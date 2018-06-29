@@ -1,7 +1,7 @@
 <template>
     <div class="customer">
         <h1>职位运作.....</h1>
-        <router-link to='/customer/jobPersonalDetails'>候选人详情</router-link>
+        <router-link to='/customer/jobDoing/personalDetails'>候选人详情</router-link>
     </div>
 </template>
 
@@ -26,18 +26,6 @@ export default {
             this.$store.state.spinShow = false;
         }, 1500);
 
-        api
-            .axs("post", "role/save", {
-                roleName: "总经理",
-                companyId: 1,
-                roleType: 1
-            })
-            .then(({ data: { data, code } }) => {
-                if (code === SUCCESS) {
-                    console.log(data)
-                    this.datas = data
-                }
-            })
     }
 };
 </script>

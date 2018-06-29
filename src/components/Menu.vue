@@ -1,6 +1,6 @@
 <template>
 <div class="menu">
-	<Menu :theme="theme" accordion :active-name=$route.path @on-select='clickItem'>
+	<Menu :theme="theme" accordion :active-name="currentm" :open-names="[subm]" @on-select='clickItem'>
         <MenuItem name="9999">&nbsp;</MenuItem>
         <router-link to='/index'>
             <MenuItem name="/index">
@@ -14,7 +14,7 @@
             导航菜单2
             </MenuItem>
         </router-link>
-        <Submenu name="300">
+        <Submenu name="customer">
             <template slot="title">
                 <Icon type="person-stalker"></Icon>
                 客户
@@ -100,10 +100,21 @@ export default {
     },
     data() {
         return {
-            theme: "dark"
+            theme: "dark",
+            subm: (this.$route.path).split('/')[1]
         }
     },
     components: {},
+    computed: {
+        currentm() {
+            var cur = (this.$route.path).split('/')
+            if (cur.length > 2) {
+                return '/' + cur[1] + '/' + cur[2]
+            } else {
+                return this.$route.path
+            }
+        }
+    },
     activated() {},
     methods: {
         clickItem() {

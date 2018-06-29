@@ -56,10 +56,10 @@ export default new Router({
                 },
                 {
                     meta: { title: '千里马-客户-职位进展-职位运作-候选人详情' },
-                    path: '/customer/jobPersonalDetails',
-                    name: 'jobPersonalDetails',
+                    path: '/customer/jobDoing/personalDetails',
+                    name: 'jobDoingPersonalDetails',
                     component: () =>
-                        import ("./views/customer/jobPersonalDetails.vue")
+                        import ("./views/customer/jobDoing-personalDetails.vue")
                 },
             ]
         }

@@ -23,20 +23,7 @@ export default {
         setTimeout(() => {
             this.$Loading.finish();
             this.$store.state.spinShow = false;
-        }, 1500);
-
-        api
-            .axs("post", "role/save", {
-                roleName: "总经理",
-                companyId: 1,
-                roleType: 1
-            })
-            .then(({ data: { data, code } }) => {
-                if (code === SUCCESS) {
-                    console.log(data)
-                    this.datas = data
-                }
-            })
+        }, 1500)
     }
 };
 </script>

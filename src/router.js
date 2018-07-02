@@ -33,7 +33,7 @@ export default new Router({
                     component: () =>
                         import ("./views/About.vue")
                 },
-                {
+                { // customer 客户=======================================================
                     meta: { title: '千里马-客户-合作中的客户' },
                     path: '/customer/cooperation',
                     name: 'cooperation',
@@ -60,6 +60,27 @@ export default new Router({
                     name: 'jobDoingPersonalDetails',
                     component: () =>
                         import ("./views/customer/jobDoing-personalDetails.vue")
+                },
+                { // manager 管理 =======================================================
+                    meta: { title: '千里马-管理-新增账号' },
+                    path: '/manager/addacc',
+                    name: 'addacc',
+                    component: () =>
+                        import ("./views/manager/addacc.vue")
+                },
+                {
+                    meta: { title: '千里马-管理-权限管理' },
+                    path: '/manager/authority',
+                    name: 'authority',
+                    component: () =>
+                        import ("./views/manager/authority.vue")
+                },
+                {
+                    meta: { title: '千里马-管理-部门管理' },
+                    path: '/manager/department',
+                    name: 'department',
+                    component: () =>
+                        import ("./views/manager/department.vue")
                 },
             ]
         }

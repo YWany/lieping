@@ -32,14 +32,14 @@
             <MenuItem name="2-1">发票管理</MenuItem>
             <MenuItem name="2-2">付款通知书</MenuItem>
         </Submenu>
-        <Submenu name="3">
+        <Submenu name="manager">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
                 管理
             </template>
-            <MenuItem name="2-11">新增账号</MenuItem>
-            <MenuItem name="2-21">权限管理</MenuItem>
-            <MenuItem name="2-222">部门管理</MenuItem>
+            <router-link to='/manager/addacc'><MenuItem name="/manager/addacc">新增账号</MenuItem></router-link>
+            <router-link to='/manager/authority'><MenuItem name="/manager/authority">权限管理</MenuItem></router-link>
+            <router-link to='/manager/department'><MenuItem name="/manager/department">部门管理</MenuItem></router-link>
         </Submenu>
         <Submenu name="2">
             <template slot="title">
@@ -74,13 +74,13 @@
                 <MenuItem name="4-2">部门报表</MenuItem>
                 <MenuItem name="4-3">所有报表</MenuItem>
             </Submenu>
-             <Submenu name="5">
+            <Submenu name="5">
                 <template slot="title">项目</template>
                 <MenuItem name="5-1">个人报表</MenuItem>
                 <MenuItem name="5-2">部门报表</MenuItem>
                 <MenuItem name="5-3">所有报表</MenuItem>
             </Submenu>
-             <Submenu name="6">
+            <Submenu name="6">
                 <template slot="title">推荐人选</template>
                 <MenuItem name="6-1">个人报表</MenuItem>
                 <MenuItem name="6-2">部门报表</MenuItem>

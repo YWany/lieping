@@ -126,16 +126,9 @@ export default {
             position: relative;
             flex: 2;
             padding: 20px;
-            padding-top: 50px;
-            text-align: center;
+            padding-top: 65px;
             overflow-y: auto;
             background-color: #fff;
-            .ivu-spin-fix .ivu-spin-main {
-                position: absolute;
-                top: 40%;
-                left: 50%;
-                transform: translate(-50%,-50%);
-            }
         }
     }
 }

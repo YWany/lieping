@@ -94,56 +94,56 @@
 <script>
 // import { isWeiXin } from '@/utils'
 export default {
-    name: 'allmenu',
-    props: {
-        msg: String
-    },
-    data() {
-        return {
-            theme: "dark",
-            subm: (this.$route.path).split('/')[1]
-        }
-    },
-    components: {},
-    computed: {
-        currentm() {
-            var cur = (this.$route.path).split('/')
-            if (cur.length > 2) {
-                return '/' + cur[1] + '/' + cur[2]
-            } else {
-                return this.$route.path
-            }
-        }
-    },
-    activated() {},
-    methods: {
-        clickItem() {
-            this.$store.state.spinShow = true
-        }
-    },
-    mounted() {}
-}
+  name: "allmenu",
+  props: {
+    msg: String
+  },
+  data() {
+    return {
+      theme: "dark",
+      subm: this.$route.path.split("/")[1]
+    };
+  },
+  components: {},
+  computed: {
+    currentm() {
+      var cur = this.$route.path.split("/");
+      if (cur.length > 2) {
+        return "/" + cur[1] + "/" + cur[2];
+      } else {
+        return this.$route.path;
+      }
+    }
+  },
+  activated() {},
+  methods: {
+    clickItem() {
+      this.$store.state.spinShow = true;
+    }
+  },
+  mounted() {}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .menu {
-    // background-color: #495060;
-    flex: 0 0 200px;
-    width: 200px;
+  // background-color: #495060;
+  flex: 0 0 200px;
+  width: 200px;
+  height: 100%;
+  overflow-y: auto;
+  text-align: left;
+  .ivu-menu {
+    width: 100% !important;
     height: 100%;
-    overflow-y: auto;
-    text-align: left;
-    .ivu-menu {
-        width: 100% !important;
-        height: 100%;
-        a {
-            color:#495060;
-        }
+    a {
+      color: #495060;
     }
-    li {
-        font-size: 14px;
-        // color: #fff;
-    }
+  }
+  li {
+    font-size: 14px;
+    // color: #fff;
+  }
 }
 </style>

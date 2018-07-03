@@ -1,5 +1,5 @@
 /* global module */
-var target = 'http://192.168.1.200:8088'
+const target = 'http://47.98.193.229:8089'
 
 module.exports = {
     lintOnSave: false,
@@ -8,18 +8,18 @@ module.exports = {
         https: false,
         hotOnly: false,
         proxy: {
-            '/sw': {
-                target: 'https://shi.huamijie.com',
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/sw': '/sw'
-                }
-            },
             '/boquma-web': {
                 target,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/boquma-web': '/boquma-web'
+                }
+            },
+            '/sw': {
+                target: 'https://shi.huamijie.com',
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/sw': '/sw'
                 }
             }
         }

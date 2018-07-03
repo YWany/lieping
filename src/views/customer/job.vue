@@ -25,7 +25,7 @@ export default {
             this.$store.state.spinShow = false;
         }, 1500)
     }
-};
+}
 </script>
 <style lang='less' scoped>
 

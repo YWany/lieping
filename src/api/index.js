@@ -24,7 +24,7 @@ function doError(res) {
 }
 
 const config = {}
-config.api = '/boquma-web/'
+config.api = '/boquma-web'
 
 export default {
     axs(method, url, data = {}) {

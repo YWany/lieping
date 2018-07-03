@@ -29,7 +29,7 @@ export default {
         }, 1500);
 
         api
-            .axs("post", "role/save", {
+            .axs("post", "/role/save", {
                 roleName: "总经理",
                 companyId: 1,
                 roleType: 1

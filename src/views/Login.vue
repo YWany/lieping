@@ -29,10 +29,12 @@ export default {
                 pwd: password,
                 captchaCode: 123456
             }
-            api.axs("post", "login", datas)
-            .then(({ data: { data, code } }) => {
-                if (code === SUCCESS) {
+            api.axs("post", "/login", datas)
+            .then(({ data }) => {
+                if (data.code === 'SUCCESS') {
                     this.$router.push("index")
+                } else {
+                    this.$Message.error(data.remark)
                 }
             })
         }

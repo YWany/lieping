@@ -1,7 +1,7 @@
 <template>
     <div class="customer">
         <h1>权限管理.....</h1>
-        <Tree :data="data1"></Tree>
+        <Table class="class" border :columns="columns7" :data="data6"></Table>
     </div>
 </template>
 
@@ -13,51 +13,127 @@ import Menu from "@/components/Menu.vue";
 import HelloWorld from "@/components/HelloWorld.vue";
 export default {
     name: "home",
-    data() {
-        return {}
-    },
     components: {
         Menu,
         HelloWorld
     },
-     data () {
+    data () {
             return {
-                data1: [
+                columns7: [
                     {
-                        title: 'parent 1',
-                        expand: true,
-                        children: [
-                            {
-                                title: 'parent 1-1',
-                                expand: false,
-                                children: [
-                                    {
-                                        title: 'leaf 1-1-1'
-                                    },
-                                    {
-                                        title: 'leaf 1-1-2'
+                        title: '角色名',
+                        key: 'name',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Icon', {
+                                    props: {
+                                        type: 'person'
                                     }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                expand: true,
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1'
+                                }),
+                                h('strong', params.row.name)
+                            ]);
+                        }
+                    },
+                    {
+                        title: '角色类型',
+                        key: 'type'
+                    },
+                    {
+                        title: '创建时间',
+                        key: 'time'
+                    },
+                    {
+                        title: '备注',
+                        key: 'remark'
+                    },
+                    {
+                        title: 'Action',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
                                     },
-                                    {
-                                        title: 'leaf 1-2-1'
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
+                                        }
                                     }
-                                ]
-                            }
-                        ]
+                                }, 'View'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index)
+                                        }
+                                    }
+                                }, 'Delete')
+                            ]);
+                        }
                     }
+                ],
+                data6: [
+                    {
+                        name: 'John Brown',
+                        type: 'BD负责人',
+                        time: '1970-01-01 08:00:00',
+                        remark:'死的话说的很熟的',
+                    },
+                    {
+                        name: 'John Brown',
+                        type: 'BD负责人',
+                        time: '1970-01-01 08:00:00',
+                        remark:'死的话说的很熟的',
+                    },
+                   {
+                        name: 'John Brown',
+                        type: 'BD负责人',
+                        time: '1970-01-01 08:00:00',
+                        remark:'死的话说的很熟的',
+                    },
+                   {
+                        name: 'John Brown',
+                        type: 'BD负责人',
+                        time: '1970-01-01 08:00:00',
+                        remark:'死的话说的很熟的',
+                    },
                 ]
             }
         },
-    methods: {},
+        methods: {
+          
+            show (index) {
+                this.$Modal.info({
+                    title: 'User Info',
+                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].type}<br>Address：${this.data6[index].time}<br>Address：${this.data6[index].remark}`
+                })
+            },
+            remove (index) {
+                this.data6.splice(index, 1);
+            }
+        },
     mounted() {
+api.axs("post", "/role/save", {
+              roleName: '负责人', 
+              companyId: '1',
+              roleType: '1',
+            })
+            .then(({ data: { data, code } }) => {
+              if (code === SUCCESS) {
+                console.log(data);
+                this.datas = data;
+              }
+            }),
         setTimeout(() => {
             this.$Loading.finish();
             this.$store.state.spinShow = false;
@@ -67,4 +143,9 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.class{
+    margin-top: 15px;
+    -webkit-box-shadow: 0 -5px 10px #eee;
+    box-shadow: 0 -5px 10px #eee;
+}
 </style>

@@ -1,5 +1,5 @@
 /* global module */
-const target = 'http://47.98.193.229:8089'
+const target = 'http://47.96.116.114:8089/'
 
 module.exports = {
     lintOnSave: false,

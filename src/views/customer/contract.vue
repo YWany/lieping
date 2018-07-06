@@ -117,14 +117,14 @@ export default {
                     align: 'center'
                 },
                 {
-                    title: "签约时间",
+                    title: "合同开始时间",
                     key: "ddd",
                     width: 90,
                     ellipsis: true,
                     align: 'center'
                 },
                 {
-                    title: "有效期至",
+                    title: "合同结束时间",
                     key: "eee",
                     maxWidth: 94,
                     align: 'center'

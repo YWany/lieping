@@ -90,7 +90,15 @@ export default {
                     title: "职位名称",
                     key: "name",
                     width: 140,
-                    align: 'center'
+                    align: 'center',
+                    render: (h, params) => {
+                        var row = params.row
+                        return h("router-link",{
+                            attrs: {
+                                to: '/customer/jobDoing/details?jodId=' + row.id
+                            }
+                        },row.name)
+                    }
                 },
                 {
                     title: "公司名称",
@@ -211,6 +219,7 @@ export default {
             ],
             tableLists: [
                 {
+                    id: 96,
                     name: "财务总监",
                     kehu: "浙江千里马股份有限公司",
                     phone: "Yuxinhua",
@@ -224,6 +233,7 @@ export default {
                     hhh: "2018-10-10 12:30:40"
                 },
                 {
+                    id: 97,
                     name: "招商CEO招商CEO",
                     kehu: "浙江千里马股份有限公司",
                     phone: "Yuxinhua",

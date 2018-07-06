@@ -1,9 +1,9 @@
-import Vue from "vue";
-import Router from "vue-router";
+import Vue from "vue"
+import Router from "vue-router"
 import Login from "./views/Login.vue"
 import Main from "./views/Main.vue"
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
     mode: 'hash', //history
@@ -55,11 +55,32 @@ export default new Router({
                         import ("./views/customer/jobDoing.vue")
                 },
                 {
+                    meta: { title: '千里马-客户-职位进展-职位详情' },
+                    path: '/customer/jobDoing/details',
+                    name: 'jobDoingDetails',
+                    component: () =>
+                        import ("./views/customer/jobDoing-details.vue")
+                },
+                {
                     meta: { title: '千里马-客户-职位进展-职位运作-候选人详情' },
                     path: '/customer/jobDoing/personalDetails',
                     name: 'jobDoingPersonalDetails',
                     component: () =>
                         import ("./views/customer/jobDoing-personalDetails.vue")
+                },
+                {
+                    meta: { title: '千里马-客户-我的客户' },
+                    path: '/customer/myCustomers',
+                    name: 'myCustomers',
+                    component: () =>
+                        import ("./views/customer/myCustomers.vue")
+                },
+                {
+                    meta: { title: '千里马-客户-我的客户-记录' },
+                    path: '/customer/myCustomers/records',
+                    name: 'myCustomersRecords',
+                    component: () =>
+                        import ("./views/customer/myCustomers-records.vue")
                 },
                 { // manager 管理 =======================================================
                     meta: { title: '千里马-管理-新增账号' },

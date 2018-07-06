@@ -11,6 +11,7 @@ module.exports = {
             '/boquma-web': {
                 target,
                 changeOrigin: true,
+                ws: true,
                 pathRewrite: {
                     '^/boquma-web': '/boquma-web'
                 }

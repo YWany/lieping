@@ -52,8 +52,8 @@
         <div class="searchTable">
             <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
             <div class="sendBtns fl">
-                <Button type="warning">群发短信</Button>
-                <Button type="info">群发邮件</Button>
+                <Button type="warning">发送短信</Button>
+                <Button type="info">发送邮件</Button>
             </div>
             <div class="tablePage fr">
                 <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>

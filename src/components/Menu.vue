@@ -4,14 +4,8 @@
         <MenuItem name="9999">&nbsp;</MenuItem>
         <router-link to='/index'>
             <MenuItem name="/index">
-            <Icon type="document-text"></Icon>
-            导航菜单1
-            </MenuItem>
-        </router-link>
-        <router-link to='/about'>
-            <MenuItem name="/about">
-            <Icon type="chatbubbles"></Icon>
-            导航菜单2
+            <Icon type="pie-graph"></Icon>
+            工作台
             </MenuItem>
         </router-link>
         <Submenu name="customer">
@@ -27,10 +21,26 @@
         <Submenu name="2">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
+                职位
+            </template>
+            <MenuItem name="2-1">职位11</MenuItem>
+            <MenuItem name="2-2">职位22</MenuItem>
+        </Submenu>
+        <Submenu name="3">
+            <template slot="title">
+                <Icon type="ios-filing"></Icon>
+                人才
+            </template>
+            <MenuItem name="3-1">人才11</MenuItem>
+            <MenuItem name="3-2">人才22</MenuItem>
+        </Submenu>
+        <Submenu name="4">
+            <template slot="title">
+                <Icon type="ios-filing"></Icon>
                 财务
             </template>
-            <MenuItem name="2-1">发票管理</MenuItem>
-            <MenuItem name="2-2">付款通知书</MenuItem>
+            <MenuItem name="4-1">发票管理</MenuItem>
+            <MenuItem name="4-2">付款通知书</MenuItem>
         </Submenu>
         <Submenu name="manager">
             <template slot="title">
@@ -41,50 +51,44 @@
             <router-link to='/manager/authority'><MenuItem name="/manager/authority">权限管理</MenuItem></router-link>
             <router-link to='/manager/department'><MenuItem name="/manager/department">部门管理</MenuItem></router-link>
         </Submenu>
-        <Submenu name="2">
+        <Submenu name="5">
             <template slot="title">
                 <Icon type="ios-filing"></Icon>
                 审核
             </template>
-            <MenuItem name="2-1">合同</MenuItem>
-            <MenuItem name="2-2">订单</MenuItem>
-            <MenuItem name="2-3">发票</MenuItem>
-            <MenuItem name="2-4">所有审批</MenuItem>
-            <!-- <Submenu name="3">
-                <template slot="title">Submenu</template>
-                <MenuItem name="3-1">Option 7</MenuItem>
-                <MenuItem name="3-2">Option 8</MenuItem>
-            </Submenu> -->
+            <MenuItem name="5-1">合同</MenuItem>
+            <MenuItem name="5-2">订单</MenuItem>
+            <MenuItem name="5-3">发票</MenuItem>
+            <MenuItem name="5-4">所有审批</MenuItem>
         </Submenu>
         <Submenu name="3">
             <template slot="title">
                 <Icon type="social-apple"></Icon>
                 报表
             </template>
-            <!-- <MenuItem name="2-7">Option 5</MenuItem> -->
-            <Submenu name="3">
+            <Submenu name="31">
                 <template slot="title">订单</template>
-                <MenuItem name="3-1">个人报表</MenuItem>
-                <MenuItem name="3-2">部门报表</MenuItem>
-                <MenuItem name="3-3">所有报表</MenuItem>
+                <MenuItem name="31-1">个人报表</MenuItem>
+                <MenuItem name="31-2">部门报表</MenuItem>
+                <MenuItem name="31-3">所有报表</MenuItem>
             </Submenu>
-            <Submenu name="4">
+            <Submenu name="41">
                 <template slot="title">合同</template>
-                <MenuItem name="4-1">个人报表</MenuItem>
-                <MenuItem name="4-2">部门报表</MenuItem>
-                <MenuItem name="4-3">所有报表</MenuItem>
+                <MenuItem name="41-1">个人报表</MenuItem>
+                <MenuItem name="41-2">部门报表</MenuItem>
+                <MenuItem name="41-3">所有报表</MenuItem>
             </Submenu>
-            <Submenu name="5">
+            <Submenu name="51">
                 <template slot="title">项目</template>
-                <MenuItem name="5-1">个人报表</MenuItem>
-                <MenuItem name="5-2">部门报表</MenuItem>
-                <MenuItem name="5-3">所有报表</MenuItem>
+                <MenuItem name="51-1">个人报表</MenuItem>
+                <MenuItem name="51-2">部门报表</MenuItem>
+                <MenuItem name="51-3">所有报表</MenuItem>
             </Submenu>
-            <Submenu name="6">
+            <Submenu name="61">
                 <template slot="title">推荐人选</template>
-                <MenuItem name="6-1">个人报表</MenuItem>
-                <MenuItem name="6-2">部门报表</MenuItem>
-                <MenuItem name="6-3">所有报表</MenuItem>
+                <MenuItem name="61-1">个人报表</MenuItem>
+                <MenuItem name="61-2">部门报表</MenuItem>
+                <MenuItem name="61-3">所有报表</MenuItem>
             </Submenu>
         </Submenu>
     </Menu>

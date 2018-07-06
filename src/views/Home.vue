@@ -1,9 +1,7 @@
 <template>
-    <div class="home">
+    <div class="home" style='text-align: center'>
         <img src="@/assets/images/logo.png">
         <HelloWorld msg="Qianlima" />
-        <h1>commit 2018-06-25 10:30</h1>
-        <Table border :columns="columns5" :data="data5"></Table>
     </div>
 </template>
 
@@ -61,32 +59,6 @@ export default {
                 {
                     title: "Address",
                     key: "address"
-                }
-            ],
-            data5: [
-                {
-                    name: "John Brown",
-                    age: 18,
-                    address: "New York No. 1 Lake Park",
-                    date: "2016-10-03"
-                },
-                {
-                    name: "Jim Green",
-                    age: 24,
-                    address: "London No. 1 Lake Park",
-                    date: "2016-10-01"
-                },
-                {
-                    name: "Joe Black",
-                    age: 30,
-                    address: "Sydney No. 1 Lake Park",
-                    date: "2016-10-02"
-                },
-                {
-                    name: "Jon Snow",
-                    age: 26,
-                    address: "Ottawa No. 2 Lake Park",
-                    date: "2016-10-04"
                 }
             ]
         };

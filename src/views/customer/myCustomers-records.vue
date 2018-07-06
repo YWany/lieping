@@ -72,7 +72,7 @@
                     <li>
                         <div class="name clearfix">
                             <strong>Wanyu</strong>
-                            <span class='imp imp2'>主联系人</span>
+                            <span class='imp'>主联系人</span>
                             <p class="sels fr">
                                 <Button size='small' @click="inWork">在职</Button>
                                 <Button size='small' @click='dimissionPop=true'>离职</Button>
@@ -87,7 +87,7 @@
                     <li>
                         <div class="name clearfix">
                             <strong>Wanyu</strong>
-                            <a href="javascript:;"><span class='imp' @click='mainperPop=true'>设为主联系人</span></a>
+                            <a href="javascript:;"><span class='imp imp2' @click='mainperPop=true'>设为主联系人</span></a>
                             <p class="sels fr">
                                 <Button size='small'>在职</Button>
                                 <Button size='small'>离职</Button>

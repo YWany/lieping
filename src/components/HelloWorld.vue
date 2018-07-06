@@ -1,10 +1,6 @@
 <template>
     <div class="hello">
         <h1>{{ msg }}</h1>
-        <!-- <div v-html='datas.content'></div> -->
-        <template>
-            <i-button type="primary" @click="info">显示普通提醒</i-button>
-        </template>
         <template>
             <i-button @click="success">显示成功提示</i-button>
             <i-button @click="warning">显示警告提示</i-button>

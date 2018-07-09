@@ -1,6 +1,6 @@
 <template>
     <div class="jobDoing">
-        <div class='currentNav'>当前位置: 部门管理 
+        <div class='currentNav'>当前位置: 用户管理 
         </div>
         <form class="searches">
             <div class="search">
@@ -17,13 +17,13 @@
                     <Option value="部门归属1">部门归属1</Option>
                     <Option value="部门归属2">部门归属2</Option>
                 </Select>
-                <Select v-model="form.sel2" class='sels-item' placeholder='项目状态' style="width:100px">
-                    <Option value="客户行业1">客户行业1</Option>
-                    <Option value="客户行业2">客户行业2</Option>
+                <Select v-model="form.sel2" class='sels-item' placeholder='角色' style="width:100px">
+                    <Option value="客户行业1">BD</Option>
+                    <Option value="客户行业2">BD负责人</Option>
                 </Select>
-                <Select v-model="form.sel3" class='sels-item' placeholder='项目经理' style="width:100px">
-                    <Option value="客户来源1">客户来源1</Option>
-                    <Option value="客户来源2">客户来源2</Option>
+                <Select v-model="form.sel3" class='sels-item' placeholder='部门' style="width:100px">
+                    <Option value="客户来源1">董事长</Option>
+                    <Option value="客户来源2">部门一</Option>
                 </Select>
                 <div class="disInB sels-item">
                     创建时间: 
@@ -89,11 +89,14 @@
                 <span slot="close">Off</span>
             </i-switch>
         </FormItem>
-        <FormItem>
-            <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
-            <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
-        </FormItem>
+       
     </Form>
+    <div slot="footer">
+         
+           <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+            <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
+      
+        </div>
                 </Modal>
             </div>
         </form>
@@ -364,6 +367,8 @@ export default {
                
               } else if (code === "PHONE_REPEAT") {
                 this.$Message.error(" 该手机账号已存在");
+              }else if(code ==="ACCOUNT_EXIST"){
+                 this.$Message.error(" 该登陆账号已存在");
               }
             });
           }else{

@@ -23,18 +23,18 @@
         <div class="searchTable">
             <div class="tabsTable">
                 <Tabs value="jianli" :animated=false>
-                    <div class="searchItem">
-                        <Button type="ghost">自主寻访</Button>
-                        <Button type="ghost">他人推荐</Button>
-                        <Button type="ghost">智能匹配</Button>
-                        <Button type="text" disabled>CallList(1)</Button>
-                        <Button type="text" disabled>推荐简历(25)</Button>
-                        <Button type="text" disabled>面试(25)</Button>
-                        <Button type="text" disabled>Offer(25)</Button>
-                        <Button type="text" disabled>过保(25)</Button>
-                        <Button type="text" disabled>淘汰人选(25)</Button>
-                    </div>
                     <TabPane label="简历" name="jianli">
+                        <div class="searchItem">
+                            <Button type="ghost">自主寻访</Button>
+                            <Button type="ghost">他人推荐</Button>
+                            <Button type="ghost">智能匹配</Button>
+                            <Button type="text" disabled>CallList(1)</Button>
+                            <Button type="text" disabled>推荐简历(25)</Button>
+                            <Button type="text" disabled>面试(25)</Button>
+                            <Button type="text" disabled>Offer(25)</Button>
+                            <Button type="text" disabled>过保(25)</Button>
+                            <Button type="text" disabled>淘汰人选(25)</Button>
+                        </div>
                         <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                         <div class="tablePage fr">
                             <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>

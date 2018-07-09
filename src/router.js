@@ -82,6 +82,13 @@ export default new Router({
                     component: () =>
                         import ("./views/customer/myCustomers-records.vue")
                 },
+                {
+                    meta: { title: '千里马-客户-我的客户-合同详情' },
+                    path: '/customer/myCustomers/contract',
+                    name: 'myCustomersContract',
+                    component: () =>
+                        import ("./views/customer/myCustomers-contract.vue")
+                },
                 { // manager 管理 =======================================================
                     meta: { title: '千里马-管理-新增账号' },
                     path: '/manager/addacc',

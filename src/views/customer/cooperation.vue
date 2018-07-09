@@ -1,6 +1,6 @@
 <template>
     <div class="customer">
-        <div class='currentNav'>当前位置: 合作中客户 <Button type="success" class='addNew fr'><Icon type="plus"></Icon> 录入新客户</Button></div>
+        <div class='currentNav'>当前位置: 合作中客户 <Button type="success" class='addNew fr' @click='companyPop=true'><Icon type="plus"></Icon> 录入新客户</Button></div>
         <form class="searches">
             <div class="search">
                 <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
@@ -59,20 +59,24 @@
                 <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
+
+        <!-- 新增企业客户弹窗 -->
+        <CompanyPop :companyPop='companyPop'/>
+
     </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import api from "@/api";
-import ls from "store2";
-import Menu from "@/components/Menu.vue";
-import HelloWorld from "@/components/HelloWorld.vue";
+import api from "@/api"
+import ls from "store2"
+import CompanyPop from "@/components/customer/addCompanyPop.vue"
 
 export default {
     name: "home",
     data() {
         return {
+            companyPop: false, //新增企业客户弹窗
             form: {
                 searchVal: "",
                 selVal: "企业名称",
@@ -87,7 +91,7 @@ export default {
             },
             formPage: {
                 total: 120,
-                current: 1,
+                pageNum: 1,
                 pageSize: 20
             },
             tableHeader: [
@@ -98,7 +102,7 @@ export default {
                 },
                 {
                     title: "客户名称",
-                    key: "name",
+                    key: "companyName",
                     width: 140,
                     sortable: true,
                     ellipsis: true,
@@ -109,19 +113,19 @@ export default {
                                     console.log(params)
                                 }
                             }
-                        },params.row.name)
+                        },params.row.companyName)
                     }
                 },
                 {
                     title: "客户重要性",
-                    key: "a1",
+                    key: "importantLevel",
                     width: 95,
                     sortable: true,
                     render: (h, params) => {
                         const row = params.row
                         return h("Rate", {
                             props: {
-                                value: row.aaa,
+                                value: +row.importantLevel,
                                 disabled: true
                             }
                         });
@@ -129,7 +133,7 @@ export default {
                 },
                 {
                     title: "客户联系人",
-                    key: "kehu",
+                    key: "outerName",
                     width: 94,
                     sortable: true
                 },
@@ -140,7 +144,7 @@ export default {
                 },
                 {
                     title: "合作状态",
-                    key: "bbb",
+                    key: "companyStatus",
                     sortable: true
                 },
                 {
@@ -149,19 +153,19 @@ export default {
                 },
                 {
                     title: "沟通记录",
-                    key: "ddd",
+                    key: "remark",
                     width: 90,
                     ellipsis: true,
                     render: (h, params) => {
-                        const row = params.row;
+                        const row = params.row
                         return h( "Tooltip", {
                                 props: {
-                                    content: row.ddd,
+                                    content: row.remark || '',
                                     placement: "top"
                                 }
                             },
-                        [h("div", row.ddd.substr(0, 5) + "...")]
-                        );
+                        [h("div", row.remark && row.remark.substr(0, 5) + "..." || '暂无记录')]
+                        )
                     }
                 },
                 {
@@ -192,13 +196,13 @@ export default {
             ],
             tableLists: [
                 {
-                    name: "杭州千里马千里马千里马千里马",
-                    aaa: 4,
-                    kehu: "Wanyyyy",
+                    companyName: "杭州千里马千里马千里马千里马",
+                    importantLevel: 4,
+                    outerName: "Wanyyyy",
                     phone: "18788888888",
-                    bbb: "潜在客户",
+                    companyStatus: "潜在客户",
                     ccc: "2018-10-10",
-                    ddd: "这是沟通记录记录记录记录记录记录记录记录11111111",
+                    remark: "这是沟通记录记录记录记录记录记录记录记录11111111",
                     eee: "25 / 799",
                     fff: "Yuxinhua",
                     ggg: "Yuxinhua",
@@ -206,41 +210,13 @@ export default {
                     iii: 999999
                 },
                 {
-                    name: "杭州千里哈哈哈",
-                    aaa: 3,
-                    kehu: "Wany",
+                    companyName: "杭州千里哈哈哈",
+                    importantLevel: 3,
+                    outerName: "Wany",
                     phone: "18700000000",
-                    bbb: "潜在客户",
+                    companyStatus: "潜在客户",
                     ccc: "2018-10-10",
-                    ddd: "这是沟通记录记录记录记录",
-                    eee: "88 / 999",
-                    fff: "Yuxinhua",
-                    ggg: "Yuxinhua",
-                    hhh: 345000,
-                    iii: 2000000
-                },
-                {
-                    name: "千里马嘛嘛嘛",
-                    aaa: 5,
-                    kehu: "Wany000",
-                    phone: "18700000000",
-                    bbb: "潜在客户",
-                    ccc: "2018-10-10",
-                    ddd: "这是沟通记录记录记录记录",
-                    eee: "88 / 999",
-                    fff: "Yuxinhua",
-                    ggg: "Yuxinhua",
-                    hhh: 345000,
-                    iii: 2000000
-                },
-                {
-                    name: "千里马嘛嘛嘛",
-                    aaa: 5,
-                    kehu: "Wany000",
-                    phone: "18700000000",
-                    bbb: "潜在客户",
-                    ccc: "2018-10-10",
-                    ddd: "这是沟通记录记录记录记录",
+                    remark: "这是沟通记录记录记录记录",
                     eee: "88 / 999",
                     fff: "Yuxinhua",
                     ggg: "Yuxinhua",
@@ -251,16 +227,21 @@ export default {
         };
     },
     components: {
-        Menu,  
-        HelloWorld
+        CompanyPop
     },
     methods: {
         loadLists(page) {
-            this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page)
-            setTimeout(() => {
-                this.$store.state.spinShow = false
-            }, 1500)
+            this.$store.state.spinShow = true
+
+            api.axs("post", "/company/info", this.formPage)
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.tableLists = this.tableLists.concat(data.data)
+                    this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -271,10 +252,12 @@ export default {
     },
 
     mounted() {
-        setTimeout(() => {
-            this.$Loading.finish()
-            this.$store.state.spinShow = false
-        }, 1500)
+
+        this.loadLists()
+        // setTimeout(() => {
+        //     this.$Loading.finish()
+        //     this.$store.state.spinShow = false
+        // }, 1500)
         
     }
 };

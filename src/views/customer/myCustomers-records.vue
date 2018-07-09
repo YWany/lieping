@@ -63,7 +63,9 @@
                     </li>
                 </ul>
             </TabPane>
-            <TabPane label="合同" name="hetong">合同</TabPane>
+            <TabPane label="合同" name="hetong">
+                <router-link to='/customer/myCustomers/contract'>合同列表</router-link>
+            </TabPane>
             <TabPane label="汇款" name="huikuan">汇款</TabPane>
             <TabPane label="开票历史" name="lishi">开票历史</TabPane>
             <TabPane label="开票信息" name="xinxi">开票信息</TabPane>

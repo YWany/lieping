@@ -180,12 +180,12 @@ export default {
                     width: 140,
                     sortable: true,
                     ellipsis: true,
-                    align: 'center',
                     render: (h, params) => {
-                        return h('span', {
+                        var row = params.row
+                        return h('a', {
                             on: {
                                 click: () => {
-                                    console.log(params)
+                                    this.$router.push('/customer/myCustomers/records?cname='+row.name)
                                 }
                             }
                         }, params.row.name)

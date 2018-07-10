@@ -15,8 +15,8 @@
     </div>
     <form class="searches">
         <div class="search">
-            <Input v-model="form.searchVal" placeholder="请输入客户名称进行搜索...">
-            <Button slot="append" icon="ios-search"></Button>
+            <Input v-model="form.companyName"  @on-enter='searchIn' placeholder="请输入客户名称进行搜索...">
+            <Button slot="append" icon="ios-search" @click='searchIn'></Button>
             </Input>
         </div>
         <div class="sels">
@@ -70,7 +70,7 @@
             <Button type="info">发送邮件</Button>
         </div>
         <div class="tablePage fr">
-            <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+            <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
         </div>
     </div>
 
@@ -120,8 +120,6 @@ export default {
             cname: '',
             attePop: false, //新增提醒弹窗
             form: {
-                searchVal: "",
-                selVal: "企业名称",
                 sel1: "",
                 sel2: "",
                 sel3: "",
@@ -129,9 +127,7 @@ export default {
                 sel5: "",
                 sel6: "",
                 createDate: "",
-                signDate: ""
-            },
-            formPage: {
+                signDate: "",
                 total: 120,
                 current: 1,
                 pageSize: 20
@@ -169,14 +165,14 @@ export default {
                 },
                 {
                     title: "客户状态",
-                    key: "zhuangt",
+                    key: "companyStatus",
                     width: 94,
                     sortable: true,
                     align: 'center',
                 },
                 {
                     title: "客户名称",
-                    key: "name",
+                    key: "companyName",
                     width: 140,
                     sortable: true,
                     ellipsis: true,
@@ -185,7 +181,7 @@ export default {
                         return h('a', {
                             on: {
                                 click: () => {
-                                    this.$router.push('/customer/myCustomers/records?cname='+row.name)
+                                    this.$router.push('/customer/myCustomers/records?id='+row.id+'&cname='+row.companyName+'&level='+row.importantLevel )
                                 }
                             }
                         }, params.row.name)
@@ -193,7 +189,7 @@ export default {
                 },
                 {
                     title: "客户重要性",
-                    key: "a1",
+                    key: "importantLevel",
                     width: 95,
                     sortable: true,
                     align: 'center',
@@ -201,7 +197,7 @@ export default {
                         const row = params.row
                         return h("Rate", {
                             props: {
-                                value: row.aaa,
+                                value: +row.importantLevel,
                                 disabled: true
                             }
                         });
@@ -209,26 +205,26 @@ export default {
                 },
                 {
                     title: "联系人",
-                    key: "kehu",
+                    key: "name",
                     width: 94,
                     sortable: true,
                     align: 'center',
                 },
                 {
                     title: "联系方式",
-                    key: "phone",
+                    key: "phone1",
                     width: 94,
                     align: 'center',
                 },
                 {
                     title: "未联系时间",
-                    key: "bbb",
+                    key: "wlxTime",
                     width: 86,
                     align: 'center',
                 },
                 {
                     title: "跟进记录",
-                    key: "ccc",
+                    key: "followRecord",
                     ellipsis: true,
                     align: 'center',
                     render: (h, params) => {
@@ -240,7 +236,7 @@ export default {
                                     this.cname = row.name
                                 }
                             }
-                        }, row.ccc)
+                        }, row.followRecord)
                     }
                 },
                 {
@@ -251,71 +247,18 @@ export default {
                 },
                 {
                     title: "创建时间",
-                    key: "fff",
+                    key: "createTime",
                     width: 80,
                     align: 'center',
                 },
                 {
                     title: "最近更新时间",
-                    key: "ggg",
+                    key: "updateTime",
                     width: 80,
                     align: 'center',
                 }
             ],
-            tableLists: [{
-                    zhuangt: '潜在客户',
-                    name: "杭州千里马千里马千里马千里马",
-                    aaa: 4,
-                    kehu: "Wanyyyy",
-                    phone: "18788888888",
-                    bbb: "50天未联系",
-                    ccc: "这是沟通记录录记录录记录记录记录记录记录记录记录111111",
-                    ddd: "这是沟通记录记录记录记录记录记录记录记录11111111",
-                    eee: "公司支持",
-                    fff: "2018-10-10",
-                    ggg: "2018-10-10"
-                },
-                {
-                    zhuangt: '潜在客户',
-                    name: "杭州千里马千里马千里马千里马",
-                    aaa: 5,
-                    kehu: "Wanyyyy",
-                    phone: "18788888888",
-                    bbb: "50天未联系",
-                    ccc: "这是沟通记录录记录录记录记录记录记录记录记录记录111111",
-                    ddd: "这是沟通记录记录记录记录记录记录记录记录11111111",
-                    eee: "公司支持",
-                    fff: "2018-10-10",
-                    ggg: "2018-10-10"
-                },
-                {
-                    zhuangt: '潜在客户',
-                    name: "杭州千里马千",
-                    aaa: 3,
-                    kehu: "Wanyyyy",
-                    phone: "18788888888",
-                    bbb: "50天未联系",
-                    ccc: "这是沟通记录录记录录记录记录记录记录记录记录记录111111",
-                    ddd: "这是沟通记录记录记录记录记录记录记录记录11111111",
-                    eee: "公司支持",
-                    fff: "2018-10-10",
-                    ggg: "2018-10-10"
-                },
-                {
-                    zhuangt: '潜在客户',
-                    name: "杭州千里马千里",
-                    aaa: 2,
-                    kehu: "Wanyyyy",
-                    phone: "18788888888",
-                    bbb: "50天未联系",
-                    ccc: "这是沟通记录录记录录记录记录记录记录记录记录记录111111",
-                    ddd: "这是沟通记录记录记录记录记录记录记录记录11111111",
-                    eee: "公司支持",
-                    fff: "2018-10-10",
-                    ggg: "2018-10-10"
-                },
-                
-            ]
+            tableLists: []
         };
     },
     components: {
@@ -323,11 +266,28 @@ export default {
     },
     methods: {
         loadLists(page) {
-            this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page)
-            setTimeout(() => {
-                this.$store.state.spinShow = false
-            }, 1500)
+            this.$store.state.spinShow = true
+
+            api.axs("post", "/company/selectMultiByExt",this.form)
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.tableLists = this.tableLists.concat(data.data.list)
+                    this.form.total = data.data.total
+                    this.$Loading.finish()
+                    this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
+        },
+        searchIn() {
+            if (!this.form.companyName) {
+                this.$Message.warning('想搜点什么?')
+                return 
+            }
+            this.tableLists = []
+            this.loadLists()
+
         },
         addRecord() { //添加记录
             this.$Message.info('添加记录~~')
@@ -345,11 +305,7 @@ export default {
     },
 
     mounted() {
-        setTimeout(() => {
-            this.$Loading.finish()
-            this.$store.state.spinShow = false
-        }, 1500)
-
+        this.loadLists()
     }
 };
 </script>

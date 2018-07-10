@@ -22,9 +22,9 @@ export default {
 
     mounted() {
         setTimeout(() => {
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-        }, 1500);
+            this.$Loading.finish()
+            this.$store.state.spinShow = false
+        }, 1500)
 
         api
             .axs("post", "/role/save", {
@@ -32,8 +32,8 @@ export default {
                 companyId: 1,
                 roleType: 1
             })
-            .then(({ data: { data, code } }) => {
-                if (code === SUCCESS) {
+            .then(({ data }) => {
+                if (data.code == 'SUCCESS') {
                     console.log(data)
                     this.datas = data
                 }

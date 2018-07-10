@@ -122,7 +122,7 @@ export default {
   activated() {},
   methods: {
     clickItem() {
-      this.$store.state.spinShow = true;
+        //this.$store.state.spinShow = true
     }
   },
   mounted() {}

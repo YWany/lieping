@@ -115,11 +115,17 @@ export default {
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
-                    this.$Message.success('新增成功!')   
+                    this.$Message.success('新增成功!') 
+                    this.reset(this.companyForm)  
                 } else {
                     this.$Message.error(data.remark)
                     this.subFlag = true
                 }
+            })
+        },
+        reset(key) {
+            Object.keys(this[key]).forEach(item => {
+                this[key][item] = ""
             })
         }
     },

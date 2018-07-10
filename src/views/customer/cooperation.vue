@@ -239,6 +239,7 @@ export default {
                     this.$Loading.finish()
                     this.$store.state.spinShow = false
                 } else {
+                    this.$store.state.spinShow = false
                     this.$Message.error(data.remark)
                 }
             })
@@ -265,7 +266,6 @@ export default {
     },
 
     mounted() {
-
         this.loadLists()
         // setTimeout(() => {
         //     this.$Loading.finish()

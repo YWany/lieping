@@ -95,6 +95,8 @@
             </ul>
             <div slot='footer' style='text-align:center'>
                 <Button type='info' @click='subSave'>保存</Button>
+                &nbsp;&nbsp;&nbsp;
+                <router-link to='/customer/myCustomers/contract'>合同模板</router-link>
             </div>
         </Modal>
     </div>

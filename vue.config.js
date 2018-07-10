@@ -16,6 +16,14 @@ module.exports = {
                     '^/boquma-web': '/boquma-web'
                 }
             },
+            '/param': {
+                target,
+                changeOrigin: true,
+                ws: true,
+                pathRewrite: {
+                    '^/param': '/param'
+                }
+            },
             '/sw': {
                 target: 'https://shi.huamijie.com',
                 changeOrigin: true,

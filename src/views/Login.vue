@@ -33,6 +33,7 @@ export default {
             .then(({ data }) => {
                 if (data.code === 'SUCCESS') {
                     this.$router.push("index")
+                    this.$Message.success('登录成功')
                 } else {
                     this.$Message.error(data.remark)
                 }

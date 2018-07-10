@@ -17,7 +17,9 @@ export default {
         // console.log(process.env.NODE_ENV)
     },
     watch: {
-        $route() {}
+        $route() {
+            this.$store.state.spinShow = true
+        }
     }
 };
 </script>

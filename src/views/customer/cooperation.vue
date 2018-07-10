@@ -3,13 +3,13 @@
         <div class='currentNav'>当前位置: 合作中客户 <Button type="success" class='addNew fr' @click='companyPop=true'><Icon type="plus"></Icon> 录入新客户</Button></div>
         <form class="searches">
             <div class="search">
-                <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
-                <Select v-model="form.selVal" slot="prepend" class='search-sels' style="width:80px">
+                <Input v-model="searchVal"  @on-enter='searchIn' placeholder="请输入要搜索的内容...">
+                <Select v-model="selVal" slot="prepend" class='search-sels' style="width:80px">
                     <Option value="企业名称">企业名称</Option>
                     <Option value="搜索顾问">搜索顾问</Option>
                     <Option value="客户来源">客户来源</Option>
                 </Select>
-                <Button slot="append" icon="ios-search"></Button>
+                <Button slot="append" icon="ios-search" @click='searchIn'></Button>
                 </Input>
             </div>
             <div class="sels">
@@ -56,7 +56,7 @@
                 <Button type="info">发送邮件</Button>
             </div>
             <div class="tablePage fr">
-                <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
 
@@ -77,9 +77,9 @@ export default {
     data() {
         return {
             companyPop: false, //新增企业客户弹窗
+            selVal: "企业名称",
+            searchVal: '',
             form: {
-                searchVal: "",
-                selVal: "企业名称",
                 sel1: "",
                 sel2: "",
                 sel3: "",
@@ -87,9 +87,7 @@ export default {
                 sel5: "",
                 sel6: "",
                 createDate: "",
-                signDate: ""
-            },
-            formPage: {
+                signDate: "",
                 total: 120,
                 pageNum: 1,
                 pageSize: 20
@@ -107,12 +105,13 @@ export default {
                     sortable: true,
                     ellipsis: true,
                     render: (h, params) => {
-                        return h('span',{
+                        var row = params.row
+                        return h('a',{
                             on: {
                                 click: () => {
-                                    console.log(params)
+                                    this.$router.push('/customer/myCustomers/records?id='+row.id+'&cname='+row.companyName+'&level='+row.importantLevel )
                                 }
-                            }
+                            }       
                         },params.row.companyName)
                     }
                 },
@@ -164,7 +163,7 @@ export default {
                                     placement: "top"
                                 }
                             },
-                        [h("div", row.remark && row.remark.substr(0, 5) + "..." || '暂无记录')]
+                        [h("div", row.remark && row.remark.substr(0, 5) + "..." || '无记录')]
                         )
                     }
                 },
@@ -233,15 +232,29 @@ export default {
         loadLists(page) {
             this.$store.state.spinShow = true
 
-            api.axs("post", "/company/info", this.formPage)
+            api.axs("post", "/company/info",this.form)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.tableLists = this.tableLists.concat(data.data)
+                    this.$Loading.finish()
                     this.$store.state.spinShow = false
                 } else {
                     this.$Message.error(data.remark)
                 }
             })
+        },
+        searchIn() {
+            if (this.selVal == '企业名称') this.form.companyName = this.searchVal
+            else if (this.selVal == '搜索顾问') this.form.companyName = this.searchVal
+            else if (this.selVal == '客户来源') this.form.companyName = this.searchVal
+
+            if (!this.searchVal) {
+                this.$Message.warning('想搜点什么?')
+                return 
+            }
+            this.tableLists = []
+            this.loadLists()
+
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {

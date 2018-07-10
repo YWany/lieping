@@ -3,7 +3,7 @@
         <Modal v-model="contactPop" :closable='false' :mask-closable='false' style='text-align:center'>
             <div slot='header' style='font-size:14px;color:#444'>
                 新增联系人
-                <a href="javascript:;" @click='$parent.contactPop=false'><Icon type="close" class='fr'></Icon></a>
+                <a href="javascript:;" @click='closePop'><Icon type="close" class='fr'></Icon></a>
             </div>
             <ul class="contact-content">
                 <li>
@@ -157,7 +157,8 @@ export default {
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
-                    this.$Message.success('新增成功!')   
+                    this.$Message.success('新增成功!')
+                    this.reset(this.addForm)
                 } else {
                     this.$Message.error(data.remark)
                     this.subFlag = true
@@ -177,6 +178,10 @@ export default {
             if (this.phoneNum == 1) this.addPhone2 = false
             if (this.phoneNum == 2) this.addPhone3 = false
             if (this.phoneNum == 3) this.addPhone4 = false
+        },
+        closePop() {
+            this.$parent.contactPop=false
+            this.reset(this.addForm)
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {

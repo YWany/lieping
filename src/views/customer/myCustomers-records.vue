@@ -1,11 +1,11 @@
 <template>
 
 <div class="myCustomersRecords">
-	<div class='currentNav'>当前位置: <router-link to='/customer/myCustomers'>我的客户</router-link> > {{cname}} <Rate disabled v-model="rateNum" style='font-size:14px'></Rate></div>
+	<div class='currentNav'>当前位置: <router-link to='/customer/myCustomers'>我的客户</router-link> > {{cname}} <Rate disabled v-model="level" style='font-size:14px'></Rate></div>
 	<ul class="info">
         <li>BD顾问: Wanyu <span>|</span></li>
-        <li>客户状态: 潜在客户<span>|</span></li>
-        <li>最后跟进时间: 无</li>
+        <li>客户状态: {{recordsDetails.companyStatus}}<span>|</span></li>
+        <li>最后跟进时间: {{recordsDetails.updateTime}}</li>
     </ul>
     <div class="recordsContent">
         <Tabs value="jilu" :animated=false>
@@ -18,17 +18,17 @@
                         </Select>
                         <Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
                         <span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-                        <Select v-model="recordsForm.styles" style='width:200px;margin-right:30px'>
+                        <Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
                             <Option value='方式1'>方式1</Option>
                             <Option value='方式2'>方式2</Option>
                             <Option value='方式3'>方式3</Option>
                         </Select>
                         <span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-                        <DatePicker type="date" :value='nowDate' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+                        <DatePicker type="date" v-model='recordsForm.followTime' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                     </div>
                     <div class="add-content">
                         <p style='padding: 15px 0 5px'><span class='xing'>*</span>跟进记录:</p>
-                        <Input v-model="recordsForm.content" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+                        <Input v-model="recordsForm.remark" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
                     </div>
                     <div class="add-sub" style='margin:10px 0 0'>
                         <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
@@ -39,7 +39,7 @@
                         </Upload>
                     </div>
                     <div class="add-sub" style='display:block;text-align:center'>
-                        <Button type='info' style='font-size:14px;'>提交</Button>
+                        <Button type='info' @click='addRecords' style='font-size:14px;'>提交</Button>
                     </div>
                 </div>
                 <ul class="history-records">
@@ -168,17 +168,28 @@ export default {
 	},
 	data() {
 		return {
+            subFlag: true,
+            id: this.$route.query.id,
             cname: this.$route.query.cname,
-            nowDate: new Date(),
-            rateNum: 4,
+            level: +this.$route.query.level,
+            recordsDetails: {},//记录详情
+            contactLists: [],//联系人列表
             attePop: false, //新增联系人弹窗
             contactPop: false, //新增联系人弹窗
             mainperPop: false, //设置主联系人弹窗
             dimissionPop: false, //离职提醒弹窗
             recordsForm: {
+                companyId: this.$route.query.id,
                 contacts: [],
-                styles: '',
-                content: '',
+                followType: '',
+                followTime: new Date(),
+                remark: '',
+                attachmentList: [],//附件
+            },
+            recordsFormError: {
+                contacts: '联系人',
+                followType: '跟进方式',
+                remark: '跟进记录',
             },
             cityList: [
                 {
@@ -204,7 +215,7 @@ export default {
             ],
             formPage: {
                 total: 120,
-                current: 1,
+                pageNum: 1,
                 pageSize: 20
             },
             tableHeader: [
@@ -364,6 +375,49 @@ export default {
         }
 	},
 	methods: {
+        loadDetails() {
+            this.$store.state.spinShow = true
+
+            api.axs("post", "/company/queryById",{id: this.id})
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.recordsDetails = data.data
+                    this.$Loading.finish()
+                    this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
+
+            api.axs("post", "/contact/queryByExt",{id: this.id})
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.contactLists = data.data
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
+        },
+        addRecords() {
+            var forms = this.recordsForm
+            for(var name in forms) {
+                if (!forms[name] || name == 'contacts' && forms[name].length < 1) {
+                    this.$Message.error(this.recordsFormError[name] + ': 请填写完整!')
+                    return
+                }
+            }
+            if (this.subFlag) this.subFlag = false
+            else return
+            api.axs("post", "/contactRecord/save", this.recordsForm)
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.$Message.success('添加记录成功!')
+                } else {
+                    this.$Message.error(data.remark)
+                    this.subFlag = true
+                }
+            })
+        },
         loadLists() {},
         sureMainper() {
             this.$Message.info('确认主联系人成功!')
@@ -380,10 +434,7 @@ export default {
         }
     },
 	mounted() {
-		setTimeout(() => {
-			this.$Loading.finish();
-			this.$store.state.spinShow = false;
-		}, 1500);
+        this.loadDetails()
 	},
 	beforeDestroy() {}
 };

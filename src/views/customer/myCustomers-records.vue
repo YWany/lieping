@@ -225,6 +225,11 @@ export default {
 	data() {
 		return {
             subFlag: true,
+            form: {
+               
+                createDate: "",
+                signDate: ""
+            },
             id: this.$route.query.id,
             cname: this.$route.query.cname,
             level: +this.$route.query.level,

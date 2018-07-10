@@ -1,11 +1,11 @@
 <template>
 
 <div class="myCustomersRecords">
-	<div class='currentNav'>当前位置: <router-link to='/customer/myCustomers'>我的客户</router-link> > {{cname}} <Rate disabled v-model="level" style='font-size:14px'></Rate></div>
+	<div class='currentNav'>当前位置: <router-link to='/customer/myCustomers'>我的客户</router-link> > {{cname}} <Rate disabled v-model="rateNum" style='font-size:14px'></Rate></div>
 	<ul class="info">
         <li>BD顾问: Wanyu <span>|</span></li>
-        <li>客户状态: {{recordsDetails.companyStatus}}<span>|</span></li>
-        <li>最后跟进时间: {{recordsDetails.updateTime}}</li>
+        <li>客户状态: 潜在客户<span>|</span></li>
+        <li>最后跟进时间: 无</li>
     </ul>
     <div class="recordsContent">
         <Tabs value="jilu" :animated=false>
@@ -18,17 +18,17 @@
                         </Select>
                         <Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
                         <span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-                        <Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
+                        <Select v-model="recordsForm.styles" style='width:200px;margin-right:30px'>
                             <Option value='方式1'>方式1</Option>
                             <Option value='方式2'>方式2</Option>
                             <Option value='方式3'>方式3</Option>
                         </Select>
                         <span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-                        <DatePicker type="date" v-model='recordsForm.followTime' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+                        <DatePicker type="date" :value='nowDate' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                     </div>
                     <div class="add-content">
                         <p style='padding: 15px 0 5px'><span class='xing'>*</span>跟进记录:</p>
-                        <Input v-model="recordsForm.remark" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+                        <Input v-model="recordsForm.content" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
                     </div>
                     <div class="add-sub" style='margin:10px 0 0'>
                         <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
@@ -39,7 +39,7 @@
                         </Upload>
                     </div>
                     <div class="add-sub" style='display:block;text-align:center'>
-                        <Button type='info' @click='addRecords' style='font-size:14px;'>提交</Button>
+                        <Button type='info' style='font-size:14px;'>提交</Button>
                     </div>
                 </div>
                 <ul class="history-records">
@@ -63,8 +63,59 @@
                     </li>
                 </ul>
             </TabPane>
-            <TabPane label="合同" name="hetong">
-                <router-link to='/customer/myCustomers/contract'>合同列表</router-link>
+            <TabPane class="pact" label="合同" name="hetong">
+                <!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
+
+                <div class="search">
+                    <div class="disInB sels-item">                       
+                        <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                    </div>----<div class="disInB sels-item"> 
+                        <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                    </div>
+                </div>
+                    
+                 <Tabs class="tab1" value="name1">
+                    <TabPane label="所有合同(3)" name="name1">
+                         <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
+                      
+                        </div>
+                    </TabPane>
+                    <TabPane label="猎头(3)" name="name2">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="headhunter" :data="headlist"></Table>
+                      
+                        </div>
+                    </TabPane>
+                    <TabPane label="背景调查(1)" name="name3">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table> 
+                        </div>
+                    </TabPane>
+                    <TabPane label="薪酬调查(1)" name="name4">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table> 
+                        </div>
+                    </TabPane>
+                    <TabPane label="咨询服务(1)" name="name5">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table> 
+                        </div>
+                    </TabPane>
+                    <TabPane label="外包(1)" name="name6">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table> 
+                        </div>
+                    </TabPane>
+                    <TabPane label="其他(1)" name="name7">
+                        <div class="searchTable">
+                            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table> 
+                        </div>
+                    </TabPane>
+                </Tabs>
+                <div class="tablePage fr leta">
+                    <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                </div> 
             </TabPane>
             <TabPane label="汇款" name="huikuan">汇款</TabPane>
             <TabPane label="开票历史" name="lishi">开票历史</TabPane>
@@ -192,403 +243,523 @@ export default {
                 remark: '',
                 attachmentList: [],//附件
             },
-            recordsFormError: {
-                contacts: '联系人',
-                followType: '跟进方式',
-                remark: '跟进记录',
-            },
-            cityList: [
-                {
-                    value: 'New York',
-                    label: 'New York'
-                },
-                {
-                    value: 'London',
-                    label: 'London'
-                },
-                {
-                    value: 'Sydney',
-                    label: 'Sydney'
-                },
-                {
-                    value: 'Ottawa',
-                    label: 'Ottawa'
-                },
-                {
-                    value: 'Paris',
-                    label: 'Paris'
-                }
-            ],
-            formPage: {
-                total: 120,
-                pageNum: 1,
-                pageSize: 20
-            },
-            tableHeader: [
-                {
-                    title: "职位名称",
-                    key: "name",
-                    width: 140,
-                    align: 'center',
-                    render: (h, params) => {
-                        var row = params.row
-                        return h("router-link",{
-                            attrs: {
-                                to: '/customer/jobDoing/details?jodId=' + row.id
-                            }
-                        },row.name)
-                    }
-                },
-                {
-                    title: "项目经理",
-                    key: "phone",
-                    width: 94,
-                    align: 'center'
-                },
-                {
-                    title: "项目状态",
-                    key: "bbb",
-                    sortable: true,
-                    width: 94,
-                    align: 'center'
-                },
-                {
-                    title: "加入项目",
-                    key: "ccc",
-                    width: 65,
-                    align: 'center'
-                },
-                {
-                    title: "推荐",
-                    key: "ddd",
-                    width: 65,
-                    ellipsis: true,
-                    align: 'center'
-                },
-                {
-                    title: "面试",
-                    key: "eee",
-                    width: 65,
-                    align: 'center'
-                },
-                {
-                    title: "录用",
-                    key: "fff",
-                    width: 65,
-                    align: 'center'
-                },
-                {
-                    title: "上岗",
-                    key: "ggg",
-                    width: 65,
-                    align: 'center'
-                },
-                {
-                    title: "创建时间",
-                    key: "hhh",
-                    width: 85,
-                    align: 'center'
-                },
-                {
-                    title: "更新时间",
-                    key: "hhh",
-                    width: 85,
-                    align: 'center'
-                },
-                {
-                    title: "操作",
-                    key: "iii",
-                    align: 'center',
-                    render: (h, params) => {
-                        const row = params.row
-                        return h("div", [
-                            h("Button", {
-                                props: {
-                                    type: 'info', //primary、ghost、dashed、text、info、success、warning、error
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '6px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.$Message.info("暂缓!!!" + row.name)
-                                    }
-                                }
-                            }, '暂缓'),
-                            h("Button", {
-                                props: {
-                                    type: 'warning',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '6px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.$Message.info("终止!!!" + row.name)
-                                    }
-                                }
-                            }, '终止'),
-                            h("Button", {
-                                props: {
-                                    type: 'error',
-                                    size: 'small'
-                                },
-                                style: {
-                                    marginRight: '6px'
-                                },
-                                on: {
-                                    click: () => {
-                                        this.$Message.info("失效!!!" + row.name)
-                                    }
-                                }
-                            }, '失效')
-                        ])
-                    }
-                }
-            ],
-            tableLists: [
-                {
-                    id: 96,
-                    name: "财务总监",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                },
-                {
-                    id: 97,
-                    name: "招商CEO招商CEO",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                }
-            ]
+      cityList: [
+        {
+          value: "New York",
+          label: "New York"
+        },
+        {
+          value: "London",
+          label: "London"
+        },
+        {
+          value: "Sydney",
+          label: "Sydney"
+        },
+        {
+          value: "Ottawa",
+          label: "Ottawa"
+        },
+        {
+          value: "Paris",
+          label: "Paris"
         }
-	},
-	methods: {
-        loadDetails() {
-            this.$store.state.spinShow = true
+      ],
+      formPage: {
+        total: 120,
+        current: 1,
+        pageSize: 20
+      },
+      tableHeader: [
+        {
+          title: "合同类型",
+          key: "name",
+          width: 140,
+          align: "center",
+          render: (h, params) => {
+            var row = params.row;
+            return h(
+              "router-link",
+              {
+                attrs: {
+                  to: "/customer/myCustomers/contract?jodId=" + row.id
+                }
+              },
+              row.name
+            );
+          }
+        },
+        {
+          title: "合同开始时间",
+          key: "hhh",
+          width: 150,
+          align: "center"
+        },
+        {
+          title: "合同结束时间",
+          key: "hhh",
+          width: 150,
+          align: "center"
+        },
 
-            api.axs("post", "/company/queryById",{id: this.id})
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.recordsDetails = data.data
-                    this.$Loading.finish()
-                    this.$store.state.spinShow = false
-                } else {
-                    this.$Message.error(data.remark)
-                }
-            })
+        {
+          title: "合同状态",
+          key: "bbb",
+          sortable: true,
+          width: 94,
+          align: "center"
+        },
 
-            api.axs("post", "/contact/queryByExt",{id: this.id})
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.contactLists = data.data
-                } else {
-                    this.$Message.error(data.remark)
-                }
-            })
+        {
+          title: "BD顾问",
+          key: "ddd",
+          width: 65,
+          ellipsis: true,
+          align: "center"
         },
-        addRecords() {
-            var forms = this.recordsForm
-            for(var name in forms) {
-                if (!forms[name] || name == 'contacts' && forms[name].length < 1) {
-                    this.$Message.error(this.recordsFormError[name] + ': 请填写完整!')
-                    return
-                }
-            }
-            if (this.subFlag) this.subFlag = false
-            else return
-            api.axs("post", "/contactRecord/save", this.recordsForm)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.$Message.success('添加记录成功!')
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
+        {
+          title: "合同编号",
+          key: "phone",
+          width: 94,
+          align: "center"
         },
-        loadLists() {},
-        sureMainper() {
-            this.$Message.info('确认主联系人成功!')
-        },
-        inWork() { //在职
-            this.$Message.info('确认在职成功!')
-        },
-        sureDim() { //离职确认
-            this.$Message.info('确认离职成功!')
-        },
-        dimissonFun() { //关闭离职弹窗
-            this.mainperPop = false
-            this.dimissionPop = false
+
+        {
+          title: "操作",
+          key: "iii",
+          align: "center",
+          render: (h, params) => {
+            const row = params.row;
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "6px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$Message.info("暂缓!!!" + row.name);
+                    }
+                  }
+                },
+                "暂缓"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "warning",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "6px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$Message.info("终止!!!" + row.name);
+                    }
+                  }
+                },
+                "终止"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "error",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "6px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$Message.info("失效!!!" + row.name);
+                    }
+                  }
+                },
+                "失效"
+              )
+            ]);
+          }
         }
+      ],
+      headhunter: [
+        {
+          title: "合同类型",
+          key: "name",
+          width: 100,
+          align: "center",
+          render: (h, params) => {
+            var row = params.row;
+            return h(
+              "router-link",
+              {
+                attrs: {
+                  to: "/customer/myCustomers/contract?jodId=" + row.id
+                }
+              },
+              row.name
+            );
+          }
+        },
+        {
+          title: "BD顾问",
+          key: "ddd",
+          width: 65,
+          ellipsis: true,
+          align: "center"
+        },
+        {
+          title: "前期服务费",
+          key: "ccc",
+          width: 65,
+          ellipsis: true,
+          align: "center"
+        },
+        {
+          title: "服务费比例",
+          key: "ggg",
+          width: 65,
+          ellipsis: true,
+          align: "center"
+        },
+        {
+          title: "付款方式",
+          key: "eee",
+          width: 65,
+          ellipsis: true,
+          align: "center"
+        },
+        {
+          title: "合同开始时间",
+          key: "hhh",
+          width: 120,
+          align: "center"
+        },
+        {
+          title: "合同结束时间",
+          key: "hhh",
+          width: 120,
+          align: "center"
+        },
+
+        {
+          title: "合同状态",
+          key: "bbb",
+          sortable: true,
+          width: 94,
+          align: "center"
+        },
+
+        {
+          title: "合同编号",
+          key: "phone",
+          width: 94,
+          align: "center"
+        },
+
+        {
+          title: "操作",
+          key: "iii",
+          align: "center",
+          render: (h, params) => {
+            const row = params.row;
+            return h("div", [
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "6px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$Message.info("暂缓!!!" + row.name);
+                    }
+                  }
+                },
+                "暂缓"
+              ),
+              h(
+                "Button",
+                {
+                  props: {
+                    type: "warning",
+                    size: "small"
+                  },
+                  style: {
+                    marginRight: "6px"
+                  },
+                  on: {
+                    click: () => {
+                      this.$Message.info("终止!!!" + row.name);
+                    }
+                  }
+                },
+                "终止"
+              )
+            ]);
+          }
+        }
+      ],
+      tableLists: [
+        {
+          id: 96,
+          name: "猎头协议",
+          kehu: "浙江千里马股份有限公司",
+          phone: "Yuxinhua",
+          bbb: "进行中",
+          ccc: "1",
+          ddd: "23",
+          eee: "10",
+          fff: "00",
+          ggg: "00",
+          hhh: "2018-10-10 12:30:40",
+          hhh: "2018-10-10 12:30:40"
+        },
+        {
+          id: 97,
+          name: "招商CEO招商CEO",
+          kehu: "浙江千里马股份有限公司",
+          phone: "Yuxinhua",
+          bbb: "进行中",
+          ccc: "1",
+          ddd: "23",
+          eee: "10",
+          fff: "00",
+          ggg: "00",
+          hhh: "2018-10-10 12:30:40",
+          hhh: "2018-10-10 12:30:40"
+        }
+      ],
+      headlist: [
+        {
+          id: 96,
+          name: "猎头协议",
+          kehu: "浙江千里马股份有限公司",
+          phone: "Yuxinhua",
+          bbb: "进行中",
+          ccc: "1",
+          ddd: "23",
+          eee: "10",
+          fff: "00",
+          ggg: "00",
+          hhh: "2018-10-10 12:30:40",
+          hhh: "2018-10-10 12:30:40"
+        },
+        {
+          id: 97,
+          name: "招商CEO招商CEO",
+          kehu: "浙江千里马股份有限公司",
+          phone: "Yuxinhua",
+          bbb: "进行中",
+          ccc: "1",
+          ddd: "23",
+          eee: "10",
+          fff: "00",
+          ggg: "00",
+          hhh: "2018-10-10 12:30:40",
+          hhh: "2018-10-10 12:30:40"
+        }
+      ]
+    };
+  },
+  methods: {
+    loadLists() {},
+    sureMainper() {
+      this.$Message.info("确认主联系人成功!");
     },
-	mounted() {
-        this.loadDetails()
-	},
-	beforeDestroy() {}
+    inWork() {
+      //在职
+      this.$Message.info("确认在职成功!");
+    },
+    sureDim() {
+      //离职确认
+      this.$Message.info("确认离职成功!");
+    },
+    dimissonFun() {
+      //关闭离职弹窗
+      this.mainperPop = false;
+      this.dimissionPop = false;
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$Loading.finish();
+      this.$store.state.spinShow = false;
+    }, 1500);
+  },
+  beforeDestroy() {}
 };
 </script>
 
 <style lang='less' scoped>
 .myCustomersRecords {
-    .info {
-        display: flex;
-        border: 1px solid #eee;
-        border-radius: 5px;
+  .info {
+    display: flex;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 10px;
+    li {
+      font-size: 14px;
+      span {
+        margin: 0 10px;
+      }
+    }
+  }
+  .recordsContent {
+    margin-top: 10px;
+    .add-record {
+      width: 88%;
+      padding: 20px 20px 10px;
+      background-color: #f2f2f2;
+      .xing {
+        color: #dd3030;
+        padding-right: 2px;
+      }
+      .sels {
+        .tip {
+          line-height: 30px;
+        }
+      }
+      .add-sub {
+        .ivu-icon {
+          font-size: 20px;
+          vertical-align: middle;
+          margin-right: 4px;
+        }
+        span {
+          vertical-align: middle;
+        }
+        .ivu-upload {
+          display: inline-block;
+          vertical-align: top;
+          margin-right: 10px;
+        }
+      }
+    }
+    .history-records {
+      width: 88%;
+      li {
+        background-color: #f2f2f2;
         padding: 10px;
-        li {
-            font-size: 14px;
-            span {
-                margin: 0 10px;
-            }
-        }
-    }
-    .recordsContent {
-        margin-top: 10px;
-        .add-record {
-            width: 88%;
-            padding: 20px 20px 10px;
-            background-color: #f2f2f2;
-            .xing {
-                color: #dd3030;
-                padding-right: 2px;
-            }
-            .sels {
-                .tip {
-                    line-height:30px
-                }
-            }
-            .add-sub {
-                .ivu-icon {
-                    font-size: 20px;
-                    vertical-align: middle;
-                    margin-right: 4px;
-                }
-                span {
-                    vertical-align: middle
-                }
-                .ivu-upload {
-                    display: inline-block;
-                    vertical-align: top;
-                    margin-right: 10px;
-                }
-            }
-        }
-        .history-records {
-            width: 88%;
-            li {
-                background-color: #f2f2f2;
-                padding: 10px;
-                margin: 10px 0;
-                .header {
-                    display: flex;
-                    .avatar {
-                        width: 38px;
-                        height: 38px;
-                        border-radius: 50%;
-                        border: 1px solid #eee;
-                        img {
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;
-                        }
-                    }
-                    .name {
-                        margin-left: 15px;
-                        h5 {
-                            font-size: 15px;
-                            font-weight: bold;
-                            color: #333;
-                        }
-                    }
-                    .time {
-                        flex: 2;
-                        text-align: right;
-                    }
-                }
-                .desc {
-                    padding: 8px 0;
-                }
-                .contact {
-                    span {
-                        margin-left: 10px;
-                        color: #207ace
-                    }
-                }
-            }
-        }
-    }
-    .contact-lists {
-        width: 88%;
-        li {
+        margin: 10px 0;
+        .header {
+          display: flex;
+          .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
             border: 1px solid #eee;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            .name {
-                line-height: 32px;
-                strong {
-                    font-size: 14px;
-                }
-                .imp {
-                    padding: 3px 4px;
-                    margin-left: 5px;
-                    border: 1px solid #f1c840;
-                    background-color: #f1c840;
-                    border-radius: 4px;
-                    color: #fff;
-                }
-                .imp2 {
-                    background-color: #fff;
-                    border-radius: 4px;
-                    color: #f1c840;
-                }
-                .sels {
-                    display: inline-block;
-                    button {
-                        margin-left: 10px;
-                    }
-                }
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
             }
-            .desc {
-                padding: 10px 0 0;
-                span {
-                    margin-right: 20px;
-                }
+          }
+          .name {
+            margin-left: 15px;
+            h5 {
+              font-size: 15px;
+              font-weight: bold;
+              color: #333;
             }
+          }
+          .time {
+            flex: 2;
+            text-align: right;
+          }
         }
-    }
-    .job-content {
-        width: 88%;
-    }
-    .other-btns {
-        position: fixed;
-        top: 210px;
-        right: 25px;
-        button {
-            display: block;
-            width: 120px;
-            margin: 10px 0;
+        .desc {
+          padding: 8px 0;
+        }
+        .contact {
+          span {
+            margin-left: 10px;
             color: #207ace;
-            background-color: #c3e0fa;
-            border: 2px solid #c3e0fa;;
+          }
+        }
+      }
+    }
+    .tab1 {
+      width: 85%;
+    }
+    .leta{
+        margin-right: 15%;
+        margin-top: 10px;
+    }
+    .pact{
+        position: relative;
+        .search{
+            position: absolute;
+            right: 15%;
+            top: 0;
         }
     }
+  }
+  .contact-lists {
+    width: 88%;
+    li {
+      border: 1px solid #eee;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      .name {
+        line-height: 32px;
+        strong {
+          font-size: 14px;
+        }
+        .imp {
+          padding: 3px 4px;
+          margin-left: 5px;
+          border: 1px solid #f1c840;
+          background-color: #f1c840;
+          border-radius: 4px;
+          color: #fff;
+        }
+        .imp2 {
+          background-color: #fff;
+          border-radius: 4px;
+          color: #f1c840;
+        }
+        .sels {
+          display: inline-block;
+          button {
+            margin-left: 10px;
+          }
+        }
+      }
+      .desc {
+        padding: 10px 0 0;
+        span {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+  .job-content {
+    width: 88%;
+  }
+  .other-btns {
+    position: fixed;
+    top: 210px;
+    right: 25px;
+    button {
+      display: block;
+      width: 120px;
+      margin: 10px 0;
+      color: #207ace;
+      background-color: #c3e0fa;
+      border: 2px solid #c3e0fa;
+    }
+  }
 }
 </style>

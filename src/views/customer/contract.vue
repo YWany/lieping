@@ -3,7 +3,7 @@
         <div class='currentNav'>当前位置: 客户合同 
             <Button type="error" class='addNew fr'><Icon type="arrow-down-c"></Icon> 下载</Button>
             <span class='fr'>&nbsp;&nbsp;</span>
-            <Button type="success" class='addNew fr'><Icon type="plus"></Icon> 创建新合同</Button>
+            <Button type="success" class='addNew fr' @click='contractPop=true'><Icon type="plus"></Icon> 创建新合同</Button>
         </div>
         <form class="searches">
             <div class="search">
@@ -50,6 +50,10 @@
                 <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
+
+        <!-- 新增合同弹窗 -->
+        <ContractPop :contractPop='contractPop'/>
+
     </div>
 </template>
 
@@ -57,13 +61,12 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
-import Menu from "@/components/Menu.vue";
-import HelloWorld from "@/components/HelloWorld.vue";
-
+import ContractPop from "@/components/customer/addContractPop.vue"
 export default {
     name: "home",
     data() {
         return {
+            contractPop: false, //新增合同弹窗
             form: {
                 searchVal: "",
                 selVal: "客户名称",
@@ -189,8 +192,7 @@ export default {
         };
     },
     components: {
-        Menu,
-        HelloWorld
+        ContractPop
     },
     methods: {
         loadLists(page) {

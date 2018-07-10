@@ -116,7 +116,7 @@
     </div>
     <div class="other-btns">
         <Button @click='contactPop=true'>新增联系人</Button>
-        <Button>新建合同</Button>
+        <Button @click='contractPop=true'>新建合同</Button>
         <Button @click='attePop=true'>设置跟进提醒</Button>
         <Button>发票申请</Button>
     </div>
@@ -151,6 +151,9 @@
     <!-- 新增联系人弹窗 -->
     <ContactPop :contactPop='contactPop'/>
 
+    <!-- 新增合同弹窗 -->
+    <ContractPop :contractPop='contractPop'/>
+
 </div>
 </template>
 
@@ -160,11 +163,13 @@ import api from "@/api"
 import ls from "store2"
 import AttePop from "@/components/customer/addAttePop.vue"
 import ContactPop from "@/components/customer/addContactPop.vue"
+import ContractPop from "@/components/customer/addContractPop.vue"
 export default {
 	name: "personalDetails",
 	components: {
         AttePop,
-        ContactPop
+        ContactPop,
+        ContractPop
 	},
 	data() {
 		return {
@@ -176,6 +181,7 @@ export default {
             contactLists: [],//联系人列表
             attePop: false, //新增联系人弹窗
             contactPop: false, //新增联系人弹窗
+            contractPop: false, //新增合同弹窗
             mainperPop: false, //设置主联系人弹窗
             dimissionPop: false, //离职提醒弹窗
             recordsForm: {

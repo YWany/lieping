@@ -95,9 +95,9 @@ export default {
                 sel6: "",
                 createDate: "",
                 signDate: "",
-                total: 120,
+                total: 100,
                 pageNum: 1,
-                pageSize: 20
+                pageSize: 10
             },
             tableLists: [],
             tableHeader: [
@@ -110,7 +110,6 @@ export default {
                     title: "客户名称",
                     key: "companyName",
                     width: 140,
-                    sortable: true,
                     ellipsis: true,
                     render: (h, params) => {
                         var row = params.row;
@@ -120,12 +119,7 @@ export default {
                                 on: {
                                     click: () => {
                                         this.$router.push(
-                                            "/customer/myCustomers/records?id=" +
-                                                row.id +
-                                                "&cname=" +
-                                                row.companyName +
-                                                "&level=" +
-                                                row.importantLevel
+                                            "/customer/myCustomers/records?id=" + row.id
                                         );
                                     }
                                 }
@@ -153,7 +147,6 @@ export default {
                     title: "客户联系人",
                     key: "contact",
                     width: 94,
-                    sortable: true
                 },
                 {
                     title: "手机",
@@ -163,18 +156,23 @@ export default {
                 {
                     title: "合作状态",
                     key: "companyStatus",
-                    sortable: true,
                     width: 90,
                     align: 'center'
                 },
                 {
                     title: "最近沟通",
-                    key: "lastContactTime"
+                    key: "lastContactTime",
+                    width: 100,
+                    align: 'center',
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h( "span",row.lastContactTime.substr(0, 10))
+                    }
                 },
                 {
                     title: "沟通记录",
                     key: "lastContactText",
-                    width: 90,
+                    width: 120,
                     ellipsis: true,
                     render: (h, params) => {
                         const row = params.row;
@@ -208,24 +206,20 @@ export default {
                     }
                 },
                 {
-                    title: "项目经理",
-                    key: "fff",
-                    width: 66
-                },
-                {
                     title: "BD顾问",
                     key: "bdName",
-                    width: 66
+                    width: 80
                 },
                 {
                     title: "附件",
-                    key: "hhh",
-                    width: 60
+                    key: "totalAttachment",
+                    width: 60,
+                    align: 'center',
                 },
                 {
                     title: "贡献值",
-                    key: "iii",
-                    sortable: true
+                    key: "totalPayed",
+                    align: 'center',
                 }
             ]
         };
@@ -237,12 +231,13 @@ export default {
     methods: {
         ...mapActions(['selTrees']),
         loadLists(page) {
+            this.form.pageNum = page
             this.$store.state.spinShow = true
 
             api.axs("post", "/company/page", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     this.tableLists = data.data.list
-                    this.form.pageSize = data.data.total
+                    this.form.total = data.data.total
                     this.$Loading.finish()
                     this.$store.state.spinShow = false
                 } else {

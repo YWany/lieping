@@ -1,7 +1,7 @@
 <template>
     <div class="customer">
         <div class='currentNav'>当前位置: 客户合同 
-            <Button type="error" class='addNew fr'><Icon type="arrow-down-c"></Icon> 下载</Button>
+            <Button type="info" class='addNew fr'><Icon type="arrow-down-c"></Icon> 下载</Button>
             <span class='fr'>&nbsp;&nbsp;</span>
             <Button type="success" class='addNew fr' @click='contractPop=true'><Icon type="plus"></Icon> 创建新合同</Button>
         </div>

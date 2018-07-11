@@ -1,9 +1,12 @@
 <template>
-    <div class="customer">
-        <div class='currentNav'>当前位置: 合作中客户 <Button type="success" class='addNew fr' @click='companyPop=true'><Icon type="plus"></Icon> 录入新客户</Button></div>
+    <div class="cooperation">
+        <div class='currentNav'>当前位置: 合作中客户
+            <Button type="success" class='addNew fr' @click='companyPop=true'>
+                <Icon type="plus"></Icon> 录入新客户</Button>
+        </div>
         <form class="searches">
             <div class="search">
-                <Input v-model="searchVal"  @on-enter='searchIn' placeholder="请输入要搜索的内容...">
+                <Input v-model="searchVal" @on-enter='searchIn' placeholder="请输入要搜索的内容...">
                 <Select v-model="selVal" slot="prepend" class='search-sels' style="width:80px">
                     <Option value="企业名称">企业名称</Option>
                     <Option value="搜索顾问">搜索顾问</Option>
@@ -17,10 +20,8 @@
                     <Option value="部门归属1">部门归属1</Option>
                     <Option value="部门归属2">部门归属2</Option>
                 </Select>
-                <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
-                    <Option value="客户行业1">客户行业1</Option>
-                    <Option value="客户行业2">客户行业2</Option>
-                </Select>
+
+                <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业"></Input>
                 <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
                     <Option value="客户来源1">客户来源1</Option>
                     <Option value="客户来源2">客户来源2</Option>
@@ -61,7 +62,9 @@
         </div>
 
         <!-- 新增企业客户弹窗 -->
-        <CompanyPop :companyPop='companyPop'/>
+        <CompanyPop :companyPop='companyPop' />
+
+        <Professions ref='professionComp' :professPop='professPop' />
 
     </div>
 </template>
@@ -71,14 +74,18 @@
 import api from "@/api"
 import ls from "store2"
 import CompanyPop from "@/components/customer/addCompanyPop.vue"
-
+import Professions from "@/components/common/professions.vue"
+import { mapState, mapMutations, mapActions } from "vuex"
 export default {
-    name: "home",
+    name: "cooperation",
     data() {
         return {
             companyPop: false, //新增企业客户弹窗
+            professPop: false, //职位弹窗
             selVal: "企业名称",
-            searchVal: '',
+            searchVal: "",
+            professName: "",
+            professId: "",
             form: {
                 sel1: "",
                 sel2: "",
@@ -105,14 +112,25 @@ export default {
                     sortable: true,
                     ellipsis: true,
                     render: (h, params) => {
-                        var row = params.row
-                        return h('a',{
-                            on: {
-                                click: () => {
-                                    this.$router.push('/customer/myCustomers/records?id='+row.id+'&cname='+row.companyName+'&level='+row.importantLevel )
+                        var row = params.row;
+                        return h(
+                            "a",
+                            {
+                                on: {
+                                    click: () => {
+                                        this.$router.push(
+                                            "/customer/myCustomers/records?id=" +
+                                                row.id +
+                                                "&cname=" +
+                                                row.companyName +
+                                                "&level=" +
+                                                row.importantLevel
+                                        );
+                                    }
                                 }
-                            }       
-                        },params.row.companyName)
+                            },
+                            params.row.companyName
+                        );
                     }
                 },
                 {
@@ -121,7 +139,7 @@ export default {
                     width: 95,
                     sortable: true,
                     render: (h, params) => {
-                        const row = params.row
+                        const row = params.row;
                         return h("Rate", {
                             props: {
                                 value: +row.importantLevel,
@@ -156,15 +174,24 @@ export default {
                     width: 90,
                     ellipsis: true,
                     render: (h, params) => {
-                        const row = params.row
-                        return h( "Tooltip", {
+                        const row = params.row;
+                        return h(
+                            "Tooltip",
+                            {
                                 props: {
-                                    content: row.remark || '',
+                                    content: row.remark || "",
                                     placement: "top"
                                 }
                             },
-                        [h("div", row.remark && row.remark.substr(0, 5) + "..." || '无记录')]
-                        )
+                            [
+                                h(
+                                    "div",
+                                    (row.remark &&
+                                        row.remark.substr(0, 5) + "...") ||
+                                        "无记录"
+                                )
+                            ]
+                        );
                     }
                 },
                 {
@@ -226,36 +253,50 @@ export default {
         };
     },
     components: {
-        CompanyPop
+        CompanyPop,
+        Professions
     },
     methods: {
+        ...mapActions(['selTrees']),
         loadLists(page) {
             this.$store.state.spinShow = true
 
-            api.axs("post", "/company/info",this.form)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.tableLists = this.tableLists.concat(data.data)
-                    this.$Loading.finish()
-                    this.$store.state.spinShow = false
+            api.axs("post", "/company/info", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.tableLists = this.tableLists.concat(data.data);
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
                 } else {
-                    this.$store.state.spinShow = false
-                    this.$Message.error(data.remark)
+                    this.$store.state.spinShow = false;
+                    this.$Message.error(data.remark);
                 }
-            })
+            });
         },
         searchIn() {
-            if (this.selVal == '企业名称') this.form.companyName = this.searchVal
-            else if (this.selVal == '搜索顾问') this.form.companyName = this.searchVal
-            else if (this.selVal == '客户来源') this.form.companyName = this.searchVal
+            if (this.selVal == "企业名称")
+                this.form.companyName = this.searchVal;
+            else if (this.selVal == "搜索顾问")
+                this.form.companyName = this.searchVal;
+            else if (this.selVal == "客户来源")
+                this.form.companyName = this.searchVal;
 
             if (!this.searchVal) {
-                this.$Message.warning('想搜点什么?')
-                return 
+                this.$Message.warning("想搜点什么?");
+                return;
             }
-            this.tableLists = []
-            this.loadLists()
-
+            this.tableLists = [];
+            this.loadLists();
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.professPop = false;
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -267,16 +308,22 @@ export default {
 
     mounted() {
         this.loadLists()
+        this.selTrees()
         // setTimeout(() => {
         //     this.$Loading.finish()
         //     this.$store.state.spinShow = false
         // }, 1500)
-        
     }
 };
 </script>
 
 <style lang='less' scoped>
-.customer {
+.cooperation {
+    .selPro {
+        width: 100px;
+        margin: 10px;
+        margin-left: 0;
+        text-align: center;
+    }
 }
 </style>

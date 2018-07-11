@@ -10,6 +10,10 @@
                     <p><span>*</span> 客户名称：</p>
                     <Input v-model='companyForm.companyName' placeholder=""></Input>
                 </li>
+                <li>
+                    <p><span>*</span> 客户来源：</p>
+                    <Input placeholder=""></Input>
+                </li>
                 <li style='text-align:left'>
                     <p style='width:130px'><span>*</span> 客户对外显示名称：</p>
                     <Input v-model='companyForm.outerName' placeholder=""></Input>
@@ -26,7 +30,7 @@
                         <Option value='4'>四星</Option>
                         <Option value='5'>五星</Option>
                     </Select>
-                </li>   
+                </li>
                 <li>
                     <p><span>*</span> 客户状态：</p>
                     <Select v-model="companyForm.companyStatus" style="width:300px">
@@ -43,7 +47,8 @@
                 </li>
                 <li>
                     <p><span>*</span> 所在地：</p>
-                    <Input v-model='companyForm.outerName' placeholder=""></Input>
+                    <!-- <Input v-model='companyForm.outerName' placeholder=""></Input> -->
+                    <Citysels ref='proCity'/>
                 </li>
                 <li>
                     <p><span>*</span> 企业性质：</p>
@@ -65,10 +70,13 @@
 
 <script>
 import api from "@/api"
+import Citysels from "@/components/common/citysels.vue"
 export default {
     name: "addCompanyPop",
     props: ['companyPop'],
-    components: {}, 
+    components: {
+        Citysels
+    }, 
     data() {
         return {
             subFlag: true,

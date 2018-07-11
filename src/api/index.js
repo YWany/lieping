@@ -20,7 +20,11 @@ function doSucc(res) {
 }
 
 function doError(res) {
-    return res
+    if (res.data.code == "UNAUTHORIZED") {
+        window.location.href = '/#/login'
+    } else {
+        return res
+    }
 }
 
 const config = {}

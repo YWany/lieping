@@ -25,19 +25,6 @@ export default {
             this.$Loading.finish()
             this.$store.state.spinShow = false
         }, 1500)
-
-        api
-            .axs("post", "/role/save", {
-                roleName: "总经理",
-                companyId: 1,
-                roleType: 1
-            })
-            .then(({ data }) => {
-                if (data.code == 'SUCCESS') {
-                    console.log(data)
-                    this.datas = data
-                }
-            })
     },
     data() {
         return {

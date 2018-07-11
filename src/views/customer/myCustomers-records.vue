@@ -669,7 +669,7 @@ export default {
 					this.$store.state.users = data.data.list
 					this.userForm.total = data.data.total
 					this.selUsersPop = true
-				} else {
+				} else { 
 					this.$Message.error(data.remark)
 				}
 			})

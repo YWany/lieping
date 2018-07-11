@@ -286,7 +286,7 @@ export default {
                 return 
             }
             this.tableLists = []
-            this.loadLists()
+            // this.loadLists()
 
         },
         addRecord() { //添加记录

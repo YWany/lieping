@@ -1,70 +1,93 @@
 <template>
 
-<div class="myCustomersRecords">
-	<div class='currentNav'>当前位置: <router-link to='/customer/myCustomers'>我的客户</router-link> > {{cname}} <Rate disabled v-model="rateNum" style='font-size:14px'></Rate></div>
-	<ul class="info">
-        <li>BD顾问: Wanyu <span>|</span></li>
-        <li>客户状态: 潜在客户<span>|</span></li>
-        <li>最后跟进时间: 无</li>
-    </ul>
-    <div class="recordsContent">
-        <Tabs value="jilu" :animated=false>
-            <TabPane label="跟进记录" name="jilu">
-                <div class="add-record clearfix">
-                    <div class="sels">
-                        <span class='xing'>*</span>联系人: &nbsp;&nbsp;
-                        <Select v-model="recordsForm.contacts" filterable multiple style='width:200px;'>
-                            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                        </Select>
-                        <Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
-                        <span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-                        <Select v-model="recordsForm.styles" style='width:200px;margin-right:30px'>
-                            <Option value='方式1'>方式1</Option>
-                            <Option value='方式2'>方式2</Option>
-                            <Option value='方式3'>方式3</Option>
-                        </Select>
-                        <span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-                        <DatePicker type="date" :value='nowDate' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
-                    </div>
-                    <div class="add-content">
-                        <p style='padding: 15px 0 5px'><span class='xing'>*</span>跟进记录:</p>
-                        <Input v-model="recordsForm.content" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
-                    </div>
-                    <div class="add-sub" style='margin:10px 0 0'>
-                        <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
-                            <Button type="ghost"><Icon type="ios-camera-outline"></Icon><span>图片</span></Button>
-                        </Upload>
-                        <Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
-                            <Button type="ghost"><Icon type="link"></Icon><span>附件</span></Button>
-                        </Upload>
-                    </div>
-                    <div class="add-sub" style='display:block;text-align:center'>
-                        <Button type='info' style='font-size:14px;'>提交</Button>
-                    </div>
-                </div>
-                <ul class="history-records">
-                    <li>
-                        <div class="header">
-                            <div class="avatar"><img src="@/assets/images/logo.png"></div>
-                            <div class="name">
-                                <h5>Wanyu</h5>
-                                <p class="company">电话沟通 | 浙江钱里面股份有限公司</p>
-                            </div>
-                            <div class="time">2018-06-12 08:10</div>
-                        </div>
-                        <p class="desc">这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述</p>
-                        <div class="contact">联系人: 巴啦啦 (人力资源中心) <span class="check-files fr">文件(2)</span><span class="check-pics fr">查看图片(6)</span></div>
-                    </li>
-                    <li class='null-records'>
-                        <h5 style='text-align:center;padding:20px 0;font-size:14px;'>
-                            <Icon type="social-snapchat-outline" style='font-size:22px;vertical-align:middle'></Icon>
-                            <span style='vertical-align:middle;padding-left:5px;'>无任何跟进记录</span>
-                        </h5>
-                    </li>
-                </ul>
-            </TabPane>
-            <TabPane class="pact" label="合同" name="hetong">
-                <!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
+	<div class="myCustomersRecords">
+		<div class='currentNav'>当前位置:
+			<router-link to='/customer/myCustomers'>我的客户</router-link> > {{recordsDetails.companyName}}
+			<Rate disabled :value='+recordsDetails.importantLevel' style='font-size:14px'></Rate>
+			<Button type="info" icon='arrow-right-a' class='toolBtn fr' @click='selUsersFun(1)'></Button>
+            <span class='fr'>&nbsp;&nbsp;</span>
+			<Button type="error" icon='trash-a' class='toolBtn fr' @click='delCompanyPop=true'></Button>
+			<span class='fr'>&nbsp;&nbsp;</span>
+			<Button type="warning" icon='ios-compose' class='toolBtn fr' @click='companyPop=true'></Button>
+            <span class='fr'>&nbsp;&nbsp;</span>
+		</div>
+		<ul class="info">
+			<li>BD顾问: {{recordsDetails.bdName}}
+				<span>|</span>
+			</li>
+			<li>客户状态: {{recordsDetails.companyStatus}}
+				<span>|</span>
+			</li>
+			<li>最后跟进时间: {{recordsDetails.updateTime}}</li>
+		</ul>
+		<div class="recordsContent">
+			<Tabs type="card" value="jilu" :animated=false>
+				<TabPane label="跟进记录" name="jilu">
+					<div class="add-record clearfix">
+						<div class="sels">
+							<span class='xing'>*</span>联系人: &nbsp;&nbsp;
+							<Select v-model="recordsForm.contacts" filterable multiple style='width:200px;'>
+								<Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+							</Select>
+							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
+							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
+							<Select v-model="recordsForm.styles" style='width:200px;margin-right:30px'>
+								<Option value='方式1'>方式1</Option>
+								<Option value='方式2'>方式2</Option>
+								<Option value='方式3'>方式3</Option>
+							</Select>
+							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
+							<DatePicker type="date" :value='recordsForm.followTime' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+						</div>
+						<div class="add-content">
+							<p style='padding: 15px 0 5px'>
+								<span class='xing'>*</span>跟进记录:</p>
+							<Input v-model="recordsForm.content" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+						</div>
+						<div class="add-sub" style='margin:10px 0 0'>
+							<Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
+								<Button type="ghost">
+									<Icon type="ios-camera-outline"></Icon>
+									<span>图片</span>
+								</Button>
+							</Upload>
+							<Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
+								<Button type="ghost">
+									<Icon type="link"></Icon>
+									<span>附件</span>
+								</Button>
+							</Upload>
+						</div>
+						<div class="add-sub" style='display:block;text-align:center'>
+							<Button type='info' style='font-size:14px;'>提交</Button>
+						</div>
+					</div>
+					<ul class="history-records">
+						<li>
+							<div class="header">
+								<div class="avatar"><img src="@/assets/images/logo.png"></div>
+								<div class="name">
+									<h5>Wanyu</h5>
+									<p class="company">电话沟通 | 浙江钱里面股份有限公司</p>
+								</div>
+								<div class="time">2018-06-12 08:10</div>
+							</div>
+							<p class="desc">这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述</p>
+							<div class="contact">联系人: 巴啦啦 (人力资源中心)
+								<span class="check-files fr">文件(2)</span>
+								<span class="check-pics fr">查看图片(6)</span>
+							</div>
+						</li>
+						<li class='null-records'>
+							<h5 style='text-align:center;padding:20px 0;font-size:14px;'>
+								<Icon type="social-snapchat-outline" style='font-size:22px;vertical-align:middle'></Icon>
+								<span style='vertical-align:middle;padding-left:5px;'>无任何跟进记录</span>
+							</h5>
+						</li>
+					</ul>
+				</TabPane>
+				<TabPane class="pact" label="合同" name="hetong">
+					<!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
 
                 <div class="search">
                     <div class="disInB sels-item">                       
@@ -205,19 +228,56 @@
     <!-- 新增合同弹窗 -->
     <ContractPop :contractPop='contractPop'/>
 
-</div>
+		<!-- 选择BD角色 -->
+		<Modal v-model="selUsersPop" title="选择BD" width='400px' @on-ok="sureSelUser">
+			<ul class='users-content' >
+				<li v-for='user in users'>
+					<RadioGroup v-model="userId">
+						<Radio :label="user.id">
+							<span class='name'>{{user.userName}}</span>
+							<span class='depart'>{{user.departmentName}}</span>
+						</Radio>
+					</RadioGroup>
+				</li>
+			</ul>
+			<div class="tablePage" style='text-align:right;margin-bottom:0;'>
+                <Page size='small' :total='userForm.total' :page-size='userForm.pageSize' show-total @on-change='selUsersFun'></Page>
+            </div>
+		</Modal>
+
+		<!-- 删除 -->
+		<Modal v-model="delCompanyPop" title="删除确认" width='400px' @on-ok="delCompany" style='text-align: center'>
+			<p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
+		</Modal>
+
+        <!-- 新增企业客户弹窗 -->
+        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod'/>
+
+		<!-- 新增跟进提醒弹窗 -->
+		<AttePop :attePop='attePop' />
+
+		<!-- 新增联系人弹窗 -->
+		<ContactPop :contactPop='contactPop' />
+
+		<!-- 新增合同弹窗 -->
+		<ContractPop :contractPop='contractPop' />
+
+	</div>
 </template>
 
 <script>
 // @ is an alias to /src
 import api from "@/api"
 import ls from "store2"
+import { mapState, mapMutations, mapActions } from "vuex"
+import CompanyPop from "@/components/customer/addCompanyPop.vue"
 import AttePop from "@/components/customer/addAttePop.vue"
 import ContactPop from "@/components/customer/addContactPop.vue"
 import ContractPop from "@/components/customer/addContractPop.vue"
 export default {
-	name: "personalDetails",
-	components: {
+    name: "personalDetails",
+    components: {
+        CompanyPop,
         AttePop,
         ContactPop,
         ContractPop
@@ -232,14 +292,19 @@ export default {
             },
             id: this.$route.query.id,
             cname: this.$route.query.cname,
-            level: +this.$route.query.level,
-            recordsDetails: {},//记录详情
-            contactLists: [],//联系人列表
+			level: +this.$route.query.level,
+			userId: '',
+            recordsDetails: {}, //记录详情
+            contactLists: [], //联系人列表
+            companyPop: false, //新增企业客户弹窗
             attePop: false, //新增联系人弹窗
             contactPop: false, //新增联系人弹窗
             contractPop: false, //新增合同弹窗
             mainperPop: false, //设置主联系人弹窗
             dimissionPop: false, //离职提醒弹窗
+			selUsersPop: false, //选择BD弹窗
+            delCompanyPop: false, //删除弹窗
+            companyMod: true,
             recordsForm: {
                 companyId: this.$route.query.id,
                 contacts: [],

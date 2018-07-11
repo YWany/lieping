@@ -78,6 +78,10 @@ import Professions from "@/components/common/professions.vue"
 import { mapState, mapMutations, mapActions } from "vuex"
 export default {
     name: "cooperation",
+    components: {
+        CompanyPop,
+        Professions
+    },
     data() {
         return {
             companyPop: false, //新增企业客户弹窗
@@ -223,10 +227,6 @@ export default {
                 }
             ]
         };
-    },
-    components: {
-        CompanyPop,
-        Professions
     },
     methods: {
         ...mapActions(['selTrees']),

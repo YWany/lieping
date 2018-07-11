@@ -2,7 +2,8 @@
     <div class="companyPop">
         <Modal v-model="companyPop" :closable='false' :mask-closable='false' style='text-align:center'>
             <div slot='header' style='font-size:14px;color:#444'>
-                新增企业
+                <span v-if='companyMod'>编辑企业</span>
+                <span v-else>新增企业</span>
                 <a href="javascript:;" @click='$parent.companyPop=false'><Icon type="close" class='fr'></Icon></a>
             </div>
             <ul class="company-content">
@@ -71,7 +72,10 @@
                     <Input v-model='companyForm.introduction' type="textarea" :rows="4" placeholder=""></Input>
                 </li>
             </ul>
-            <div slot='footer' style='text-align:center'><Button type='info' @click='subSave'>保存</Button></div>
+            <div slot='footer' style='text-align:center'>
+                <Button type='info' @click='subSave' v-if='companyMod'>保存编辑</Button>
+                <Button type='info' @click='subSave' v-else>保存</Button>
+            </div>
         </Modal>
         <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
     </div>  
@@ -83,7 +87,7 @@ import Citysels from "@/components/common/citysels.vue"
 import Professions from "@/components/common/professions.vue"
 export default {
     name: "addCompanyPop",
-    props: ['companyPop'],
+    props: ['recordsDetails', 'companyPop', 'companyMod'],
     components: {
         Citysels,
         Professions
@@ -215,7 +219,10 @@ export default {
         }
     },
     mounted() {
-        this.info() 
+        this.info()
+
+        // 企业信息
+        console.log(this.recordsDetails)
     },
 
 }

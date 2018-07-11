@@ -8,7 +8,7 @@
             <span class='fr'>&nbsp;&nbsp;</span>
 			<Button type="error" icon='trash-a' class='toolBtn fr' @click='delCompanyPop=true'></Button>
 			<span class='fr'>&nbsp;&nbsp;</span>
-			<Button type="warning" icon='ios-compose' class='toolBtn fr'></Button>
+			<Button type="warning" icon='ios-compose' class='toolBtn fr' @click='companyPop=true'></Button>
             <span class='fr'>&nbsp;&nbsp;</span>
 		</div>
 		<ul class="info">
@@ -233,6 +233,9 @@
 			<p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
 		</Modal>
 
+        <!-- 新增企业客户弹窗 -->
+        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod'/>
+
 		<!-- 新增跟进提醒弹窗 -->
 		<AttePop :attePop='attePop' />
 
@@ -250,12 +253,14 @@
 import api from "@/api"
 import ls from "store2"
 import { mapState, mapMutations, mapActions } from "vuex"
+import CompanyPop from "@/components/customer/addCompanyPop.vue"
 import AttePop from "@/components/customer/addAttePop.vue"
 import ContactPop from "@/components/customer/addContactPop.vue"
 import ContractPop from "@/components/customer/addContractPop.vue"
 export default {
     name: "personalDetails",
     components: {
+        CompanyPop,
         AttePop,
         ContactPop,
         ContractPop
@@ -278,13 +283,15 @@ export default {
 			userId: '',
             recordsDetails: {}, //记录详情
             contactLists: [], //联系人列表
+            companyPop: false, //新增企业客户弹窗
             attePop: false, //新增联系人弹窗
             contactPop: false, //新增联系人弹窗
             contractPop: false, //新增合同弹窗
             mainperPop: false, //设置主联系人弹窗
             dimissionPop: false, //离职提醒弹窗
 			selUsersPop: false, //选择BD弹窗
-			delCompanyPop: false, //删除弹窗
+            delCompanyPop: false, //删除弹窗
+            companyMod: true,
             recordsForm: {
                 companyId: this.$route.query.id,
                 contacts: [],

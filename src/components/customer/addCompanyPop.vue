@@ -12,7 +12,11 @@
                 </li>
                 <li>
                     <p><span>*</span> 客户来源：</p>
-                    <Input placeholder=""></Input>
+                    
+                      <Select v-model='companyForm.companySource' style="width:300px">
+                         <Option v-for="(source,index) in sourcelist"  :value="source.code" :key='index'>{{source.codeText}}</Option>
+                        
+                    </Select>
                 </li>
                 <li style='text-align:left'>
                     <p style='width:130px'><span>*</span> 客户对外显示名称：</p>
@@ -24,26 +28,21 @@
                 <li>
                     <p><span>*</span> 重要程度：</p>
                     <Select v-model="companyForm.importantLevel" style="width:300px">
-                        <Option value='1'>一星</Option>
-                        <Option value='2'>二星</Option>
-                        <Option value='3'>三星</Option>
-                        <Option value='4'>四星</Option>
-                        <Option value='5'>五星</Option>
+                        <Option v-for="(importance,index) in importancelist"  :value="importance.code" :key='index'>{{importance.codeText}}</Option>
+
                     </Select>
                 </li>
                 <li>
                     <p><span>*</span> 客户状态：</p>
                     <Select v-model="companyForm.companyStatus" style="width:300px">
-                        <Option value='意向客户'>意向客户</Option>
-                        <Option value='潜在客户'>潜在客户</Option>
-                        <Option value='合作谈判'>合作谈判</Option>
-                        <Option value='失信客户'>失信客户</Option>
-                        <Option value='失效客户'>失效客户</Option>
+                         <Option v-for="(item,index) in statelist"  :value="item.code" :key='index'>{{item.codeText}}</Option>
+                        
                     </Select>
                 </li>
                 <li>
                     <p><span>*</span> 所属行业：</p>
                     <Input v-model='professName' @on-focus='professPop=true' :readonly='true' placeholder="选择行业" class='selpro'></Input>
+                    <Professions ref='pfoFess'/>
                 </li>
                 <li>
                     <p><span>*</span> 所在地：</p>
@@ -53,11 +52,19 @@
                 </li>
                 <li>
                     <p><span>*</span> 企业性质：</p>
-                    <Input v-model='companyForm.companyType' placeholder=""></Input>
+                    
+                      <Select v-model='companyForm.companyType' style="width:300px">
+                         <Option v-for="(nature,index) in naturelist"  :value="nature.code" :key='index'>{{nature.codeText}}</Option>
+                        
+                    </Select>
                 </li>
                 <li>
                     <p><span>*</span> 企业规模：</p>
-                    <Input v-model='companyForm.companyScope' placeholder=""></Input>
+                    
+                     <Select v-model='companyForm.companyScope' style="width:300px">
+                         <Option v-for="(scale,index) in scalelist"  :value="scale.code" :key='index'>{{scale.codeText}}</Option>
+                        
+                    </Select>
                 </li>
                 <li>
                     <p><span>*</span> 企业介绍：</p>
@@ -87,8 +94,14 @@ export default {
             professPop: false,
             professName: "",
             professId: "",
+            statelist:[],
+            naturelist:[],
+            scalelist:[],
+            importancelist:[],
+            sourcelist:[],
             companyForm: {
                 companyName: '',
+                companySource:'',
                 outerName: '',
                 importantLevel: '',
                 companyStatus: '',
@@ -116,12 +129,47 @@ export default {
     methods: {
         info() {
             this.$Message.info("这是一条普通的提醒")
+            api.axs("post", "/param/dic/tree", {id:'10'})
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                   let alllist=data.data
+                   for(let i=0;i<alllist.length;i++){
+                        if(alllist[i].code==="companyType"){//公司性质
+                            this.naturelist=alllist[i].children;
+                        }
+                        if(alllist[i].code==="companyStatus"){
+                            this.statelist=alllist[i].children;
+                            
+                        }
+                         if(alllist[i].code==="companyScope"){
+                            this.scalelist=alllist[i].children;
+                            
+                        }
+                         if(alllist[i].code==="4"){
+                            this.importancelist=alllist[i].children;
+                            
+                        }
+                        if(alllist[i].code==="companySource"){
+                            this.sourcelist=alllist[i].children;
+                        }
+                        
+                   }
+                  
+                } else {
+                    this.$Message.error(data.remark)
+                    this.subFlag = true
+                }
+            })
         },
         subSave() {
-            this.companyForm.areaId=this.$refs.proCity.cityId
+            
+            if(this.$refs.proCity.cityId===''){
+                 this.companyForm.areaId=this.$refs.proCity.proId
+            }else{
+                 this.companyForm.areaId=this.$refs.proCity.cityId
+            }
+            this.companyForm.companyVocation=this.professId
             var forms = this.companyForm
-            console.log(forms)
-            console.log(this.$refs.proCity.cityId)
             for(var name in forms) {
                 if (!forms[name]) {
                     this.$Message.error(this.companyFormError[name] + ': 请填写完整!')
@@ -131,12 +179,15 @@ export default {
             if (this.subFlag) this.subFlag = false
             else return
             
-            api.axs("post", "/company/save", this.companyForm)
+            api.axs("post", "/company/add", this.companyForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
                     this.$Message.success('新增成功!') 
+                     this.$parent.companyPop=false
+                     this.$parent.loadLists()
                     this.reset(this.companyForm)  
+                   
                 } else {
                     this.$Message.error(data.remark)
                     this.subFlag = true
@@ -164,7 +215,7 @@ export default {
         }
     },
     mounted() {
-        
+        this.info() 
     },
 
 }

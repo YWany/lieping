@@ -8,19 +8,19 @@
             <ul class="contact-content">
                 <li>
                     <p><span>*</span> 姓名：</p>
-                    <Input placeholder=""></Input>
+                    <Input v-model='addForm.name' placeholder=""></Input>
                 </li>
                 <li>
                     <p><span>*</span> 关联客户：</p>
-                    <Input placeholder=""></Input>
+                    <Input :readonly='true' :value="company" placeholder=""></Input>
                 </li>
                 <li class='li-phone'>
                     <p><span>*</span> 联系电话：</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone1'>
                             <Select v-model='addForm.phone1Type' slot="append" style="width:80px">
-                                <Option value="工作">工作</Option>
-                                <Option value="手机">手机</Option>
+                                <Option value="1">工作</Option>
+                                <Option value="2">手机</Option>
                             </Select>
                         </Input>
                     </div>
@@ -31,8 +31,8 @@
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone2'>
                             <Select v-model='addForm.phone2Type' slot="append" style="width:80px">
-                                <Option value="工作">工作</Option>
-                                <Option value="手机">手机</Option>  
+                                <Option value="1">工作</Option>
+                                <Option value="2">手机</Option>
                             </Select>
                         </Input>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
@@ -43,8 +43,8 @@
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone3'>
                             <Select v-model='addForm.phone3Type' slot="append" style="width:80px">
-                                <Option value="工作">工作</Option>
-                                <Option value="手机">手机</Option>
+                                <Option value="1">工作</Option>
+                                <Option value="2">手机</Option>
                             </Select>
                         </Input>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
@@ -55,8 +55,8 @@
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone4'>
                             <Select v-model='addForm.phone4Type' slot="append" style="width:80px">
-                                <Option value="工作">工作</Option>
-                                <Option value="手机">手机</Option>
+                              <Option value="1">工作</Option>
+                                <Option value="2">手机</Option>
                             </Select>
                         </Input>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
@@ -64,38 +64,48 @@
                 </li>
                 <li>
                     <p>职务：</p>
-                    <Input v-model='addForm.incumbency' placeholder=""></Input>
+                    <Input v-model='addForm.job' placeholder=""></Input>
                 </li>
                 <li>
                     <p>决策关系：</p>
-                    <Input v-model='addForm.decisionRelation' placeholder=""></Input>
+                    <!-- <Input v-model='addForm.decisionRelation' placeholder=""></Input> -->
+                    <Select v-model='addForm.decisionRelation' style="width:300px;text-align:left">
+                         <Option v-for="(decision,index) in decisionlist"  :value="decision.code" :key='index'>{{decision.codeText}}</Option>
+
+                    </Select>
                 </li>
                 <li>
                     <p>邮箱：</p>
-                    <Input placeholder=""></Input>
+                    <Input v-model='addForm.email' placeholder=""></Input>
                 </li>
                 <li>
                     <p>微信：</p>
-                    <Input placeholder=""></Input>
+                    <Input v-model='addForm.wechat'  placeholder=""></Input>
                 </li>
                 <li>
                     <p>性别：</p>
                     <Select v-model='addForm.sex' style="width:300px;text-align:left">
                         <Option value="1">男</Option>
-                        <Option value="0">女</Option>
+                        <Option value="2">女</Option>
                     </Select>
                 </li>
                 <li>
                     <p>生日：</p>
-                    <DatePicker type="date" v-model='addForm.birthday'  placeholder="Select date" style="width:300px;"></DatePicker>
+                    <div style="display:inline-block;vertical-align:middle">
+                        <DatePicker type="date" v-model='addForm.birthday'  placeholder="Select date" style="width:220px;float:left"></DatePicker>
+                    <Select v-model='addForm.dateType' style="width:80px;float:left;">
+                                <Option value="1">公历</Option>
+                                <Option value="2">农历</Option>
+                     </Select>
+                    </div>
                 </li>
                 <li>
                     <p>爱好：</p>
-                    <Input placeholder=""></Input>
+                    <Input v-model='addForm.hobby' placeholder=""></Input>
                 </li>
                 <li>
                     <p>备注：</p>
-                    <Input type="textarea" :rows="4" placeholder=""></Input>
+                    <Input v-model='addForm.remark' type="textarea" :rows="4" placeholder=""></Input>
                 </li>
             </ul>
             <div slot='footer' style='text-align:center'><Button type='info' @click='subSave'>保存</Button></div>
@@ -112,25 +122,32 @@ export default {
     data() {
         return {
             subFlag: true,
+            id:'',
+            company:'',
+            decisionlist:'',
             addForm: {
-                mainContact: '',
+                name: '',
+                companyId: '',              
                 phone1: '',
                 phone2: '',
                 phone3: '',
                 phone4: '',
-                phone1Type: '工作',
-                phone2Type: '工作',
-                phone3Type: '工作',
-                phone4Type: '工作',
-                incumbency: '',
+                phone1Type: '1',
+                phone2Type: '1',
+                phone3Type: '1',
+                phone4Type: '1',
+                job: '',
+                dateType:'1',
                 decisionRelation:'',
                 email: '',
                 wechat: '',
                 sex: '1',
-                birthday: '1990-01-01'
+                birthday: '',
+                hobby:'',
+                remark:''
             },
             addFormError: {
-                mainContact: '姓名',
+                name: '姓名',
                 phone1: '电话',
                 decisionRelation:'决策关系'
             },
@@ -143,22 +160,26 @@ export default {
     },
     methods: {
         subSave() {
-            if (!addForm.mainContact) {
+            this.addForm.companyId=this.id
+            if (!this.addForm.name) {
                 this.$Message.error('姓名: 请填写完整!')
                 return
-            } else if (!addForm.phone1) {
+            } else if (!this.addForm.phone1) {
                 this.$Message.error('手机: 请填写完整!')
                 return
             }
 
             if (this.subFlag) this.subFlag = false
             else return
-            api.axs("post", "/contact/save", this.addForm)
+            console.log(this.addForm)
+            api.axs("post", "/contact/add", this.addForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
                     this.$Message.success('新增成功!')
+                     this.$parent.contactPop=false
                     this.reset(this.addForm)
+                   
                 } else {
                     this.$Message.error(data.remark)
                     this.subFlag = true
@@ -190,7 +211,37 @@ export default {
         }
     },
     mounted() {
-        
+        console.log(this.$parent.id)
+          this.id=this.$parent.id
+         api.axs("post", "/company/info", {id:this.id})
+            .then(({ data }) => {
+                console.log(data)
+                if ( data.code === 'SUCCESS') {
+                   this.company=data.data.companyName
+                    
+                } else {
+                    this.$Message.error(data.remark)
+                    this.subFlag = true
+                }
+            })
+
+            api.axs("post", "/param/dic/tree", {id:'10'})
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                   let alllist=data.data
+                   for(let i=0;i<alllist.length;i++){
+                        if(alllist[i].code==="decisionRelation"){//公司性质
+                            this.decisionlist=alllist[i].children;
+                        }
+                       
+                        
+                   }
+                  
+                } else {
+                    this.$Message.error(data.remark)
+                    this.subFlag = true
+                }
+            })
     },
 
 }

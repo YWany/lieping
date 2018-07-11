@@ -328,11 +328,6 @@ export default {
       .axs("post", "/user/queryLikeForPages", {pageNum:page})
       .then(({ data: { data, code } }) => {
         console.log(data.list);
-    //      formPage: {
-    //     total: 120,
-    //     current: 1,
-    //     pageSize: 20
-    //   },
           _this.formPage.total=data.total
           _this.formPage.pageSize=data.pageSize
         // //   _this.formPage.current=data.pages

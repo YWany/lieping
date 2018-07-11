@@ -21,7 +21,7 @@
 			<li>最后跟进时间: {{recordsDetails.updateTime}}</li>
 		</ul>
 		<div class="recordsContent">
-			<Tabs type="card" value="jilu" :animated=false>
+			<Tabs type="card" value="jilu" :animated=false @on-click='ClickTab'>
 				<TabPane label="跟进记录" name="jilu">
 					<div class="add-record clearfix">
 						<div class="sels">

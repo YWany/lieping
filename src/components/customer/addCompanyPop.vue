@@ -43,12 +43,13 @@
                 </li>
                 <li>
                     <p><span>*</span> 所属行业：</p>
-                    <Input v-model='companyForm.companyVocation' placeholder=""></Input>
+                    <Input v-model='companyForm.companyVocation' :readonly='true' placeholder=""></Input>
                 </li>
                 <li>
                     <p><span>*</span> 所在地：</p>
                     <!-- <Input v-model='companyForm.outerName' placeholder=""></Input> -->
                     <Citysels ref='proCity'/>
+                    <!-- this.$refs.proCity.cityId -->
                 </li>
                 <li>
                     <p><span>*</span> 企业性质：</p>
@@ -88,7 +89,8 @@ export default {
                 companyType: '',
                 companyVocation: '',
                 companyScope: '',
-                introduction: ''
+                introduction: '',
+                areaId:''
             },
             companyFormError: {
                 companyName: '客户名称',
@@ -110,7 +112,10 @@ export default {
             this.$Message.info("这是一条普通的提醒")
         },
         subSave() {
+            this.companyForm.areaId=this.$refs.proCity.cityId
             var forms = this.companyForm
+            console.log(forms)
+            console.log(this.$refs.proCity.cityId)
             for(var name in forms) {
                 if (!forms[name]) {
                     this.$Message.error(this.companyFormError[name] + ': 请填写完整!')
@@ -119,7 +124,7 @@ export default {
             }
             if (this.subFlag) this.subFlag = false
             else return
-            // alert(1)
+            
             api.axs("post", "/company/save", this.companyForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {

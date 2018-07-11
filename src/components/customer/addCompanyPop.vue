@@ -43,7 +43,7 @@
                 </li>
                 <li>
                     <p><span>*</span> 所属行业：</p>
-                    <Input v-model='companyForm.companyVocation' placeholder=""></Input>
+                    <Input v-model='professName' @on-focus='professPop=true' :readonly='true' placeholder="选择行业" class='selpro'></Input>
                 </li>
                 <li>
                     <p><span>*</span> 所在地：</p>
@@ -65,21 +65,27 @@
             </ul>
             <div slot='footer' style='text-align:center'><Button type='info' @click='subSave'>保存</Button></div>
         </Modal>
-    </div>
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+    </div>  
 </template>
 
 <script>
 import api from "@/api"
 import Citysels from "@/components/common/citysels.vue"
+import Professions from "@/components/common/professions.vue"
 export default {
     name: "addCompanyPop",
     props: ['companyPop'],
     components: {
-        Citysels
+        Citysels,
+        Professions
     }, 
     data() {
         return {
             subFlag: true,
+            professPop: false,
+            professName: "",
+            professId: "",
             companyForm: {
                 companyName: '',
                 outerName: '',
@@ -131,6 +137,20 @@ export default {
                 }
             })
         },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.professPop = false
+        },
+        success(res) {
+            this.professPop = res
+        },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = ""
@@ -151,6 +171,11 @@ export default {
     overflow-y: auto;
     li {
         margin-bottom: 10px;
+        .selpro {
+            .ivu-input {
+                text-align:center
+            }
+        }
         p {
             display: inline-block;
             width: 80px;

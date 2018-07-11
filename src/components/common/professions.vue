@@ -1,9 +1,9 @@
 <template>
-    <div class="professPop">
-        <Modal v-model='professPop' :closable='false' :mask-closable='false' width='650px'>
+    <div class="professPop" style='position:relative;z-index:99999'>
+        <Modal v-model='professPop' :closable='false' :mask-closable='false' width='650px' style='z-index:1999'>
             <div slot='header' style='text-align:center;font-size:14px;color:#444'>
                 选择行业分类
-                <a href="javascript:;" @click='$parent.professPop=false'>
+                <a href="javascript:;" @click="$parent.professPop=false">
                     <Icon type="close" class='fr'></Icon>
                 </a>
             </div>
@@ -21,7 +21,7 @@
             </ul>
 
             <div slot='footer' style='text-align:center'>
-                <Button type='info' @click='$parent.selPro'>确定</Button>
+                <Button type='info' @click="$emit('selPro')">确定</Button>
             </div>
         </Modal>
     </div>
@@ -50,7 +50,7 @@ export default {
         }
     },
     mounted() {
-        this.getProfess();
+        this.getProfess()
     }
 };
 </script>

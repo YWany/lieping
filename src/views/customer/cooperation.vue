@@ -64,7 +64,7 @@
         <!-- 新增企业客户弹窗 -->
         <CompanyPop :companyPop='companyPop' />
 
-        <Professions ref='professionComp' :professPop='professPop' />
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
 
     </div>
 </template>
@@ -99,6 +99,7 @@ export default {
                 pageNum: 1,
                 pageSize: 20
             },
+            tableLists: [],
             tableHeader: [
                 {
                     type: "selection",
@@ -150,27 +151,29 @@ export default {
                 },
                 {
                     title: "客户联系人",
-                    key: "outerName",
+                    key: "contact",
                     width: 94,
                     sortable: true
                 },
                 {
                     title: "手机",
-                    key: "phone",
+                    key: "contactMobile",
                     width: 94
                 },
                 {
                     title: "合作状态",
                     key: "companyStatus",
-                    sortable: true
+                    sortable: true,
+                    width: 90,
+                    align: 'center'
                 },
                 {
                     title: "最近沟通",
-                    key: "ccc"
+                    key: "lastContactTime"
                 },
                 {
                     title: "沟通记录",
-                    key: "remark",
+                    key: "lastContactText",
                     width: 90,
                     ellipsis: true,
                     render: (h, params) => {
@@ -179,15 +182,15 @@ export default {
                             "Tooltip",
                             {
                                 props: {
-                                    content: row.remark || "",
+                                    content: row.lastContactText || "",
                                     placement: "top"
                                 }
                             },
                             [
                                 h(
                                     "div",
-                                    (row.remark &&
-                                        row.remark.substr(0, 5) + "...") ||
+                                    (row.lastContactText &&
+                                        row.lastContactText.substr(0, 5) + "...") ||
                                         "无记录"
                                 )
                             ]
@@ -196,8 +199,13 @@ export default {
                 },
                 {
                     title: "进行中/总职位",
-                    key: "eee",
-                    maxWidth: 94
+                    key: "totalPosition",
+                    maxWidth: 94,
+                    align: 'center',
+                    render: (h, params) => {
+                        const row = params.row
+                        return h('span', row.doingPosition + ' / ' + row.totalPosition)
+                    }
                 },
                 {
                     title: "项目经理",
@@ -206,7 +214,7 @@ export default {
                 },
                 {
                     title: "BD顾问",
-                    key: "ggg",
+                    key: "bdName",
                     width: 66
                 },
                 {
@@ -218,36 +226,6 @@ export default {
                     title: "贡献值",
                     key: "iii",
                     sortable: true
-                }
-            ],
-            tableLists: [
-                {
-                    companyName: "杭州千里马千里马千里马千里马",
-                    importantLevel: 4,
-                    outerName: "Wanyyyy",
-                    phone: "18788888888",
-                    companyStatus: "潜在客户",
-                    ccc: "2018-10-10",
-                    remark: "这是沟通记录记录记录记录记录记录记录记录11111111",
-                    eee: "25 / 799",
-                    fff: "Yuxinhua",
-                    ggg: "Yuxinhua",
-                    hhh: 345,
-                    iii: 999999
-                },
-                {
-                    companyName: "杭州千里哈哈哈",
-                    importantLevel: 3,
-                    outerName: "Wany",
-                    phone: "18700000000",
-                    companyStatus: "潜在客户",
-                    ccc: "2018-10-10",
-                    remark: "这是沟通记录记录记录记录",
-                    eee: "88 / 999",
-                    fff: "Yuxinhua",
-                    ggg: "Yuxinhua",
-                    hhh: 345000,
-                    iii: 2000000
                 }
             ]
         };
@@ -261,14 +239,14 @@ export default {
         loadLists(page) {
             this.$store.state.spinShow = true
 
-            api.axs("post", "/company/info", this.form).then(({ data }) => {
+            api.axs("post", "/company/page", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.tableLists = this.tableLists.concat(data.data);
-                    this.$Loading.finish();
-                    this.$store.state.spinShow = false;
+                    this.tableLists = data.data.list
+                    this.form.pageSize = data.data.total
+                    this.$Loading.finish()
+                    this.$store.state.spinShow = false
                 } else {
-                    this.$store.state.spinShow = false;
-                    this.$Message.error(data.remark);
+                    this.$Message.error(data.remark)
                 }
             });
         },

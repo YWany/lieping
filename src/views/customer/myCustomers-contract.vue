@@ -111,7 +111,14 @@
                 <TabPane label="合同模板2" name="name2">合同模板2</TabPane>
                 <TabPane label="合同模板3" name="name3">合同模板3</TabPane>
                  <TabPane label="合同模板4" name="name4">合同模板4</TabPane>
-                <TabPane label="其他模板" name="name5">其他模板</TabPane>
+                <TabPane class="others" label="其他模板" name="name5">
+                     <Upload
+                        :before-upload="handleUpload"
+                        action="//jsonplaceholder.typicode.com/posts/">
+                        <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+                    </Upload>
+                    <div v-if="file !== null">文件名: {{ file.name }} <Button type="primary" @click="upload" :loading="loadingStatus">{{ loadingStatus ? 'Uploading' : '确认上传' }}</Button></div>
+                </TabPane>
             </Tabs>
             <div class="fix">
                 <Button type="info">编辑</Button>
@@ -131,11 +138,30 @@ import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
   name: "home",
+  data () {
+            return {
+                file: null,
+                loadingStatus: false
+            }
+        },
   components: {
     Menu,
     HelloWorld
   },
-  methods: {},
+  methods: {
+      handleUpload (file) {
+                this.file = file;
+                return false;
+            },
+            upload () {
+                this.loadingStatus = true;
+                setTimeout(() => {
+                    this.file = null;
+                    this.loadingStatus = false;
+                    this.$Message.success('Success')
+                }, 1500);
+            }
+  },
 
   mounted() {
     setTimeout(() => {
@@ -191,6 +217,10 @@ export default {
         Button{
             margin-right: 30px;
         }
+    }
+    .others{
+       
+
     }
   }
   .fix{

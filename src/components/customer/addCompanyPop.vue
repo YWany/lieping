@@ -119,6 +119,7 @@ export default {
             }
             if (this.subFlag) this.subFlag = false
             else return
+            // alert(1)
             api.axs("post", "/company/save", this.companyForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {

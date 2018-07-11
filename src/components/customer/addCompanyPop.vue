@@ -182,14 +182,15 @@ export default {
             }
             if (this.subFlag) this.subFlag = false
             else return
-            
-            api.axs("post", "/company/add", this.companyForm)
+            var url = "/company/add"
+            if (this.companyMod) url = '/company/edit'
+            api.axs("post", url, this.companyForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
                     this.$Message.success('新增成功!') 
-                     this.$parent.companyPop=false
-                     this.$parent.loadLists()
+                    this.$parent.companyPop=false
+                    this.$parent.loadLists()
                     this.reset(this.companyForm)  
                    
                 } else {
@@ -223,6 +224,7 @@ export default {
 
         // 企业信息
         console.log(this.recordsDetails)
+        this.companyForm=this.recordsDetails.data
     },
 
 }

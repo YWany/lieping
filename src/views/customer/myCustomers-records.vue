@@ -21,7 +21,7 @@
 			<li>最后跟进时间: {{recordsDetails.updateTime}}</li>
 		</ul>
 		<div class="recordsContent">
-			<Tabs type="card" value="jilu" :animated=false>
+			<Tabs type="card" value="jilu" :animated=false @on-click='ClickTab'>
 				<TabPane label="跟进记录" name="jilu">
 					<div class="add-record clearfix">
 						<div class="sels">
@@ -657,6 +657,18 @@ export default {
 					this.recordsDetails = data.data
                     this.$Loading.finish()
                     this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            });
+		},
+        ClickTab(name) {
+            if (name == 'contact') this.getContactLists()
+        },
+        getContactLists() {
+			api.axs("post", "/contact/list", {id: this.id}).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.contactLists = data.data
                 } else {
                     this.$Message.error(data.remark)
                 }

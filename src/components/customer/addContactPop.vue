@@ -202,7 +202,7 @@ export default {
         },
         closePop() {
             this.$parent.contactPop=false
-            this.reset(this.addForm)
+            // this.reset(this.addForm)
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {

@@ -33,7 +33,7 @@
 								<Option :value='tree.id' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
 							</Select>
 							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd" @on-change='seltime' style="width: 200px"></DatePicker>
+							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
 						</div>
 						<div class="add-content">
 							<p style='padding: 15px 0 5px'>
@@ -285,8 +285,16 @@ export default {
                 contactId: '',
                 companyId: this.$route.query.id,
                 followType: '',
-                followTime: UTC2Date(new Date()),
-                followRecord: ''
+                followTime: UTC2Date(new Date(),'y-m-d h:i:s'),
+                followRecord: '',
+                contactRecord: [],
+                attachmentList: [
+                    {
+                        fileName: "f.jpg",
+                        filePath: "g.jpg",
+                        fileSize: 3
+                    }
+                ]
             },
             id: this.$route.query.id,
             cname: this.$route.query.cname,

@@ -27,44 +27,63 @@
                         <div class="sels">
                             <span class='xing'>*</span>联系人: &nbsp;&nbsp;
                             <Input slot="append" @on-focus="selUsersFun(1,'select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input>
-                            <Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
-                            <span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-                            <Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
-                                <Option value='电话沟通'>电话沟通</Option>
-                                <Option value='当面拜访'>当面拜访</Option>
-                            </Select>
-                            <span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-                            <DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd" @on-change='seltime' style="width: 200px"></DatePicker>
-                        </div>
-                        <div class="add-content">
-                            <p style='padding: 15px 0 5px'>
-                                <span class='xing'>*</span>跟进记录:</p>
-                            <Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
-                        </div>
-                        <div class="add-sub" style='margin:10px 0 0'>
-                            <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
-                                <Button type="ghost">
-                                    <Icon type="ios-camera-outline"></Icon>
-                                    <span>图片</span>
-                                </Button>
-                            </Upload>
-                            <Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
-                                <Button type="ghost">
-                                    <Icon type="link"></Icon>
-                                    <span>附件</span>
-                                </Button>
-                            </Upload>
-                        </div>
-                        <div class="add-sub" style='display:block;text-align:center'>
-                            <Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
-                        </div>
-                    </div>
-                    <ul class="history-records" v-if="contactRecordlist.length">
-                        <li v-for='lists in contactRecordlist' :key='lists.id'>
-                            <div class="header">
-                                <div class="avatar"><img src="@/assets/images/logo.png"></div>
-                                <div class="name">
-                                    <h5>{{ lists.contactName }}</h5>
+							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
+							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
+							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
+								<Option :value='tree.id' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
+							</Select>
+							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
+							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
+						</div>
+						<div class="add-content">
+							<p style='padding: 15px 0 5px'>
+								<span class='xing'>*</span>跟进记录:</p>
+							<Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+						</div>
+						<div class="add-sub" style='margin:10px 0 0'>
+							<Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
+								<Button type="ghost">
+									<Icon type="ios-camera-outline"></Icon>
+									<span>图片</span>
+								</Button>
+							</Upload>
+							<Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
+								<Button type="ghost">
+									<Icon type="link"></Icon>
+									<span>附件</span>
+								</Button>
+							</Upload>
+						</div>
+						<div class="add-sub" style='display:block;text-align:center'>
+							<Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
+						</div>
+					</div>
+					<ul class="history-records">
+						<li>
+							<div class="header">
+								<div class="avatar"><img src="@/assets/images/logo.png"></div>
+								<div class="name">
+									<h5>Wanyu</h5>
+									<p class="company">电话沟通 | 浙江钱里面股份有限公司</p>
+								</div>
+								<div class="time">2018-06-12 08:10</div>
+							</div>
+							<p class="desc">这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述</p>
+							<div class="contact">联系人: 巴啦啦 (人力资源中心)
+								<span class="check-files fr">文件(2)</span>
+								<span class="check-pics fr">查看图片(6)</span>
+							</div>
+						</li>
+						<li class='null-records'>
+							<h5 style='text-align:center;padding:20px 0;font-size:14px;'>
+								<Icon type="social-snapchat-outline" style='font-size:22px;vertical-align:middle'></Icon>
+								<span style='vertical-align:middle;padding-left:5px;'>无任何跟进记录</span>
+							</h5>
+						</li>
+					</ul>
+				</TabPane>
+				<TabPane class="pact" label="合同" name="hetong">
+					<!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
 
                                     <p class="company">电话沟通 | {{ lists.companyName }}</p>
 
@@ -276,6 +295,7 @@ export default {
     data() {
         return {
             subFlag: true,
+            genjinTrees: this.$store.state.selTrees[5].children,
             pageNum: "1",
             pageSize: "10",
             form: {
@@ -290,9 +310,17 @@ export default {
             recordsForm: {
                 contactId: "",
                 companyId: this.$route.query.id,
-                followType: "",
-                followTime: UTC2Date(new Date()),
-                followRecord: ""
+                followType: '',
+                followTime: UTC2Date(new Date(),'y-m-d h:i:s'),
+                followRecord: '',
+                contactRecord: [],
+                attachmentList: [
+                    {
+                        fileName: "f.jpg",
+                        filePath: "g.jpg",
+                        fileSize: 3
+                    }
+                ]
             },
             id: this.$route.query.id,
             cname: this.$route.query.cname,

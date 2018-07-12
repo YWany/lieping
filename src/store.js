@@ -26,7 +26,7 @@ export default new Vuex.Store({
         async selTrees({ commit }) {
             console.log('你请求了这个接口..')
             const { data } = await api.axs('post', '/param/dic/tree')
-            if (data) commit('selTrees', data)
+            if (data) commit('selTrees', data.data)
         },
         async getRoles({ commit }) {
             const { data } = await api.axs("post", "/role/info")

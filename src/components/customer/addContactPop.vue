@@ -227,20 +227,32 @@ export default {
             }
         });
 
-        api.axs("post", "/param/dic/tree", { id: "10" }).then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                let alllist = data.data;
-                for (let i = 0; i < alllist.length; i++) {
-                    if (alllist[i].code === "decisionRelation") {
-                        //公司性质
-                        this.decisionlist = alllist[i].children;
-                    }
+        const selTrees = this.$store.state.selTrees
+        if (selTrees.length) {
+            for (let i = 0; i < selTrees.length; i++) {
+                if (selTrees[i].code === "decisionRelation") {
+                    //公司性质
+                    this.decisionlist = selTrees[i].children;
                 }
-            } else {
-                this.$Message.error(data.remark);
-                this.subFlag = true;
             }
-        });
+        } else {
+            api.axs("post", "/param/dic/tree", { id: "10" }).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    let alllist = data.data;
+                    this.$store.state.selTrees = data.data
+                    for (let i = 0; i < alllist.length; i++) {
+                        if (alllist[i].code === "decisionRelation") {
+                            //公司性质
+                            this.decisionlist = alllist[i].children;
+                        }
+                    }
+                } else {
+                    this.$Message.error(data.remark);
+                    this.subFlag = true;
+                }
+            });
+        }
+        
     }
 };
 </script>

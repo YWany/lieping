@@ -11,7 +11,7 @@
 				<li>
 					<p>
 						<span>*</span> 客户名称：</p>
-					<Input :readonly='true' v-model='atteForm.companyId' :placeholder="company"></Input>
+					<Input :readonly='true' :value='atteCompanyName'></Input>
 				</li>
 				<li>
 					<p>
@@ -54,7 +54,7 @@ import api from "@/api";
 import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "addAttePop",
-    props: ["attePop"],
+    props: ["attePop", "atteCompanyId", "atteCompanyName"],
     components: {},
     data() {
         return {
@@ -83,7 +83,7 @@ export default {
     methods: {
         subSave() {
             var forms = this.atteForm;
-            this.atteForm.companyId = this.id;
+            this.atteForm.companyId = this.companyId;
             //    date = this.atteForm.followTime.replace("Z", " UTC");
             //    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
             for (var companyId in forms) {
@@ -129,17 +129,6 @@ export default {
         }
     },
     mounted() {
-        this.id = this.$parent.id;
-        console.log(this.id);
-        api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                this.company = data.data.companyName;
-            } else {
-                this.$Message.error(data.remark);
-                this.subFlag = true;
-            }
-        });
-
         api.axs("post", "/user/list").then(({ data }) => {
             if (data.code === "SUCCESS") {
                 console.log(data);
@@ -148,7 +137,7 @@ export default {
             } else {
                 this.$Message.error(data.remark);
             }
-        });
+        })
     }
 };
 </script>

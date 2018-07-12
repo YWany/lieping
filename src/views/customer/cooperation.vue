@@ -10,39 +10,40 @@
                 <Select v-model="selVal" slot="prepend" class='search-sels' style="width:80px">
                     <Option value="企业名称">企业名称</Option>
                     <Option value="搜索顾问">搜索顾问</Option>
-                    <Option value="客户来源">客户来源</Option>
+                    <!-- <Option value="客户来源">客户来源</Option> -->
                 </Select>
                 <Button slot="append" icon="ios-search" @click='searchIn'></Button>
                 </Input>
             </div>
-            <div class="sels">
-                <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
+            <div class="sels" v-if='allTrees.length'>
+                <Select v-model="form.deptId" class='sels-item' placeholder='部门归属' style="width:150px">
                     <Option v-for="(dept,index) in deptlist" :key="index" :value="dept.id">{{ dept.departmentName }}</Option>
                 </Select>
 
-                <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业"></Input>
-                <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
+                <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业" style="width:150px"></Input>
+                <Select v-model="form.companySource" class='sels-item' placeholder='客户来源' style="width:150px">
                     <Option v-for="(tree,index) in allTrees[1].children" :key="index" :value="tree.code">{{ tree.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
+                <Select v-model="form.importantLevel" class='sels-item' placeholder='客户重要性' style="width:150px">
                     <Option v-for="(imports,index) in allTrees[6].children" :key="index" :value="imports.code">{{ imports.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel5" class='sels-item' placeholder='前期服务费' style="width:100px">
+                <Select v-model="form.preFee" class='sels-item' placeholder='前期服务费' style="width:150px">
                     <Option v-for="(money,index) in allTrees[7].children" :key="index" :value="money.code">{{ money.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel6" class='sels-item' placeholder='转入客户' style="width:100px">
+                <Select v-model="form.changeInto" class='sels-item' placeholder='转入客户' style="width:100px">
                     <Option v-for="(peoples,index) in allTrees[8].children" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
                 </Select>
                 <div class="disInB sels-item">
-                    创建时间：
-                    <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                    签约时间：
+                    <DatePicker type="date" v-model='form.signRange' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime3' style="width: 180px"></DatePicker>
                 </div>
                 <div class="disInB sels-item">
-                    签约时间：
-                    <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                    创建时间：
+                    <DatePicker type="date" v-model='form.createTimeStart' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' style="width: 180px"></DatePicker> -- 
+                    <DatePicker type="date" v-model='form.createTimeEnd' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime2' style="width: 180px"></DatePicker>
                 </div>
                 <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
-                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
+                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search" @click="searchIn('selSearch')">搜索</Button>
             </div>
         </form>
         <div class="searchTable">
@@ -52,7 +53,7 @@
                 <Button type="info">发送邮件</Button>
             </div>
             <div class="tablePage fr">
-                <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
+                <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
             </div>
         </div>
 
@@ -87,13 +88,14 @@ export default {
             professId: "",
             deptlist: [],
             form: {
-                sel1: "",
+                deptId: "",
+                industryId: '',
                 sel2: "",
-                sel3: "",
-                sel4: "",
-                sel5: "",
-                sel6: "",
-                createDate: "",
+                companySource: "",
+                importantLevel: "",
+                preFee: "",
+                changeInto: "",
+                createTimeStart: "",
                 signDate: "",
                 total: 100,
                 pageNum: 1,
@@ -158,7 +160,13 @@ export default {
                     title: "合作状态",
                     key: "companyStatus",
                     width: 90,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row
+                        if (this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
+                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        }
+                    }
                 },
                 {
                     title: "最近沟通",
@@ -256,20 +264,21 @@ export default {
                 }
             });
         },
-        searchIn() {
+        searchIn(type) {
             if (this.selVal == "企业名称")
-                this.form.companyName = this.searchVal;
+                this.form.companyName = this.searchVal
             else if (this.selVal == "搜索顾问")
-                this.form.companyName = this.searchVal;
+                this.form.companyName = this.searchVal
             else if (this.selVal == "客户来源")
-                this.form.companyName = this.searchVal;
+                this.form.companyName = this.searchVal
 
-            if (!this.searchVal) {
-                this.$Message.warning("想搜点什么?");
-                return;
+            if (!this.searchVal && !type) {
+                this.$Message.warning("想搜点什么?")
+                return
             }
-            this.tableLists = [];
-            this.loadLists();
+            this.form.pageNum = 1
+            this.tableLists = []
+            this.loadLists()
         },
         selPro() {
             //选择职位
@@ -278,15 +287,26 @@ export default {
                 this.$Message.warning("不选一个职位么?");
                 return;
             }
-            this.professId = idName.split("&")[0];
-            this.professName = idName.split("&")[1];
-            this.professPop = false;
+            this.professId = idName.split("&")[0]
+            this.professName = idName.split("&")[1]
+            this.form.industryId = idName.split("&")[0]
+            this.professPop = false
+        },
+        seltime1(date) {
+            this.form.createTimeStart = date
+        },
+        seltime2(date) {
+            this.form.createTimeEnd = date
+        },
+        seltime3(date) {
+            this.form.signRange = date
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = "";
             });
             this.form.selVal = "企业名称";
+            this.form.pageSize = 10
         }
     },
 

@@ -147,6 +147,11 @@ export default {
             }
         };
     },
+    computed: {
+        allTrees() {
+            return this.$store.state.selTrees
+        }
+    },
     methods: {
         info() {
             api

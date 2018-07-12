@@ -130,7 +130,7 @@ export default {
                 signDate: "",
                 total: 120,
                 current: 1,
-                pageSize: 20
+                pageSize: 10
             },
             tableHeader: [
                 {
@@ -289,7 +289,7 @@ export default {
             this.$store.state.spinShow = true;
 
             api
-                .axs("post", "/company/selectMultiByExt", this.form)
+                .axs("post", "/company/myPage", this.form)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.tableLists = this.tableLists.concat(

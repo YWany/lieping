@@ -36,7 +36,6 @@
                         <span>*</span> 重要程度：</p>
                     <Select v-model="companyForm.importantLevel" style="width:300px">
                         <Option v-for="(importance,index) in importancelist" :value="importance.code" :key='index'>{{importance.codeText}}</Option>
-
                     </Select>
                 </li>
                 <li>
@@ -144,7 +143,6 @@ export default {
     },
     methods: {
         info() {
-            this.$Message.info("这是一条普通的提醒");
             api.axs("post", "/param/dic/tree", { id: "10" })
             .then(({ data }) => {
                 if (data.code === "SUCCESS") {

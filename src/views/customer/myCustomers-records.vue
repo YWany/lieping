@@ -21,7 +21,7 @@
 			<li>最后跟进时间: {{recordsDetails.updateTime}}</li>
 		</ul>
 		<div class="recordsContent">
-			<Tabs type="card" value="jilu" :animated=false @on-click='ClickTab'>
+			<Tabs type="card" value="jilu" :animated=false @on-click='clickTab'>
 				<TabPane label="跟进记录" name="jilu">
 					<div class="add-record clearfix">
 						<div class="sels">
@@ -797,7 +797,7 @@ export default {
         seltime(date) {
             this.recordsForm.followTime = date
         },
-        ClickTab(name) {
+        clickTab(name) {
             if (name == "contact") this.getContactLists();
             if (name == "files") this.getFileLists(this.pageNum);
         },
@@ -816,53 +816,8 @@ export default {
             this.contactId = id;
             this.contactName = name;
         },
-        selUsersFun(page) {
-            this.userForm.pageNum = page;
-            api
-                .axs("post", "/user/queryLikeForPages", this.userForm)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.$store.state.users = data.data.list;
-                        this.userForm.total = data.data.total;
-                        this.selUsersPop = true;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
-        },
-        sureSelUser() {
-            if (!this.userId) {
-                this.$Message.info("选一个BD啊!");
-                return;
-            }
-            api
-                .axs("post", "/company/changeInto", {
-                    id: this.id,
-                    bdId: this.userId
-                })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.$Message.success("转出成功!");
-                        this.$router.push("/customer/cooperation");
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
-        },
-        delCompany() {
-            api
-                .axs("post", "/company/delete", { id: this.id })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.$Message.success("删除成功");
-                        this.$router.push("/customer/cooperation");
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
-        },
         loadLists(page) {
-            this.ClickTab(name);
+            this.clickTab(name);
             this.$store.state.spinShow = true;
             this.$Message.info("当前页: " + page);
             setTimeout(() => {
@@ -918,7 +873,6 @@ export default {
                 }
             })
 		},
-        loadLists() {},
         sureMainper() {
             this.$Message.info("确认主联系人成功!");
         },
@@ -929,17 +883,15 @@ export default {
         sureDim() {
             //离职确认
             this.$store.state.spinShow = true;
-            api
-                .axs("post", "/contact/setLeaveStatus", { id: this.contactId })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.$Message.success("离职成功!");
-                        this.getContactLists();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+            api.axs("post", "/contact/setLeaveStatus", { id: this.contactId }).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.$Message.success("离职成功!");
+                    this.getContactLists();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         dimissonFun() {
             //关闭离职弹窗
@@ -948,7 +900,7 @@ export default {
         }
     },
     mounted() {
-        this.companyInfo();
+        this.companyInfo()
     },
     beforeDestroy() {}
 };
@@ -1014,6 +966,11 @@ export default {
                         border: 1px solid #eee;
                         padding: 10px 15px;
                         margin-bottom: 10px;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                            border-radius: 50%;
+                        }
                         .name {
                             line-height: 32px;
                             strong {

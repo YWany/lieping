@@ -71,11 +71,11 @@
 
 <script>
 // @ is an alias to /src
-import api from "@/api";
-import ls from "store2";
-import CompanyPop from "@/components/customer/addCompanyPop.vue";
-import Professions from "@/components/common/professions.vue";
-import { mapState, mapMutations, mapActions } from "vuex";
+import api from "@/api"
+import ls from "store2"
+import CompanyPop from "@/components/customer/addCompanyPop.vue"
+import Professions from "@/components/common/professions.vue"
+import { mapState, mapMutations, mapActions } from "vuex"
 export default {
     name: "cooperation",
     components: {
@@ -129,7 +129,7 @@ export default {
                                     }
                                 }
                             },
-                            params.row.companyName
+                            row.companyName
                         );
                     }
                 },
@@ -150,12 +150,12 @@ export default {
                 },
                 {
                     title: "客户联系人",
-                    key: "contact",
+                    key: "contactName",
                     width: 94
                 },
                 {
                     title: "手机",
-                    key: "contactMobile",
+                    key: "contactPhone1",
                     width: 94
                 },
                 {
@@ -166,17 +166,17 @@ export default {
                 },
                 {
                     title: "最近沟通",
-                    key: "lastContactTime",
+                    key: "lastFollowTime",
                     width: 100,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
-                        return h("span", row.lastContactTime.substr(0, 10));
+                        return h("span", row.lastFollowTime && row.lastFollowTime.substr(0, 10) || '--');
                     }
                 },
                 {
                     title: "沟通记录",
-                    key: "lastContactText",
+                    key: "lastFollowRecord",
                     width: 120,
                     ellipsis: true,
                     render: (h, params) => {
@@ -185,15 +185,15 @@ export default {
                             "Tooltip",
                             {
                                 props: {
-                                    content: row.lastContactText || "",
+                                    content: row.lastFollowRecord || "",
                                     placement: "top"
                                 }
                             },
                             [
                                 h(
                                     "div",
-                                    (row.lastContactText &&
-                                        row.lastContactText.substr(0, 5) +
+                                    (row.lastFollowRecord &&
+                                        row.lastFollowRecord.substr(0, 5) +
                                             "...") ||
                                         "无记录"
                                 )
@@ -239,7 +239,7 @@ export default {
             this.form.pageNum = page;
             this.$store.state.spinShow = true;
 
-            api.axs("post", "/company/page", this.form).then(({ data }) => {
+            api.axs("post", "/company/allPage", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     this.tableLists = data.data.list;
                     this.form.total = data.data.total;

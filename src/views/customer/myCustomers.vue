@@ -178,7 +178,13 @@ export default {
                     key: "companyStatus",
                     width: 94,
                     sortable: true,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row
+                        if (this.allTrees[12] && this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
+                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        }
+                    }
                 },
                 {
                     title: "客户名称",
@@ -220,7 +226,11 @@ export default {
                         });
                     }
                 },
-                {
+                {computed: {
+        allTrees() {
+            return this.$store.state.selTrees
+        }
+    },
                     title: "联系人",
                     key: "contactName",
                     width: 94,
@@ -292,6 +302,11 @@ export default {
     },
     components: {
         AttePop
+    },
+    computed: {
+        allTrees() {
+            return this.$store.state.selTrees
+        }
     },
     methods: {
         loadLists(page) {

@@ -162,7 +162,13 @@ export default {
                     title: "合作状态",
                     key: "companyStatus",
                     width: 90,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row
+                        if (this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
+                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        }
+                    }
                 },
                 {
                     title: "最近沟通",
@@ -232,6 +238,11 @@ export default {
                 }
             ]
         };
+    },
+    computed: {
+        allTrees() {
+            return this.$store.state.selTrees
+        }
     },
     methods: {
         ...mapActions(["selTrees"]),

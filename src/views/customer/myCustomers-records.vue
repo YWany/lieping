@@ -944,7 +944,7 @@ export default {
         },
         inWork() {
             //在职
-            this.$Message.info("又回来了?");
+            this.$Message.info("不能反悔噢!");
         },
         sureDim() {
             //离职确认

@@ -141,6 +141,11 @@ export default {
             }
         };
     },
+    computed: {
+        allTrees() {
+            return this.$store.state.selTrees
+        }
+    },
     methods: {
         info() {
             api.axs("post", "/param/dic/tree", { id: "10" })
@@ -159,7 +164,7 @@ export default {
                         if (alllist[i].code === "companyScope") {
                             this.scalelist = alllist[i].children;
                         }
-                        if (alllist[i].code === "4") {
+                        if (alllist[i].code === "importantLevel") {
                             this.importancelist = alllist[i].children;
                         }
                         if (alllist[i].code === "companySource") {

@@ -26,23 +26,20 @@
 					<div class="add-record clearfix">
 						<div class="sels">
 							<span class='xing'>*</span>联系人: &nbsp;&nbsp;
-							<Select v-model="recordsForm.contacts" filterable multiple style='width:200px;'>
-								<Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-							</Select>
+                            <Input slot="append" @on-focus="selUsersFun(1,'select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input>
 							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
 							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-							<Select v-model="recordsForm.styles" style='width:200px;margin-right:30px'>
-								<Option value='方式1'>方式1</Option>
-								<Option value='方式2'>方式2</Option>
-								<Option value='方式3'>方式3</Option>
+							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
+								<Option value='电话沟通'>电话沟通</Option>
+								<Option value='当面拜访'>当面拜访</Option>
 							</Select>
 							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-							<DatePicker type="date" :value='recordsForm.followTime' format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd" @on-change='seltime' style="width: 200px"></DatePicker>
 						</div>
 						<div class="add-content">
 							<p style='padding: 15px 0 5px'>
 								<span class='xing'>*</span>跟进记录:</p>
-							<Input v-model="recordsForm.content" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+							<Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
 						</div>
 						<div class="add-sub" style='margin:10px 0 0'>
 							<Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
@@ -59,7 +56,7 @@
 							</Upload>
 						</div>
 						<div class="add-sub" style='display:block;text-align:center'>
-							<Button type='info' style='font-size:14px;'>提交</Button>
+							<Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
 						</div>
 					</div>
 					<ul class="history-records">
@@ -200,11 +197,15 @@
 		</Modal>
 
 		<!-- 选择BD角色 -->
-		<Modal v-model="selUsersPop" title="选择BD" width='400px' @on-ok="sureSelUser">
+		<Modal v-model="selUsersPop" width='400px' :mask-closable='false' :closable='false'>
+            <div slot="header">
+                <span style='font-size:14px'>选择BD</span>
+                <a href="javascript:;" class='fr' @click='closeSelUsersPop'><Icon type="close-round"></Icon></a>
+            </div>
 			<ul class='users-content' >
 				<li v-for='user in users'>
 					<RadioGroup v-model="userId">
-						<Radio :label="user.id">
+						<Radio :label="user.id + '&' +user.userName">
 							<span class='name'>{{user.userName}}</span>
 							<span class='depart'>{{user.departmentName}}</span>
 						</Radio>
@@ -212,8 +213,11 @@
 				</li>
 			</ul>
 			<div class="tablePage" style='text-align:right;margin-bottom:0;'>
-                <Page size='small' :total='userForm.total' :page-size='userForm.pageSize' show-total @on-change='selUsersFun'></Page>
+                <Page size='small' :total='userForm.total' :page-size='userForm.pageSize' :current='userForm.pageNum' show-total @on-change='selUsersFun'></Page>
             </div>
+            <div slot='footer' style='text-align:center'>
+				<Button type='primary' @click='sureSelUser'>确定</Button>
+			</div>
 		</Modal>
 
 		<!-- 删除 -->
@@ -245,6 +249,7 @@ import CompanyPop from "@/components/customer/addCompanyPop.vue"
 import AttePop from "@/components/customer/addAttePop.vue"
 import ContactPop from "@/components/customer/addContactPop.vue"
 import ContractPop from "@/components/customer/addContractPop.vue"
+import { UTC2Date } from '@/assets/js/utils.js'
 export default {
     name: "personalDetails",
     components: {
@@ -265,12 +270,21 @@ export default {
 				total: 1,
 				pageSize: 3
 			},
+            recordsForm: {
+                contactId: '',
+                companyId: this.$route.query.id,
+                followType: '',
+                followTime: UTC2Date(new Date()),
+                followRecord: ''
+            },
             id: this.$route.query.id,
             cname: this.$route.query.cname,
 			level: +this.$route.query.level,
             contactId: '', //联系人ID
             contactName: '', //联系人姓名
 			userId: '',
+            userName: '',
+            selUserSelect: false,
             recordsDetails: {}, //记录详情
             contactLists: [], //联系人列表
             companyPop: false, //新增企业客户弹窗
@@ -282,14 +296,6 @@ export default {
 			selUsersPop: false, //选择BD弹窗
             delCompanyPop: false, //删除弹窗
             companyMod: true,
-            recordsForm: {
-                companyId: this.$route.query.id,
-                contacts: [],
-                followType: "",
-                followTime: new Date(),
-                remark: "",
-                attachmentList: [] //附件
-            },
             cityList: [
                 {
                     value: "New York",
@@ -650,8 +656,34 @@ export default {
                 } else {
                     this.$Message.error(data.remark)
                 }
-            });
+            })
 		},
+        subRecord() { //提交记录
+            if (!this.recordsForm.contactId) {
+                this.$Message.error('请选择联系人!')
+                return
+            } else if (!this.recordsForm.followType) {
+                this.$Message.error('请选择跟进方式!')
+                return
+            } else if (!this.recordsForm.followRecord) {
+                this.$Message.error('请填写跟进记录!')
+                return
+            }
+
+            if (this.subFlag) this.subFlag = false
+            else return
+            this.$store.state.spinShow = true
+            api.axs("post", "/contactRecord/save", this.recordsForm).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+					this.$Message.error('提交成功!')
+                    this.$Loading.finish()
+                    this.$store.state.spinShow = false
+                    this.subFlag = true
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
+        },
         getContactLists() { //联系人
             api.axs("post", "/contact/list", {companyId: this.id}).then(({ data }) => {
                 if (data.code === "SUCCESS") {
@@ -661,7 +693,10 @@ export default {
                 } else {
                     this.$Message.error(data.remark)
                 }
-            });
+            })
+        },
+        seltime(date) {
+            this.recordsForm.followTime = date
         },
         ClickTab(name) {
             if (name == 'contact') this.getContactLists()
@@ -674,21 +709,24 @@ export default {
                 } else {
                     this.$Message.error(data.remark)
                 }
-            });
+            })
         },
         dimissionFun(id,name) {
             this.dimissionPop = true
             this.contactId = id
             this.contactName = name
         },
-		selUsersFun(page) {
+		selUsersFun(page, type) {
+            this.userId = ''
+            if (type == 'select') this.selUserSelect = true
+            
 			this.userForm.pageNum = page
 			api.axs("post", "/user/queryLikeForPages", this.userForm).then(({ data }) => {
 				if (data.code === "SUCCESS") {
 					this.$store.state.users = data.data.list
 					this.userForm.total = data.data.total
 					this.selUsersPop = true
-				} else { 
+				} else {
 					this.$Message.error(data.remark)
 				}
 			})
@@ -697,16 +735,26 @@ export default {
 			if (!this.userId) {
 				this.$Message.info("选一个BD啊!")
 				return
-			}
-			api.axs("post", "/company/changeInto", {id: this.id, bdId: this.userId}).then(({ data }) => {
+			}else if (this.selUserSelect) {
+                this.userName = (this.userId).split('&')[1]
+                this.recordsForm.contactId = (this.userId).split('&')[0]
+                this.selUsersPop = false
+                return
+            }
+			api.axs("post", "/company/changeInto", {id: this.id, bdId: (this.userId).split('&')[0]}).then(({ data }) => {
                 if (data.code === "SUCCESS") {
 					this.$Message.success("转出成功!")
 					this.$router.push('/customer/cooperation')
+                    this.selUsersPop = false
                 } else {
                     this.$Message.error(data.remark)
                 }
             })
 		},
+        closeSelUsersPop() {
+            this.selUserSelect = false
+            this.selUsersPop = false
+        },
 		delCompany() {
 			api.axs("post", "/company/delete", {id: this.id}).then(({ data }) => {
                 if (data.code === "SUCCESS") {
@@ -717,7 +765,7 @@ export default {
                 }
             })
 		},
-		loadLists() {},
+        loadLists() {},
         sureMainper() {
             this.$Message.info("确认主联系人成功!")
         },

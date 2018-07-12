@@ -132,7 +132,6 @@ export default {
     },
     methods: {
         info() {
-            this.$Message.info("这是一条普通的提醒")
             api.axs("post", "/param/dic/tree", {id:'10'})
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {

@@ -1,123 +1,123 @@
 <template>
-<div class="myCustomers">
-    <div class='currentNav'>当前位置: 我的客户
-        <div class='fr'>
-            <Select v-model='creatVal' placeholder='创建' @on-change='createDo' style="width:70px">
+    <div class="myCustomers">
+        <div class='currentNav'>当前位置: 我的客户
+            <div class='fr'>
+                <Select v-model='creatVal' placeholder='创建' @on-change='createDo' style="width:70px">
                     <Option value='客户'>客户</Option>
                     <Option value='联系人'>联系人</Option>
                     <Option value='合同'>合同</Option>
                 </Select>
-            <span>&nbsp;&nbsp;</span>
-            <Button type="success" class='addNew'>导入</Button>
-            <span>&nbsp;&nbsp;</span>
-            <Button type="info" class='addNew'>客户查重</Button>
+                <span>&nbsp;&nbsp;</span>
+                <Button type="success" class='addNew'>导入</Button>
+                <span>&nbsp;&nbsp;</span>
+                <Button type="info" class='addNew'>客户查重</Button>
+            </div>
         </div>
-    </div>
-    <form class="searches">
-        <div class="search">
-            <Input v-model="form.companyName"  @on-enter='searchIn' placeholder="请输入客户名称进行搜索...">
-            <Button slot="append" icon="ios-search" @click='searchIn'></Button>
-            </Input>
-        </div>
-        <div class="sels">
-            <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
+        <form class="searches">
+            <div class="search">
+                <Input v-model="form.companyName" @on-enter='searchIn' placeholder="请输入客户名称进行搜索...">
+                <Button slot="append" icon="ios-search" @click='searchIn'></Button>
+                </Input>
+            </div>
+            <div class="sels">
+                <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
                     <Option value="部门归属1">部门归属1</Option>
                     <Option value="部门归属2">部门归属2</Option>
                 </Select>
-            <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
+                <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
                     <Option value="客户行业1">客户行业1</Option>
                     <Option value="客户行业2">客户行业2</Option>
                 </Select>
-            <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
+                <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
                     <Option value="客户来源1">客户来源1</Option>
                     <Option value="客户来源2">客户来源2</Option>
                 </Select>
-            <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
+                <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
                     <Option value="客户重要性1">客户重要性1</Option>
                     <Option value="客户重要性2">客户重要性2</Option>
                 </Select>
-            <Select v-model="form.sel4" class='sels-item' placeholder='客户状态' style="width:100px">
+                <Select v-model="form.sel4" class='sels-item' placeholder='客户状态' style="width:100px">
                     <Option value="客户重要性1">客户重要性1</Option>
                     <Option value="客户重要性2">客户重要性2</Option>
                 </Select>
-            <Select v-model="form.sel4" class='sels-item' placeholder='客户等级' style="width:100px">
+                <Select v-model="form.sel4" class='sels-item' placeholder='客户等级' style="width:100px">
                     <Option value="客户重要性1">客户重要性1</Option>
                     <Option value="客户重要性2">客户重要性2</Option>
                 </Select>
-            <div class="disInB sels-item">
-                创建时间：
-                <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                <div class="disInB sels-item">
+                    创建时间：
+                    <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                </div>
+                <div class="disInB sels-item">
+                    最近更新时间：
+                    <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                </div>
+                <div class="disInB sels-item">
+                    最后联系时间：
+                    <DatePicker type="date" v-model='form.signDate' placeholder="开始时间" style="width: 110px"></DatePicker> -
+                    <DatePicker type="date" v-model='form.signDate' placeholder="结束时间" style="width: 110px"></DatePicker>
+                </div>
+                <Input v-model="form.kehu" placeholder="客户提供人" style="width:100px;margin-right:10px"></Input>
+                <Input v-model="form.guwen" placeholder="BD顾问名字" style="width:100px;margin-right:10px"></Input>
+                <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
+                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
             </div>
-            <div class="disInB sels-item">
-                最近更新时间：
-                <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+        </form>
+        <div class="searchTable">
+            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
+            <div class="sendBtns fl">
+                <Button type="warning">发送短信</Button>
+                <Button type="info">发送邮件</Button>
             </div>
-            <div class="disInB sels-item">
-                最后联系时间：
-                <DatePicker type="date" v-model='form.signDate' placeholder="开始时间" style="width: 110px"></DatePicker> -
-                <DatePicker type="date" v-model='form.signDate' placeholder="结束时间" style="width: 110px"></DatePicker>
+            <div class="tablePage fr">
+                <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
             </div>
-            <Input v-model="form.kehu" placeholder="客户提供人" style="width:100px;margin-right:10px"></Input>
-            <Input v-model="form.guwen" placeholder="BD顾问名字" style="width:100px;margin-right:10px"></Input>
-            <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
-            <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
         </div>
-    </form>
-    <div class="searchTable">
-        <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-        <div class="sendBtns fl">
-            <Button type="warning">发送短信</Button>
-            <Button type="info">发送邮件</Button>
-        </div>
-        <div class="tablePage fr">
-            <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
-        </div>
+
+        <Modal v-model="recordPop" :closable=false width='400px'>
+            <p slot="header">
+                <span>最近更新记录</span>
+                <Button type="primary" size='small' icon="plus" class='fr' @click='addRecord'></Button>
+            </p>
+            <ul class="popContent" style='max-height: 335px;overflow-y: scroll'>
+                <li>
+                    <h4 class="name">Wanyu</h4>
+                    <p class="desc">这个记录描述记录描述记录描述记录描述记录描述记录描述</p>
+                    <p class="time">
+                        <span>当面拜访</span>
+                        <time>2016-10-10 12:24</time>
+                    </p>
+                </li>
+                <li>
+                    <h4 class="name">Wanyu</h4>
+                    <p class="desc">这个记录描述记录描述记录描述记录描述记录描述记录描述</p>
+                    <p class="time">
+                        <span>当面拜访</span>
+                        <time>2016-10-10 12:24</time>
+                    </p>
+                </li>
+            </ul>
+            <p slot='footer'></p>
+        </Modal>
+
+        <!-- 新增跟进提醒弹窗 -->
+        <AttePop :attePop='attePop' />
+
     </div>
-
-    <Modal v-model="recordPop" :closable=false width='400px'>
-        <p slot="header">
-            <span>最近更新记录</span>
-            <Button type="primary" size='small' icon="plus" class='fr' @click='addRecord'></Button>
-        </p>
-        <ul class="popContent" style='max-height: 335px;overflow-y: scroll'>
-            <li>
-                <h4 class="name">Wanyu</h4>
-                <p class="desc">这个记录描述记录描述记录描述记录描述记录描述记录描述</p>
-                <p class="time">
-                    <span>当面拜访</span>
-                    <time>2016-10-10 12:24</time>
-                </p>
-            </li>
-            <li>
-                <h4 class="name">Wanyu</h4>
-                <p class="desc">这个记录描述记录描述记录描述记录描述记录描述记录描述</p>
-                <p class="time">
-                    <span>当面拜访</span>
-                    <time>2016-10-10 12:24</time>
-                </p>
-            </li>
-        </ul>
-        <p slot='footer'></p>
-    </Modal>
-
-    <!-- 新增跟进提醒弹窗 -->
-    <AttePop :attePop='attePop'/>
-
-</div>
 </template>
 
 <script>
 // @ is an alias to /src
-import api from "@/api"
-import ls from "store2"
-import AttePop from "@/components/customer/addAttePop.vue"
+import api from "@/api";
+import ls from "store2";
+import AttePop from "@/components/customer/addAttePop.vue";
 export default {
     name: "home",
     data() {
         return {
-            creatVal: '',
+            creatVal: "",
             recordPop: false,
-            cname: '',
+            cname: "",
             attePop: false, //新增提醒弹窗
             form: {
                 sel1: "",
@@ -132,7 +132,8 @@ export default {
                 current: 1,
                 pageSize: 20
             },
-            tableHeader: [{
+            tableHeader: [
+                {
                     type: "selection",
                     width: 45,
                     align: "center"
@@ -141,26 +142,30 @@ export default {
                     title: "提醒",
                     key: "tix",
                     width: 50,
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
-                        return h('a', {
-                            on: {
-                                click: () => {
-                                    this.attePop = true
-                                    this.$Message.info('通知通知通知通知')
+                        return h(
+                            "a",
+                            {
+                                on: {
+                                    click: () => {
+                                        this.attePop = true;
+                                        this.$Message.info("通知通知通知通知");
+                                    }
                                 }
-                            }
-                        }, [
-                            h('Icon', {
-                                style: {
-                                    fontSize: '16px'
-                                },
-                                props: {
-                                    type: "android-notifications",
-                                    color: '#d3585f'
-                                }
-                            })
-                        ])
+                            },
+                            [
+                                h("Icon", {
+                                    style: {
+                                        fontSize: "16px"
+                                    },
+                                    props: {
+                                        type: "android-notifications",
+                                        color: "#d3585f"
+                                    }
+                                })
+                            ]
+                        );
                     }
                 },
                 {
@@ -168,7 +173,7 @@ export default {
                     key: "companyStatus",
                     width: 94,
                     sortable: true,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "客户名称",
@@ -177,14 +182,25 @@ export default {
                     sortable: true,
                     ellipsis: true,
                     render: (h, params) => {
-                        var row = params.row
-                        return h('a', {
-                            on: {
-                                click: () => {
-                                    this.$router.push('/customer/myCustomers/records?id='+row.id+'&cname='+row.companyName+'&level='+row.importantLevel )
+                        var row = params.row;
+                        return h(
+                            "a",
+                            {
+                                on: {
+                                    click: () => {
+                                        this.$router.push(
+                                            "/customer/myCustomers/records?id=" +
+                                                row.id +
+                                                "&cname=" +
+                                                row.companyName +
+                                                "&level=" +
+                                                row.importantLevel
+                                        );
+                                    }
                                 }
-                            }
-                        }, params.row.name)
+                            },
+                            params.row.name
+                        );
                     }
                 },
                 {
@@ -192,9 +208,9 @@ export default {
                     key: "importantLevel",
                     width: 95,
                     sortable: true,
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
-                        const row = params.row
+                        const row = params.row;
                         return h("Rate", {
                             props: {
                                 value: +row.importantLevel,
@@ -208,54 +224,58 @@ export default {
                     key: "name",
                     width: 94,
                     sortable: true,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "联系方式",
                     key: "phone1",
                     width: 94,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "未联系时间",
                     key: "wlxTime",
                     width: 86,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "跟进记录",
                     key: "followRecord",
                     ellipsis: true,
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
-                        var row = params.row
-                        return h('a', {
-                            on: {
-                                click: () => {
-                                    this.recordPop = true
-                                    this.cname = row.name
+                        var row = params.row;
+                        return h(
+                            "a",
+                            {
+                                on: {
+                                    click: () => {
+                                        this.recordPop = true;
+                                        this.cname = row.name;
+                                    }
                                 }
-                            }
-                        }, row.followRecord)
+                            },
+                            row.followRecord
+                        );
                     }
                 },
                 {
                     title: "客户来源",
                     key: "eee",
                     maxWidth: 94,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "创建时间",
                     key: "createTime",
                     width: 80,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "最近更新时间",
                     key: "updateTime",
                     width: 80,
-                    align: 'center',
+                    align: "center"
                 }
             ],
             tableLists: []
@@ -266,35 +286,40 @@ export default {
     },
     methods: {
         loadLists(page) {
-            this.$store.state.spinShow = true
+            this.$store.state.spinShow = true;
 
-            api.axs("post", "/company/selectMultiByExt",this.form)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.tableLists = this.tableLists.concat(data.data.list)
-                    this.form.total = data.data.total
-                    this.$Loading.finish()
-                    this.$store.state.spinShow = false
-                } else {
-                    this.$Message.error(data.remark)
-                }
-            })
+            api
+                .axs("post", "/company/selectMultiByExt", this.form)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.tableLists = this.tableLists.concat(
+                            data.data.list
+                        );
+                        this.form.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         searchIn() {
             if (!this.form.companyName) {
-                this.$Message.warning('想搜点什么?')
-                return 
+                this.$Message.warning("想搜点什么?");
+                return;
             }
-            this.tableLists = []
+            this.tableLists = [];
             // this.loadLists()
-
         },
-        addRecord() { //添加记录
-            this.$Message.info('添加记录~~')
-            this.$router.push('/customer/myCustomers/records?cname=' + this.cname)
+        addRecord() {
+            //添加记录
+            this.$Message.info("添加记录~~");
+            this.$router.push(
+                "/customer/myCustomers/records?cname=" + this.cname
+            );
         },
         createDo(val) {
-            this.$Message.info(val + '1000000000')
+            this.$Message.info(val + "1000000000");
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -305,14 +330,13 @@ export default {
     },
 
     mounted() {
-        this.loadLists()
+        this.loadLists();
     }
 };
 </script>
 
 <style lang='less' scoped>
 .myCustomers {
-    
 }
 .popContent {
     li {
@@ -328,7 +352,7 @@ export default {
         }
         .time {
             span {
-                color: #4f8ae4
+                color: #4f8ae4;
             }
             time {
                 float: right;

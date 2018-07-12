@@ -23,10 +23,9 @@ export default {
         setTimeout(() => {
             this.$Loading.finish();
             this.$store.state.spinShow = false;
-        }, 1500)
+        }, 1500);
     }
-}
+};
 </script>
 <style lang='less' scoped>
-
 </style>

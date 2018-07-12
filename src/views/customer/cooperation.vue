@@ -71,11 +71,11 @@
 
 <script>
 // @ is an alias to /src
-import api from "@/api"
-import ls from "store2"
-import CompanyPop from "@/components/customer/addCompanyPop.vue"
-import Professions from "@/components/common/professions.vue"
-import { mapState, mapMutations, mapActions } from "vuex"
+import api from "@/api";
+import ls from "store2";
+import CompanyPop from "@/components/customer/addCompanyPop.vue";
+import Professions from "@/components/common/professions.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     name: "cooperation",
     components: {
@@ -123,7 +123,8 @@ export default {
                                 on: {
                                     click: () => {
                                         this.$router.push(
-                                            "/customer/myCustomers/records?id=" + row.id
+                                            "/customer/myCustomers/records?id=" +
+                                                row.id
                                         );
                                     }
                                 }
@@ -150,7 +151,7 @@ export default {
                 {
                     title: "客户联系人",
                     key: "contact",
-                    width: 94,
+                    width: 94
                 },
                 {
                     title: "手机",
@@ -161,16 +162,16 @@ export default {
                     title: "合作状态",
                     key: "companyStatus",
                     width: 90,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "最近沟通",
                     key: "lastContactTime",
                     width: 100,
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
                         const row = params.row;
-                        return h( "span",row.lastContactTime.substr(0, 10))
+                        return h("span", row.lastContactTime.substr(0, 10));
                     }
                 },
                 {
@@ -192,7 +193,8 @@ export default {
                                 h(
                                     "div",
                                     (row.lastContactText &&
-                                        row.lastContactText.substr(0, 5) + "...") ||
+                                        row.lastContactText.substr(0, 5) +
+                                            "...") ||
                                         "无记录"
                                 )
                             ]
@@ -203,10 +205,13 @@ export default {
                     title: "进行中/总职位",
                     key: "totalPosition",
                     maxWidth: 94,
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
-                        const row = params.row
-                        return h('span', row.doingPosition + ' / ' + row.totalPosition)
+                        const row = params.row;
+                        return h(
+                            "span",
+                            row.doingPosition + " / " + row.totalPosition
+                        );
                     }
                 },
                 {
@@ -218,30 +223,30 @@ export default {
                     title: "附件",
                     key: "totalAttachment",
                     width: 60,
-                    align: 'center',
+                    align: "center"
                 },
                 {
                     title: "贡献值",
                     key: "totalPayed",
-                    align: 'center',
+                    align: "center"
                 }
             ]
         };
     },
     methods: {
-        ...mapActions(['selTrees']),
+        ...mapActions(["selTrees"]),
         loadLists(page) {
-            this.form.pageNum = page
-            this.$store.state.spinShow = true
+            this.form.pageNum = page;
+            this.$store.state.spinShow = true;
 
             api.axs("post", "/company/page", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.tableLists = data.data.list
-                    this.form.total = data.data.total
-                    this.$Loading.finish()
-                    this.$store.state.spinShow = false
+                    this.tableLists = data.data.list;
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
                 } else {
-                    this.$Message.error(data.remark)
+                    this.$Message.error(data.remark);
                 }
             });
         },
@@ -280,8 +285,8 @@ export default {
     },
 
     mounted() {
-        this.loadLists()
-        this.selTrees()
+        this.loadLists();
+        this.selTrees();
         // setTimeout(() => {
         //     this.$Loading.finish()
         //     this.$store.state.spinShow = false

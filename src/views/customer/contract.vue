@@ -1,9 +1,11 @@
 <template>
     <div class="customer">
-        <div class='currentNav'>当前位置: 客户合同 
-            <Button type="info" class='addNew fr'><Icon type="arrow-down-c"></Icon> 下载</Button>
+        <div class='currentNav'>当前位置: 客户合同
+            <Button type="info" class='addNew fr'>
+                <Icon type="arrow-down-c"></Icon> 下载</Button>
             <span class='fr'>&nbsp;&nbsp;</span>
-            <Button type="success" class='addNew fr' @click='contractPop=true'><Icon type="plus"></Icon> 创建新合同</Button>
+            <Button type="success" class='addNew fr' @click='contractPop=true'>
+                <Icon type="plus"></Icon> 创建新合同</Button>
         </div>
         <form class="searches">
             <div class="search">
@@ -33,11 +35,11 @@
                     <Option value="客户重要性2">客户重要性2</Option>
                 </Select>
                 <div class="disInB sels-item">
-                    签约时间: 
+                    签约时间:
                     <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
                 </div>
                 <div class="disInB sels-item">
-                    合同到期日: 
+                    合同到期日:
                     <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
                 </div>
                 <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
@@ -52,7 +54,7 @@
         </div>
 
         <!-- 新增合同弹窗 -->
-        <ContractPop :contractPop='contractPop'/>
+        <ContractPop :contractPop='contractPop' />
 
     </div>
 </template>
@@ -61,7 +63,7 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
-import ContractPop from "@/components/customer/addContractPop.vue"
+import ContractPop from "@/components/customer/addContractPop.vue";
 export default {
     name: "home",
     data() {
@@ -91,75 +93,79 @@ export default {
                     width: 140,
                     sortable: true,
                     ellipsis: true,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "BD顾问",
                     key: "kehu",
                     width: 94,
                     sortable: true,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "前期服务费",
                     key: "phone",
                     width: 94,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "服务费比列",
                     key: "bbb",
                     sortable: true,
                     width: 94,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "付款方式",
                     key: "ccc",
                     width: 65,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "合同开始时间",
                     key: "ddd",
                     width: 90,
                     ellipsis: true,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "合同结束时间",
                     key: "eee",
                     maxWidth: 94,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "保证期",
                     key: "fff",
                     width: 66,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "合同状态",
                     key: "ggg",
                     width: 66,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "合同编号",
                     key: "hhh",
                     width: 120,
-                    align: 'center'
+                    align: "center"
                 },
                 {
                     title: "操作",
                     key: "iii",
-                    align: 'center',
+                    align: "center",
                     render: (h, params) => {
-                        return h("router-link", {
-                            attrs: {
-                                to: '/customer/cooperation'
-                            }
-                        }, '详情')
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to: "/customer/cooperation"
+                                }
+                            },
+                            "详情"
+                        );
                     }
                 }
             ],
@@ -197,10 +203,10 @@ export default {
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page)
+            this.$Message.info("当前页: " + page);
             setTimeout(() => {
-                this.$store.state.spinShow = false
-            }, 1500)
+                this.$store.state.spinShow = false;
+            }, 1500);
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -212,9 +218,9 @@ export default {
 
     mounted() {
         setTimeout(() => {
-            this.$Loading.finish()
-            this.$store.state.spinShow = false
-        }, 1500)
+            this.$Loading.finish();
+            this.$store.state.spinShow = false;
+        }, 1500);
     }
 };
 </script>

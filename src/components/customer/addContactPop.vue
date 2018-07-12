@@ -1,116 +1,123 @@
 <template>
-    <div class="contactPop">
-        <Modal v-model="contactPop" :closable='false' :mask-closable='false' style='text-align:center'>
-            <div slot='header' style='font-size:14px;color:#444'>
-                新增联系人
-                <a href="javascript:;" @click='closePop'><Icon type="close" class='fr'></Icon></a>
-            </div>
-            <ul class="contact-content">
-                <li>
-                    <p><span>*</span> 姓名：</p>
-                    <Input v-model='addForm.name' placeholder=""></Input>
-                </li>
-                <li>
-                    <p><span>*</span> 关联客户：</p>
-                    <Input :readonly='true' :value="company" placeholder=""></Input>
-                </li>
-                <li class='li-phone'>
-                    <p><span>*</span> 联系电话：</p>
-                    <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone1'>
-                            <Select v-model='addForm.phone1Type' slot="append" style="width:80px">
-                                <Option value="1">工作</Option>
-                                <Option value="2">手机</Option>
-                            </Select>
-                        </Input>
-                    </div>
-                    <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
-                </li>
-                <li class='li-phone' v-if='addPhone2'>
-                    <p>&nbsp;</p>
-                    <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone2'>
-                            <Select v-model='addForm.phone2Type' slot="append" style="width:80px">
-                                <Option value="1">工作</Option>
-                                <Option value="2">手机</Option>
-                            </Select>
-                        </Input>
-                        <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
-                    </div>
-                </li>
-                <li class='li-phone' v-if='addPhone3'>
-                    <p>&nbsp;</p>
-                    <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone3'>
-                            <Select v-model='addForm.phone3Type' slot="append" style="width:80px">
-                                <Option value="1">工作</Option>
-                                <Option value="2">手机</Option>
-                            </Select>
-                        </Input>
-                        <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
-                    </div>
-                </li>
-                <li class='li-phone' v-if='addPhone4'>
-                    <p>&nbsp;</p>
-                    <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone4'>
-                            <Select v-model='addForm.phone4Type' slot="append" style="width:80px">
-                              <Option value="1">工作</Option>
-                                <Option value="2">手机</Option>
-                            </Select>
-                        </Input>
-                        <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
-                    </div>
-                </li>
-                <li>
-                    <p>职务：</p>
-                    <Input v-model='addForm.job' placeholder=""></Input>
-                </li>
-                <li>
-                    <p>决策关系：</p>
-                    <!-- <Input v-model='addForm.decisionRelation' placeholder=""></Input> -->
-                    <Select v-model='addForm.decisionRelation' style="width:300px;text-align:left">
-                         <Option v-for="(decision,index) in decisionlist"  :value="decision.code" :key='index'>{{decision.codeText}}</Option>
+	<div class="contactPop">
+		<Modal v-model="contactPop" :closable='false' :mask-closable='false' style='text-align:center'>
+			<div slot='header' style='font-size:14px;color:#444'>
+				新增联系人
+				<a href="javascript:;" @click='closePop'>
+					<Icon type="close" class='fr'></Icon>
+				</a>
+			</div>
+			<ul class="contact-content">
+				<li>
+					<p>
+						<span>*</span> 姓名：</p>
+					<Input v-model='addForm.name' placeholder=""></Input>
+				</li>
+				<li>
+					<p>
+						<span>*</span> 关联客户：</p>
+					<Input :readonly='true' :value="company" placeholder=""></Input>
+				</li>
+				<li class='li-phone'>
+					<p>
+						<span>*</span> 联系电话：</p>
+					<div style="display:inline-block;vertical-align:middle">
+						<Input v-model='addForm.phone1'>
+						<Select v-model='addForm.phone1Type' slot="append" style="width:80px">
+							<Option value="1">工作</Option>
+							<Option value="2">手机</Option>
+						</Select>
+						</Input>
+					</div>
+					<Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
+				</li>
+				<li class='li-phone' v-if='addPhone2'>
+					<p>&nbsp;</p>
+					<div style="display:inline-block;vertical-align:middle">
+						<Input v-model='addForm.phone2'>
+						<Select v-model='addForm.phone2Type' slot="append" style="width:80px">
+							<Option value="1">工作</Option>
+							<Option value="2">手机</Option>
+						</Select>
+						</Input>
+						<Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+					</div>
+				</li>
+				<li class='li-phone' v-if='addPhone3'>
+					<p>&nbsp;</p>
+					<div style="display:inline-block;vertical-align:middle">
+						<Input v-model='addForm.phone3'>
+						<Select v-model='addForm.phone3Type' slot="append" style="width:80px">
+							<Option value="1">工作</Option>
+							<Option value="2">手机</Option>
+						</Select>
+						</Input>
+						<Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+					</div>
+				</li>
+				<li class='li-phone' v-if='addPhone4'>
+					<p>&nbsp;</p>
+					<div style="display:inline-block;vertical-align:middle">
+						<Input v-model='addForm.phone4'>
+						<Select v-model='addForm.phone4Type' slot="append" style="width:80px">
+							<Option value="1">工作</Option>
+							<Option value="2">手机</Option>
+						</Select>
+						</Input>
+						<Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+					</div>
+				</li>
+				<li>
+					<p>职务：</p>
+					<Input v-model='addForm.job' placeholder=""></Input>
+				</li>
+				<li>
+					<p>决策关系：</p>
+					<!-- <Input v-model='addForm.decisionRelation' placeholder=""></Input> -->
+					<Select v-model='addForm.decisionRelation' style="width:300px;text-align:left">
+						<Option v-for="(decision,index) in decisionlist" :value="decision.code" :key='index'>{{decision.codeText}}</Option>
 
-                    </Select>
-                </li>
-                <li>
-                    <p>邮箱：</p>
-                    <Input v-model='addForm.email' placeholder=""></Input>
-                </li>
-                <li>
-                    <p>微信：</p>
-                    <Input v-model='addForm.wechat'  placeholder=""></Input>
-                </li>
-                <li>
-                    <p>性别：</p>
-                    <Select v-model='addForm.sex' style="width:300px;text-align:left">
-                        <Option value="1">男</Option>
-                        <Option value="2">女</Option>
-                    </Select>
-                </li>
-                <li>
-                    <p>生日：</p>
-                    <div style="display:inline-block;vertical-align:middle">
-                        <DatePicker type="date" v-model='addForm.birthday'  placeholder="Select date" style="width:220px;float:left"></DatePicker>
-                    <Select v-model='addForm.dateType' style="width:80px;float:left;">
-                                <Option value="1">公历</Option>
-                                <Option value="2">农历</Option>
-                     </Select>
-                    </div>
-                </li>
-                <li>
-                    <p>爱好：</p>
-                    <Input v-model='addForm.hobby' placeholder=""></Input>
-                </li>
-                <li>
-                    <p>备注：</p>
-                    <Input v-model='addForm.remark' type="textarea" :rows="4" placeholder=""></Input>
-                </li>
-            </ul>
-            <div slot='footer' style='text-align:center'><Button type='info' @click='subSave'>保存</Button></div>
-        </Modal>
-    </div>
+					</Select>
+				</li>
+				<li>
+					<p>邮箱：</p>
+					<Input v-model='addForm.email' placeholder=""></Input>
+				</li>
+				<li>
+					<p>微信：</p>
+					<Input v-model='addForm.wechat' placeholder=""></Input>
+				</li>
+				<li>
+					<p>性别：</p>
+					<Select v-model='addForm.sex' style="width:300px;text-align:left">
+						<Option value="1">男</Option>
+						<Option value="2">女</Option>
+					</Select>
+				</li>
+				<li>
+					<p>生日：</p>
+					<div style="display:inline-block;vertical-align:middle">
+						<DatePicker type="date" v-model='addForm.birthday' placeholder="Select date" style="width:220px;float:left"></DatePicker>
+						<Select v-model='addForm.dateType' style="width:80px;float:left;">
+							<Option value="1">公历</Option>
+							<Option value="2">农历</Option>
+						</Select>
+					</div>
+				</li>
+				<li>
+					<p>爱好：</p>
+					<Input v-model='addForm.hobby' placeholder=""></Input>
+				</li>
+				<li>
+					<p>备注：</p>
+					<Input v-model='addForm.remark' type="textarea" :rows="4" placeholder=""></Input>
+				</li>
+			</ul>
+			<div slot='footer' style='text-align:center'>
+				<Button type='info' @click='subSave'>保存</Button>
+			</div>
+		</Modal>
+	</div>
 </template>
 
 <script>
@@ -212,7 +219,6 @@ export default {
     console.log(this.$parent.id);
     this.id = this.$parent.id;
     api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
-      console.log(data);
       if (data.code === "SUCCESS") {
         this.company = data.data.companyName;
       } else {

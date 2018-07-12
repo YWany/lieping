@@ -103,110 +103,108 @@
 </template>
 
 <script>
-import api from "@/api"
+import api from "@/api";
 export default {
-    name: "addContractPop",
-    props: ['contractPop'],
-    components: {},
-    data() {
-        return {
-            subFlag: true,
-            huiK1: false, //回款计划1
-            huiK2: false, //回款计划2
-            contractForm: {
-                companyName: '',
-                title: '',
-                remindUser: '',
-                followTime: new Date(),
-                remark: '',
-            },
-            contractFormError: {
-                companyName: '客户名称',
-                title: '标题',
-                remindUser: '跟进人',
-                followTime: '跟进时间',
-                remark: '提醒内容',
-            }
+  name: "addContractPop",
+  props: ["contractPop"],
+  components: {},
+  data() {
+    return {
+      subFlag: true,
+      huiK1: false, //回款计划1
+      huiK2: false, //回款计划2
+      contractForm: {
+        companyName: "",
+        title: "",
+        remindUser: "",
+        followTime: new Date(),
+        remark: ""
+      },
+      contractFormError: {
+        companyName: "客户名称",
+        title: "标题",
+        remindUser: "跟进人",
+        followTime: "跟进时间",
+        remark: "提醒内容"
+      }
+    };
+  },
+  methods: {
+    subSave() {
+      var forms = this.contractForm;
+      for (var name in forms) {
+        if (!forms[name]) {
+          this.$Message.error(this.contractFormError[name] + ": 请填写完整!");
+          return;
         }
+      }
+      if (this.subFlag) this.subFlag = false;
+      else return;
+      api
+        .axs("post", "/followRemind/saveFollowRemind", this.contractForm)
+        .then(({ data }) => {
+          if (data.code === "SUCCESS") {
+            this.datas = data;
+            this.$Message.success("新增成功!");
+            this.reset("contractForm");
+          } else {
+            this.$Message.error(data.remark);
+            this.subFlag = true;
+          }
+        });
     },
-    methods: {
-        subSave() {
-            var forms = this.contractForm
-            for(var name in forms) {
-                if (!forms[name]) {
-                    this.$Message.error(this.contractFormError[name] + ': 请填写完整!')
-                    return
-                }
-            }
-            if (this.subFlag) this.subFlag = false
-            else return
-            api.axs("post", "/followRemind/saveFollowRemind", this.contractForm)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.datas = data
-                    this.$Message.success('新增成功!') 
-                    this.reset(this.contractForm)
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-        },
-        closePop() {
-            this.$parent.contractPop = false
-            this.contractForm.companyName = ''
-            this.contractForm.title = ''
-            this.contractForm.remindUser = ''
-            this.contractForm.remark = ''
-        },
-        reset(key) {
-            Object.keys(this[key]).forEach(item => {
-                this[key][item] = ""
-            })
-        }
+    closePop() {
+      this.$parent.contractPop = false;
+      this.contractForm.companyName = "";
+      this.contractForm.title = "";
+      this.contractForm.remindUser = "";
+      this.contractForm.remark = "";
     },
-    mounted() {
-        
-    },
-
-}
+    reset(key) {
+      Object.keys(this[key]).forEach(item => {
+        this[key][item] = "";
+      });
+    }
+  },
+  mounted() {}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less"> 
+<style lang="less">
 .contract-content {
-    li {
-        margin-bottom: 10px;
-        width: 50%;
-        display: inline-block;
-        p {
-            display: inline-block;
-            width: 100px;
-            line-height: 32px;
-            text-align: right;
-            color: #444;
-            margin-right: 10px;
-            span {
-                color: #ff8686
-            }
-        }
-        .addHuik {
-            width:260px;
-            width: 260px;
-            margin-right: 0;
-            text-align: left;
-        }
-        .ivu-input-wrapper,
-        .ivu-select {
-            width: 260px;
-        }
-        .sel-picker .ivu-date-picker-editor {
-            width: 234px;
-        }
+  li {
+    margin-bottom: 10px;
+    width: 50%;
+    display: inline-block;
+    p {
+      display: inline-block;
+      width: 100px;
+      line-height: 32px;
+      text-align: right;
+      color: #444;
+      margin-right: 10px;
+      span {
+        color: #ff8686;
+      }
     }
-    li.line-all {
-        width: 100%;
-        display: block;
+    .addHuik {
+      width: 260px;
+      width: 260px;
+      margin-right: 0;
+      text-align: left;
     }
+    .ivu-input-wrapper,
+    .ivu-select {
+      width: 260px;
+    }
+    .sel-picker .ivu-date-picker-editor {
+      width: 234px;
+    }
+  }
+  li.line-all {
+    width: 100%;
+    display: block;
+  }
 }
 </style>

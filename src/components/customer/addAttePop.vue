@@ -8,7 +8,7 @@
             <ul class="atte-content">
                 <li>
                     <p><span>*</span> 客户名称：</p>
-                    <Input v-model='atteForm.companyName' placeholder=""></Input>
+                    <Input :readonly='true'   v-model='atteForm.companyId'  :placeholder="company"></Input>
                 </li>
                 <li>
                     <p><span>*</span> 标题：</p>
@@ -16,17 +16,23 @@
                 </li>
                 <li>
                     <p><span>*</span> 跟进人：</p>
-                    <Input v-model='atteForm.remindUser' placeholder=""></Input>
+                    <Select v-model="atteForm.followUserId" placeholder="跟进人" style="width:300px">
+                        <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
+                    </Select>
                 </li>
                 <li>
                     <p><span>*</span> 跟进时间：</p>
-                    <DatePicker v-model='atteForm.followTime'  type="date" placeholder="Select date"></DatePicker>
+                    <DatePicker :value='atteForm.followTime' format="yyyy-MM-dd" @on-change='seltime'  type="date" placeholder="Select date"></DatePicker>
                 </li>
-                
+                  <li>
+                    <p><span>*</span> 提醒时间：</p>
+                    <DatePicker v-model='atteForm.remindBefore'  type="date" placeholder="Select date"></DatePicker>
+                </li>
                 <li>
                     <p><span>*</span> 提醒：</p>
                     <Input v-model='atteForm.remark' type="textarea" :rows="4" placeholder=""></Input>
                 </li>
+                
             </ul>
             <div slot='footer' style='text-align:center'><Button type='info' @click='subSave'>保存</Button></div>
         </Modal>
@@ -34,92 +40,119 @@
 </template>
 
 <script>
-import api from "@/api"
+import api from "@/api";
 export default {
-    name: "addAttePop",
-    props: ['attePop'],
-    components: {},
-    data() {
-        return {
-            subFlag: true,
-            atteForm: {
-                companyName: '',
-                title: '',
-                remindUser: '',
-                followTime: new Date(),
-                remark: '',
-            },
-            atteFormError: {
-                companyName: '客户名称',
-                title: '标题',
-                remindUser: '跟进人',
-                followTime: '跟进时间',
-                remark: '提醒内容',
-            }
+  name: "addAttePop",
+  props: ["attePop"],
+  components: {},
+  data() {
+    return {
+      subFlag: true,
+      userlist: [],
+      id: "",
+      company: "",
+      atteForm: {
+        companyId: "",
+        title: "",
+        followUserId: "",
+        followTime: new Date(),
+        remindBefore: new Date(),
+        remark: ""
+      },
+      atteFormError: {
+        companyId: "客户名称",
+        title: "标题",
+        followUserId: "跟进人",
+        followTime: "跟进时间",
+        remindBefore: "提醒时间",
+        remark: "提醒内容"
+      }
+    };
+  },
+  methods: {
+    subSave() {
+      var forms = this.atteForm;
+      this.atteForm.companyId = this.id;
+      //    date = this.atteForm.followTime.replace("Z", " UTC");
+      //    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+      for (var companyId in forms) {
+        if (!forms[companyId]) {
+          this.$Message.error(this.atteFormError[companyId] + ": 请填写完整!");
+          return;
         }
-    },
-    methods: {
-        subSave() {
-            var forms = this.atteForm
-            for(var name in forms) {
-                if (!forms[name]) {
-                    this.$Message.error(this.atteFormError[name] + ': 请填写完整!')
-                    return
-                }
-            }
-            if (this.subFlag) this.subFlag = false
-            else return
-            api.axs("post", "/followRemind/saveFollowRemind", this.atteForm)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.datas = data
-                    this.$Message.success('新增成功!') 
-                    this.reset(this.atteForm)
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-        },
-        closePop() {
-            this.$parent.attePop = false
-            this.atteForm.companyName = ''
-            this.atteForm.title = ''
-            this.atteForm.remindUser = ''
-            this.atteForm.remark = ''
-        },
-        reset(key) {
-            Object.keys(this[key]).forEach(item => {
-                this[key][item] = ""
-            })
+      }
+      if (this.subFlag) this.subFlag = false;
+      else return;
+      api.axs("post", "/followRemind/save", this.atteForm).then(({ data }) => {
+        if (data.code === "SUCCESS") {
+          this.datas = data;
+          this.$Message.success("新增成功!");
+          this.reset(this.atteForm);
+        } else {
+          this.$Message.error(data.remark);
+          this.subFlag = true;
         }
+      });
     },
-    mounted() {
-        
+    seltime(date) {
+      this.atteForm.followTime = date;
     },
+    closePop() {
+      this.$parent.attePop = false;
+      this.atteForm.companyName = "";
+      this.atteForm.title = "";
+      this.atteForm.remindUser = "";
+      this.atteForm.remark = "";
+    },
+    reset(key) {
+      Object.keys(this[key]).forEach(item => {
+        this[key][item] = "";
+      });
+    }
+  },
+  mounted() {
+    this.id = this.$parent.id;
+    api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
+      if (data.code === "SUCCESS") {
+        this.company = data.data.companyName;
+      } else {
+        this.$Message.error(data.remark);
+        this.subFlag = true;
+      }
+    });
 
-}
+    api.axs("post", "/user/list").then(({ data }) => {
+      if (data.code === "SUCCESS") {
+        console.log(data);
+
+        this.userlist = data.data;
+      } else {
+        this.$Message.error(data.remark);
+      }
+    });
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less"> 
+<style lang="less">
 .atte-content {
-    li {
-        margin-bottom: 10px;
-        p {
-            display: inline-block;
-            width: 80px;
-            line-height: 32px;
-            text-align: right;
-            color: #444;
-            margin-right: 10px;
-            span {
-                color: #ff8686
-            }
-        }
-        .ivu-input-wrapper {
-            width: 300px;
-        }
+  li {
+    margin-bottom: 10px;
+    p {
+      display: inline-block;
+      width: 80px;
+      line-height: 32px;
+      text-align: right;
+      color: #444;
+      margin-right: 10px;
+      span {
+        color: #ff8686;
+      }
     }
+    .ivu-input-wrapper {
+      width: 300px;
+    }
+  }
 }
 </style>

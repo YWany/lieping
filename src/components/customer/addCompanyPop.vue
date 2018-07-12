@@ -4,6 +4,7 @@
             <div slot='header' style='font-size:14px;color:#444'>
                 <span v-if='companyMod'>编辑企业</span>
                 <span v-else>新增企业</span>
+                {{recordsDetails}}
                 <a href="javascript:;" @click='$parent.companyPop=false'>
                     <Icon type="close" class='fr'></Icon>
                 </a>
@@ -98,10 +99,15 @@ import Citysels from "@/components/common/citysels.vue";
 import Professions from "@/components/common/professions.vue";
 export default {
     name: "addCompanyPop",
-    props: ["recordsDetails", "companyPop", "companyMod"],
+    props: ["recordsDetails", "companyPop", "companyMod", "id"],
     components: {
         Citysels,
         Professions
+    },
+    computed: {
+        getParentDetails() {
+            return this.$parent.recordsDetails;
+        }
     },
     data() {
         return {
@@ -143,67 +149,109 @@ export default {
     },
     methods: {
         info() {
-            api.axs("post", "/param/dic/tree", { id: "10" })
-            .then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    let alllist = data.data;
-                    this.$store.state.selTrees = data.data
-                    for (let i = 0; i < alllist.length; i++) {
-                        if (alllist[i].code === "companyType") {
-                            //公司性质
-                            this.naturelist = alllist[i].children;
+            api
+                .axs("post", "/param/dic/tree", { id: "10" })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        let alllist = data.data;
+                        this.$store.state.selTrees = data.data;
+                        for (let i = 0; i < alllist.length; i++) {
+                            if (alllist[i].code === "companyType") {
+                                //公司性质
+                                this.naturelist = alllist[i].children;
+                            }
+                            if (alllist[i].code === "companyStatus") {
+                                this.statelist = alllist[i].children;
+                            }
+                            if (alllist[i].code === "companyScope") {
+                                this.scalelist = alllist[i].children;
+                            }
+                            if (alllist[i].code === "importantLevel") {
+                                this.importancelist = alllist[i].children;
+                            }
+                            if (alllist[i].code === "companySource") {
+                                this.sourcelist = alllist[i].children;
+                            }
                         }
-                        if (alllist[i].code === "companyStatus") {
-                            this.statelist = alllist[i].children;
-                        }
-                        if (alllist[i].code === "companyScope") {
-                            this.scalelist = alllist[i].children;
-                        }
-                        if (alllist[i].code === "4") {
-                            this.importancelist = alllist[i].children;
-                        }
-                        if (alllist[i].code === "companySource") {
-                            this.sourcelist = alllist[i].children;
-                        }
+                    } else {
+                        this.$Message.error(data.remark);
+                        this.subFlag = true;
                     }
-                } else {
-                    this.$Message.error(data.remark);
-                    this.subFlag = true;
-                }
-            });
+                });
+            if (this.companyMod) {
+                this.companyForm = this.recordsDetails;
+            }
         },
         subSave() {
-            if (this.$refs.proCity.cityId === "") {
-                this.companyForm.areaId = this.$refs.proCity.proId;
-            } else {
-                this.companyForm.areaId = this.$refs.proCity.cityId;
-            }
-            this.companyForm.companyVocation = this.professId;
-            var forms = this.companyForm;
-            for (var name in forms) {
-                if (!forms[name]) {
-                    this.$Message.error(
-                        this.companyFormError[name] + ": 请填写完整!"
-                    );
-                    return;
-                }
-            }
-            if (this.subFlag) this.subFlag = false;
-            else return;
+            if (this.companyMod) {
+                this.companyForm = this.recordsDetails;
 
-            api.axs("post", "/company/add", this.companyForm)
-            .then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.datas = data;
-                    this.$Message.success("新增成功!");
-                    this.$parent.companyPop = false;
-                    this.$parent.loadLists();
-                    this.reset("companyForm");
+                if (this.$refs.proCity.cityId === "") {
+                    this.companyForm.areaId = this.$refs.proCity.proId;
                 } else {
-                    this.$Message.error(data.remark);
-                    this.subFlag = true;
+                    this.companyForm.areaId = this.$refs.proCity.cityId;
                 }
-            });
+                this.companyForm.companyVocation = this.professId;
+                var forms = this.companyForm;
+                for (var name in forms) {
+                    if (!forms[name]) {
+                        this.$Message.error(
+                            this.companyFormError[name] + ": 请填写完整!"
+                        );
+                        return;
+                    }
+                }
+                if (this.subFlag) this.subFlag = false;
+                else return;
+                api
+                    .axs("post", "/company/update", this.changeform)
+                    .then(({ data: { data, code } }) => {
+                        if (data.code === "SUCCESS") {
+                            this.datas = data;
+                            this.$Message.success("新增成功!");
+                            this.$parent.companyPop = false;
+                            this.$parent.loadLists();
+                            this.reset("companyForm");
+                            this.companyMod = "false";
+                        } else {
+                            this.$Message.error(data.remark);
+                            this.subFlag = true;
+                        }
+                    });
+            } else {
+                if (this.$refs.proCity.cityId === "") {
+                    this.companyForm.areaId = this.$refs.proCity.proId;
+                } else {
+                    this.companyForm.areaId = this.$refs.proCity.cityId;
+                }
+                this.companyForm.companyVocation = this.professId;
+                var forms = this.companyForm;
+                for (var name in forms) {
+                    if (!forms[name]) {
+                        this.$Message.error(
+                            this.companyFormError[name] + ": 请填写完整!"
+                        );
+                        return;
+                    }
+                }
+                if (this.subFlag) this.subFlag = false;
+                else return;
+
+                api
+                    .axs("post", "/company/add", this.companyForm)
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.datas = data;
+                            this.$Message.success("新增成功!");
+                            this.$parent.companyPop = false;
+                            this.$parent.loadLists();
+                            this.reset("companyForm");
+                        } else {
+                            this.$Message.error(data.remark);
+                            this.subFlag = true;
+                        }
+                    });
+            }
         },
         selPro() {
             //选择职位
@@ -227,9 +275,16 @@ export default {
     },
     mounted() {
         this.info();
-
         // 企业信息
-        console.log(this.recordsDetails);
+        if (this.companyMod) {
+            this.companyForm = this.getParentDetails;
+        }
+        return this.$parent.recordsDetails;
+        console.log(12345678900);
+        setTimeout(() => {
+            console.log(12345678900);
+            this.companyForm = this.getParentDetails;
+        }, 5000);
     }
 };
 </script>

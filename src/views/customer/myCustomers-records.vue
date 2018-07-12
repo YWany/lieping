@@ -30,8 +30,7 @@
 							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
 							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
 							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
-								<Option value='电话沟通'>电话沟通</Option>
-								<Option value='当面拜访'>当面拜访</Option>
+								<Option :value='tree.id' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
 							</Select>
 							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
 							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd" @on-change='seltime' style="width: 200px"></DatePicker>
@@ -270,6 +269,7 @@ export default {
     data() {
         return {
             subFlag: true,
+            genjinTrees: this.$store.state.selTrees[5].children,
             pageNum: "1",
             pageSize: "10",
             form: {

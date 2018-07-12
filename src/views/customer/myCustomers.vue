@@ -101,7 +101,7 @@
         </Modal>
 
         <!-- 新增跟进提醒弹窗 -->
-        <AttePop :attePop='attePop' />
+        <AttePop :attePop='attePop' :atteCompanyId='atteCompanyId' :atteCompanyName='atteCompanyName' />
 
     </div>
 </template>
@@ -119,6 +119,8 @@ export default {
             recordPop: false,
             cname: "",
             attePop: false, //新增提醒弹窗
+            atteCompanyId: '',
+            atteCompanyName: '',
             form: {
                 sel1: "",
                 sel2: "",
@@ -144,13 +146,15 @@ export default {
                     width: 50,
                     align: "center",
                     render: (h, params) => {
+                        const row = params.row
                         return h(
                             "a",
                             {
                                 on: {
                                     click: () => {
-                                        this.attePop = true;
-                                        this.$Message.info("通知通知通知通知");
+                                        this.atteCompanyId = row.id
+                                        this.atteCompanyName = row.companyName
+                                        this.attePop = true
                                     }
                                 }
                             },
@@ -190,16 +194,12 @@ export default {
                                     click: () => {
                                         this.$router.push(
                                             "/customer/myCustomers/records?id=" +
-                                                row.id +
-                                                "&cname=" +
-                                                row.companyName +
-                                                "&level=" +
-                                                row.importantLevel
+                                                row.id
                                         );
                                     }
                                 }
                             },
-                            params.row.name
+                            row.companyName
                         );
                     }
                 },
@@ -221,42 +221,50 @@ export default {
                 },
                 {
                     title: "联系人",
-                    key: "name",
+                    key: "contactName",
                     width: 94,
                     sortable: true,
                     align: "center"
                 },
                 {
                     title: "联系方式",
-                    key: "phone1",
+                    key: "contactPhone1",
                     width: 94,
                     align: "center"
                 },
                 {
                     title: "未联系时间",
-                    key: "wlxTime",
+                    key: "outOfContactDays",
                     width: 86,
                     align: "center"
                 },
                 {
                     title: "跟进记录",
-                    key: "followRecord",
+                    key: "lastFollowRecord",
                     ellipsis: true,
                     align: "center",
                     render: (h, params) => {
                         var row = params.row;
-                        return h(
-                            "a",
-                            {
-                                on: {
-                                    click: () => {
-                                        this.recordPop = true;
-                                        this.cname = row.name;
+                        if (row.lastFollowRecord) {
+                            return h(
+                                "a",
+                                {
+                                    on: {
+                                        click: () => {
+                                            this.recordPop = true;
+                                            this.cname = row.name;
+                                        }
                                     }
-                                }
-                            },
-                            row.followRecord
-                        );
+                                },
+                                row.lastFollowRecord.substr(0, 5) + "..."
+                            );
+                        } else {
+                            return h(
+                                "span",
+                                "无记录"
+                            );
+                        }
+                        
                     }
                 },
                 {

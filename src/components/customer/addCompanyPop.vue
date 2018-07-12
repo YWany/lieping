@@ -147,6 +147,7 @@ export default {
             .then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     let alllist = data.data;
+                    this.$store.state.selTrees = data.data
                     for (let i = 0; i < alllist.length; i++) {
                         if (alllist[i].code === "companyType") {
                             //公司性质

@@ -114,169 +114,161 @@
 </template>
 
 <script>
-import api from "@/api"
+import api from "@/api";
 export default {
-    name: "addContactPop",
-    props: ['contactPop'],
-    components: {},
-    data() {
-        return {
-            subFlag: true,
-            id:'',
-            company:'',
-            decisionlist:'',
-            addForm: {
-                name: '',
-                companyId: '',              
-                phone1: '',
-                phone2: '',
-                phone3: '',
-                phone4: '',
-                phone1Type: '1',
-                phone2Type: '1',
-                phone3Type: '1',
-                phone4Type: '1',
-                job: '',
-                dateType:'1',
-                decisionRelation:'',
-                email: '',
-                wechat: '',
-                sex: '1',
-                birthday: '',
-                hobby:'',
-                remark:''
-            },
-            addFormError: {
-                name: '姓名',
-                phone1: '电话',
-                decisionRelation:'决策关系'
-            },
-            phoneNum: 1,
-            addPhoneBtn: true,
-            addPhone2: false,
-            addPhone3: false,
-            addPhone4: false,
+  name: "addContactPop",
+  props: ["contactPop"],
+  components: {},
+  data() {
+    return {
+      subFlag: true,
+      id: "",
+      company: "",
+      decisionlist: "",
+      addForm: {
+        name: "",
+        companyId: "",
+        phone1: "",
+        phone2: "",
+        phone3: "",
+        phone4: "",
+        phone1Type: "1",
+        phone2Type: "1",
+        phone3Type: "1",
+        phone4Type: "1",
+        job: "",
+        dateType: "1",
+        decisionRelation: "",
+        email: "",
+        wechat: "",
+        sex: "1",
+        birthday: "",
+        hobby: "",
+        remark: ""
+      },
+      addFormError: {
+        name: "姓名",
+        phone1: "电话",
+        decisionRelation: "决策关系"
+      },
+      phoneNum: 1,
+      addPhoneBtn: true,
+      addPhone2: false,
+      addPhone3: false,
+      addPhone4: false
+    };
+  },
+  methods: {
+    subSave() {
+      this.addForm.companyId = this.id;
+      if (!this.addForm.name) {
+        this.$Message.error("姓名: 请填写完整!");
+        return;
+      } else if (!this.addForm.phone1) {
+        this.$Message.error("手机: 请填写完整!");
+        return;
+      }
+
+      if (this.subFlag) this.subFlag = false;
+      else return;
+      console.log(this.addForm);
+      api.axs("post", "/contact/add", this.addForm).then(({ data }) => {
+        if (data.code === "SUCCESS") {
+          this.datas = data;
+          this.$Message.success("新增成功!");
+          this.$parent.contactPop = false;
+          this.reset("addForm");
+        } else {
+          this.$Message.error(data.remark);
         }
+        this.subFlag = true;
+      });
     },
-    methods: {
-        subSave() {
-            this.addForm.companyId=this.id
-            if (!this.addForm.name) {
-                this.$Message.error('姓名: 请填写完整!')
-                return
-            } else if (!this.addForm.phone1) {
-                this.$Message.error('手机: 请填写完整!')
-                return
-            }
+    addPhones() {
+      this.phoneNum += 1;
+      if (this.phoneNum > 3) this.addPhoneBtn = false;
+      if (this.phoneNum == 2) this.addPhone2 = true;
+      if (this.phoneNum == 3) this.addPhone3 = true;
+      if (this.phoneNum == 4) this.addPhone4 = true;
+    },
+    delPhones() {
+      this.phoneNum -= 1;
+      if (this.phoneNum < 4) this.addPhoneBtn = true;
+      if (this.phoneNum == 1) this.addPhone2 = false;
+      if (this.phoneNum == 2) this.addPhone3 = false;
+      if (this.phoneNum == 3) this.addPhone4 = false;
+    },
+    closePop() {
+      this.$parent.contactPop = false;
+      // this.reset(this.addForm)
+    },
+    reset(key) {
+      Object.keys(this[key]).forEach(item => {
+        this[key][item] = "";
+      });
+    }
+  },
+  mounted() {
+    console.log(this.$parent.id);
+    this.id = this.$parent.id;
+    api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
+      console.log(data);
+      if (data.code === "SUCCESS") {
+        this.company = data.data.companyName;
+      } else {
+        this.$Message.error(data.remark);
+        this.subFlag = true;
+      }
+    });
 
-            if (this.subFlag) this.subFlag = false
-            else return
-            console.log(this.addForm)
-            api.axs("post", "/contact/add", this.addForm)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.datas = data
-                    this.$Message.success('新增成功!')
-                     this.$parent.contactPop=false
-                    this.reset(this.addForm)
-                   
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-        },
-        addPhones() {
-            this.phoneNum += 1
-            if (this.phoneNum > 3) this.addPhoneBtn = false
-            if (this.phoneNum == 2) this.addPhone2 = true
-            if (this.phoneNum == 3) this.addPhone3 = true
-            if (this.phoneNum == 4) this.addPhone4 = true
-        },
-        delPhones() {
-            this.phoneNum -= 1
-            if (this.phoneNum < 4) this.addPhoneBtn = true
-            if (this.phoneNum == 1) this.addPhone2 = false
-            if (this.phoneNum == 2) this.addPhone3 = false
-            if (this.phoneNum == 3) this.addPhone4 = false
-        },
-        closePop() {
-            this.$parent.contactPop=false
-            // this.reset(this.addForm)
-        },
-        reset(key) {
-            Object.keys(this[key]).forEach(item => {
-                this[key][item] = ""
-            })
+    api.axs("post", "/param/dic/tree", { id: "10" }).then(({ data }) => {
+      if (data.code === "SUCCESS") {
+        let alllist = data.data;
+        for (let i = 0; i < alllist.length; i++) {
+          if (alllist[i].code === "decisionRelation") {
+            //公司性质
+            this.decisionlist = alllist[i].children;
+          }
         }
-    },
-    mounted() {
-        console.log(this.$parent.id)
-          this.id=this.$parent.id
-         api.axs("post", "/company/info", {id:this.id})
-            .then(({ data }) => {
-                console.log(data)
-                if ( data.code === 'SUCCESS') {
-                   this.company=data.data.companyName
-                    
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-
-            api.axs("post", "/param/dic/tree", {id:'10'})
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                   let alllist=data.data
-                   for(let i=0;i<alllist.length;i++){
-                        if(alllist[i].code==="decisionRelation"){//公司性质
-                            this.decisionlist=alllist[i].children;
-                        }
-                       
-                        
-                   }
-                  
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-    },
-
-}
+      } else {
+        this.$Message.error(data.remark);
+        this.subFlag = true;
+      }
+    });
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less"> 
+<style lang="less">
 .contact-content {
-    height: 400px;
-    overflow-y: auto;
-    li {
-        margin-bottom: 10px;
-        p {
-            display: inline-block;
-            width: 80px;
-            line-height: 32px;
-            text-align: right;
-            color: #444;
-            margin-right: 10px;
-            span {
-                color: #ff8686
-            }
-        }
-        .ivu-input-wrapper {
-            width: 300px;
-        }
-        .addNewContact {
-            position: absolute;
-            top: 5px;
-            right: 20px;
-        }
+  height: 400px;
+  overflow-y: auto;
+  li {
+    margin-bottom: 10px;
+    p {
+      display: inline-block;
+      width: 80px;
+      line-height: 32px;
+      text-align: right;
+      color: #444;
+      margin-right: 10px;
+      span {
+        color: #ff8686;
+      }
     }
-    li.li-phone {
-        position:relative;
-        margin-bottom:5px;
+    .ivu-input-wrapper {
+      width: 300px;
     }
+    .addNewContact {
+      position: absolute;
+      top: 5px;
+      right: 20px;
+    }
+  }
+  li.li-phone {
+    position: relative;
+    margin-bottom: 5px;
+  }
 }
 </style>

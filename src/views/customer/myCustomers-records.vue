@@ -648,6 +648,7 @@ export default {
         }
       });
     },
+    ClickTab() {},
     selUsersFun(page) {
       this.userForm.pageNum = page;
       api

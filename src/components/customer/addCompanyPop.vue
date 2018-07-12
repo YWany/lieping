@@ -82,180 +82,173 @@
 </template>
 
 <script>
-import api from "@/api"
-import Citysels from "@/components/common/citysels.vue"
-import Professions from "@/components/common/professions.vue"
+import api from "@/api";
+import Citysels from "@/components/common/citysels.vue";
+import Professions from "@/components/common/professions.vue";
 export default {
-    name: "addCompanyPop",
-    props: ['recordsDetails', 'companyPop', 'companyMod'],
-    components: {
-        Citysels,
-        Professions
-    }, 
-    data() {
-        return {
-            subFlag: true,
-            professPop: false,
-            professName: "",
-            professId: "",
-            statelist:[],
-            naturelist:[],
-            scalelist:[],
-            importancelist:[],
-            sourcelist:[],
-            companyForm: {
-                companyName: '',
-                companySource:'',
-                outerName: '',
-                importantLevel: '',
-                companyStatus: '',
-                companyType: '',
-                companyVocation: '',
-                companyScope: '',
-                introduction: '',
-                areaId:''
-            },
-            companyFormError: {
-                companyName: '客户名称',
-                outerName: '客户对外显示名称',
-                province: '身份',
-                city: '城市',
-                country: '区县',
-                importantLevel: '重要程度',
-                companyStatus: '客户状态',
-                companyType: '企业性质',
-                companyVocation: '所属行业',
-                companyScope: '企业规模',
-                introduction: '企业介绍'
+  name: "addCompanyPop",
+  props: ["recordsDetails", "companyPop", "companyMod"],
+  components: {
+    Citysels,
+    Professions
+  },
+  data() {
+    return {
+      subFlag: true,
+      professPop: false,
+      professName: "",
+      professId: "",
+      statelist: [],
+      naturelist: [],
+      scalelist: [],
+      importancelist: [],
+      sourcelist: [],
+      companyForm: {
+        companyName: "",
+        companySource: "",
+        outerName: "",
+        importantLevel: "",
+        companyStatus: "",
+        companyType: "",
+        companyVocation: "",
+        companyScope: "",
+        introduction: "",
+        areaId: ""
+      },
+      companyFormError: {
+        companyName: "客户名称",
+        outerName: "客户对外显示名称",
+        province: "身份",
+        city: "城市",
+        country: "区县",
+        importantLevel: "重要程度",
+        companyStatus: "客户状态",
+        companyType: "企业性质",
+        companyVocation: "所属行业",
+        companyScope: "企业规模",
+        introduction: "企业介绍"
+      }
+    };
+  },
+  methods: {
+    info() {
+      this.$Message.info("这是一条普通的提醒");
+      api.axs("post", "/param/dic/tree", { id: "10" }).then(({ data }) => {
+        if (data.code === "SUCCESS") {
+          let alllist = data.data;
+          for (let i = 0; i < alllist.length; i++) {
+            if (alllist[i].code === "companyType") {
+              //公司性质
+              this.naturelist = alllist[i].children;
             }
+            if (alllist[i].code === "companyStatus") {
+              this.statelist = alllist[i].children;
+            }
+            if (alllist[i].code === "companyScope") {
+              this.scalelist = alllist[i].children;
+            }
+            if (alllist[i].code === "4") {
+              this.importancelist = alllist[i].children;
+            }
+            if (alllist[i].code === "companySource") {
+              this.sourcelist = alllist[i].children;
+            }
+          }
+        } else {
+          this.$Message.error(data.remark);
+          this.subFlag = true;
         }
+      });
     },
-    methods: {
-        info() {
-            this.$Message.info("这是一条普通的提醒")
-            api.axs("post", "/param/dic/tree", {id:'10'})
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                   let alllist=data.data
-                   for(let i=0;i<alllist.length;i++){
-                        if(alllist[i].code==="companyType"){//公司性质
-                            this.naturelist=alllist[i].children;
-                        }
-                        if(alllist[i].code==="companyStatus"){
-                            this.statelist=alllist[i].children;
-                            
-                        }
-                         if(alllist[i].code==="companyScope"){
-                            this.scalelist=alllist[i].children;
-                            
-                        }
-                         if(alllist[i].code==="4"){
-                            this.importancelist=alllist[i].children;
-                            
-                        }
-                        if(alllist[i].code==="companySource"){
-                            this.sourcelist=alllist[i].children;
-                        }
-                        
-                   }
-                  
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-        },
-        subSave() {
-            
-            if(this.$refs.proCity.cityId===''){
-                 this.companyForm.areaId=this.$refs.proCity.proId
-            }else{
-                 this.companyForm.areaId=this.$refs.proCity.cityId
-            }
-            this.companyForm.companyVocation=this.professId
-            var forms = this.companyForm
-            for(var name in forms) {
-                if (!forms[name]) {
-                    this.$Message.error(this.companyFormError[name] + ': 请填写完整!')
-                    return
-                }
-            }
-            if (this.subFlag) this.subFlag = false
-            else return
-            var url = "/company/add"
-            if (this.companyMod) url = '/company/edit'
-            api.axs("post", url, this.companyForm)
-            .then(({ data }) => {
-                if ( data.code === 'SUCCESS') {
-                    this.datas = data
-                    this.$Message.success('新增成功!') 
-                    this.$parent.companyPop=false
-                    this.$parent.loadLists()
-                    this.reset(this.companyForm)  
-                   
-                } else {
-                    this.$Message.error(data.remark)
-                    this.subFlag = true
-                }
-            })
-        },
-        selPro() {
-            //选择职位
-            var idName = this.$refs.professionComp.professVal
-            if (!idName) {
-                this.$Message.warning("不选一个职位么?");
-                return;
-            }
-            this.professId = idName.split("&")[0];
-            this.professName = idName.split("&")[1];
-            this.professPop = false
-        },
-        success(res) {
-            this.professPop = res
-        },
-        reset(key) {
-            Object.keys(this[key]).forEach(item => {
-                this[key][item] = ""
-            })
+    subSave() {
+      if (this.$refs.proCity.cityId === "") {
+        this.companyForm.areaId = this.$refs.proCity.proId;
+      } else {
+        this.companyForm.areaId = this.$refs.proCity.cityId;
+      }
+      this.companyForm.companyVocation = this.professId;
+      var forms = this.companyForm;
+      for (var name in forms) {
+        if (!forms[name]) {
+          this.$Message.error(this.companyFormError[name] + ": 请填写完整!");
+          return;
         }
-    },
-    mounted() {
-        this.info()
+      }
+      if (this.subFlag) this.subFlag = false;
+      else return;
 
-        // 企业信息
-        console.log(this.recordsDetails)
-        this.companyForm=this.recordsDetails.data
+      api.axs("post", "/company/add", this.companyForm).then(({ data }) => {
+        if (data.code === "SUCCESS") {
+          this.datas = data;
+          this.$Message.success("新增成功!");
+          this.$parent.companyPop = false;
+          this.$parent.loadLists();
+          this.reset("companyForm");
+        } else {
+          this.$Message.error(data.remark);
+        }
+        this.subFlag = true;
+      });
     },
+    selPro() {
+      //选择职位
+      var idName = this.$refs.professionComp.professVal;
+      if (!idName) {
+        this.$Message.warning("不选一个职位么?");
+        return;
+      }
+      this.professId = idName.split("&")[0];
+      this.professName = idName.split("&")[1];
+      this.professPop = false;
+    },
+    success(res) {
+      this.professPop = res;
+    },
+    reset(key) {
+      Object.keys(this[key]).forEach(item => {
+        this[key][item] = "";
+      });
+    }
+  },
+  mounted() {
+    this.info();
 
-}
+    // 企业信息
+    console.log(this.recordsDetails);
+    // if(this.recordsDetails){
+    //     this.companyForm=this.recordsDetails.data
+    // }
+    // this.companyForm=this.recordsDetails.data
+  }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less"> 
+<style lang="less">
 .company-content {
-    height: 380px;
-    overflow-y: auto;
-    li {
-        margin-bottom: 10px;
-        .selpro {
-            .ivu-input {
-                text-align:center
-            }
-        }
-        p {
-            display: inline-block;
-            width: 80px;
-            line-height: 32px;
-            text-align: right;
-            color: #444;
-            margin-right: 10px;
-            span {
-                color: #ff8686
-            }
-        }
-        .ivu-input-wrapper {
-            width: 300px;
-        }
+  height: 380px;
+  overflow-y: auto;
+  li {
+    margin-bottom: 10px;
+    .selpro {
+      .ivu-input {
+        text-align: center;
+      }
     }
+    p {
+      display: inline-block;
+      width: 80px;
+      line-height: 32px;
+      text-align: right;
+      color: #444;
+      margin-right: 10px;
+      span {
+        color: #ff8686;
+      }
+    }
+    .ivu-input-wrapper {
+      width: 300px;
+    }
+  }
 }
 </style>

@@ -5,11 +5,11 @@
 			<router-link to='/customer/myCustomers'>我的客户</router-link> > {{recordsDetails.companyName}}
 			<Rate disabled :value='+recordsDetails.importantLevel' style='font-size:14px'></Rate>
 			<Button type="info" icon='arrow-right-a' class='toolBtn fr' @click='selUsersFun(1)'></Button>
-            <span class='fr'>&nbsp;&nbsp;</span>
+			<span class='fr'>&nbsp;&nbsp;</span>
 			<Button type="error" icon='trash-a' class='toolBtn fr' @click='delCompanyPop=true'></Button>
 			<span class='fr'>&nbsp;&nbsp;</span>
 			<Button type="warning" icon='ios-compose' class='toolBtn fr' @click='companyPop=true'></Button>
-            <span class='fr'>&nbsp;&nbsp;</span>
+			<span class='fr'>&nbsp;&nbsp;</span>
 		</div>
 		<ul class="info">
 			<li>BD顾问: {{recordsDetails.bdName}}
@@ -155,7 +155,7 @@
 									<Button type='info' size='small'>在职</Button>
 									<Button type='dashed' size='small' @click='dimissionFun(list.id,list.name)'>离职</Button>
 								</p>
-                                <p class="sels fr" v-else>
+								<p class="sels fr" v-else>
 									<Button type='dashed' size='small' @click="inWork">在职</Button>
 									<Button type='error' size='small'>离职</Button>
 								</p>
@@ -177,13 +177,13 @@
 					</div>
 				</TabPane>
 				<TabPane label="文件" name="files">
-                    <div class="job-content searchTable">
-                    <Table border ref="selection" :columns="filetable" :data="filelist"></Table>
+					<div class="job-content searchTable">
+						<Table border ref="selection" :columns="filetable" :data="filelist"></Table>
 						<div class="tablePage fr">
 							<Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
 						</div>
-                    </div>
-                </TabPane>
+					</div>
+				</TabPane>
 
 			</Tabs>
 		</div>
@@ -204,12 +204,13 @@
 
 		<!-- 离职确认弹窗 -->
 		<Modal v-model="dimissionPop" title="离职提醒" width='400px' @on-ok="sureDim" @on-cancel="dimissonFun" style='text-align: center'>
-			<p style='font-size:14px;text-align:center;padding:20px 0'><strong>{{contactName}}</strong>离职, 提醒相关人员</p>
+			<p style='font-size:14px;text-align:center;padding:20px 0'>
+				<strong>{{contactName}}</strong>离职, 提醒相关人员</p>
 		</Modal>
 
 		<!-- 选择BD角色 -->
 		<Modal v-model="selUsersPop" title="选择BD" width='400px' @on-ok="sureSelUser">
-			<ul class='users-content' >
+			<ul class='users-content'>
 				<li v-for='user in users'>
 					<RadioGroup v-model="userId">
 						<Radio :label="user.id">
@@ -220,8 +221,8 @@
 				</li>
 			</ul>
 			<div class="tablePage" style='text-align:right;margin-bottom:0;'>
-                <Page size='small' :total='userForm.total' :page-size='userForm.pageSize' show-total @on-change='selUsersFun'></Page>
-            </div>
+				<Page size='small' :total='userForm.total' :page-size='userForm.pageSize' show-total @on-change='selUsersFun'></Page>
+			</div>
 		</Modal>
 
 		<!-- 删除 -->
@@ -229,8 +230,8 @@
 			<p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
 		</Modal>
 
-        <!-- 新增企业客户弹窗 -->
-        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod'/>
+		<!-- 新增企业客户弹窗 -->
+		<CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' />
 
 		<!-- 新增跟进提醒弹窗 -->
 		<AttePop :attePop='attePop' />
@@ -254,781 +255,834 @@ import AttePop from "@/components/customer/addAttePop.vue";
 import ContactPop from "@/components/customer/addContactPop.vue";
 import ContractPop from "@/components/customer/addContractPop.vue";
 export default {
-  name: "personalDetails",
-  components: {
-    CompanyPop,
-    AttePop,
-    ContactPop,
-    ContractPop
-  },
-  data() {
-    return {
-      subFlag: true,
-      pageNum: "1",
-      pageSize: "10",
-      form: {
-        createDate: "",
-        signDate: ""
-      },
-      userForm: {
-        pageNum: 1,
-        total: 1,
-        pageSize: 10
-      },
-      id: this.$route.query.id,
-      cname: this.$route.query.cname,
-      level: +this.$route.query.level,
-      contactId: "", //联系人ID
-      contactName: "", //联系人姓名
-      userId: "",
-      recordsDetails: {}, //记录详情
-      contactLists: [], //联系人列表
-      companyPop: false, //新增企业客户弹窗
-      attePop: false, //新增联系人弹窗
-      contactPop: false, //新增联系人弹窗
-      contractPop: false, //新增合同弹窗
-      mainperPop: false, //设置主联系人弹窗
-      dimissionPop: false, //离职提醒弹窗
-      selUsersPop: false, //选择BD弹窗
-      delCompanyPop: false, //删除弹窗
-      companyMod: true,
-      recordsForm: {
-        companyId: this.$route.query.id,
-        contacts: [],
-        followType: "",
-        followTime: new Date(),
-        remark: "",
-        attachmentList: [] //附件
-      },
-      cityList: [
-        {
-          value: "New York",
-          label: "New York"
-        },
-        {
-          value: "London",
-          label: "London"
-        },
-        {
-          value: "Sydney",
-          label: "Sydney"
-        },
-        {
-          value: "Ottawa",
-          label: "Ottawa"
-        },
-        {
-          value: "Paris",
-          label: "Paris"
-        }
-      ],
-      formPage: {
-        total: 120,
-        current: 1,
-        pageSize: 20
-      },
-      tableHeader: [
-        {
-          title: "合同类型",
-          key: "name",
-          width: 140,
-          align: "center",
-          render: (h, params) => {
-            var row = params.row;
-            return h(
-              "router-link",
-              {
-                attrs: {
-                  to: "/customer/myCustomers/contract?jodId=" + row.id
+    name: "personalDetails",
+    components: {
+        CompanyPop,
+        AttePop,
+        ContactPop,
+        ContractPop
+    },
+    data() {
+        return {
+            subFlag: true,
+            pageNum: "1",
+            pageSize: "10",
+            form: {
+                createDate: "",
+                signDate: ""
+            },
+            userForm: {
+                pageNum: 1,
+                total: 1,
+                pageSize: 10
+            },
+            id: this.$route.query.id,
+            cname: this.$route.query.cname,
+            level: +this.$route.query.level,
+            contactId: "", //联系人ID
+            contactName: "", //联系人姓名
+            userId: "",
+            recordsDetails: {}, //记录详情
+            contactLists: [], //联系人列表
+            companyPop: false, //新增企业客户弹窗
+            attePop: false, //新增联系人弹窗
+            contactPop: false, //新增联系人弹窗
+            contractPop: false, //新增合同弹窗
+            mainperPop: false, //设置主联系人弹窗
+            dimissionPop: false, //离职提醒弹窗
+            selUsersPop: false, //选择BD弹窗
+            delCompanyPop: false, //删除弹窗
+            companyMod: true,
+            recordsForm: {
+                companyId: this.$route.query.id,
+                contacts: [],
+                followType: "",
+                followTime: new Date(),
+                remark: "",
+                attachmentList: [] //附件
+            },
+            cityList: [
+                {
+                    value: "New York",
+                    label: "New York"
+                },
+                {
+                    value: "London",
+                    label: "London"
+                },
+                {
+                    value: "Sydney",
+                    label: "Sydney"
+                },
+                {
+                    value: "Ottawa",
+                    label: "Ottawa"
+                },
+                {
+                    value: "Paris",
+                    label: "Paris"
                 }
-              },
-              row.name
-            );
-          }
-        },
-        {
-          title: "合同开始时间",
-          key: "hhh",
-          width: 150,
-          align: "center"
-        },
-        {
-          title: "合同结束时间",
-          key: "hhh",
-          width: 150,
-          align: "center"
-        },
-
-        {
-          title: "合同状态",
-          key: "bbb",
-          sortable: true,
-          width: 94,
-          align: "center"
-        },
-
-        {
-          title: "BD顾问",
-          key: "ddd",
-          width: 65,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "合同编号",
-          key: "phone",
-          width: 94,
-          align: "center"
-        },
-
-        {
-          title: "操作",
-          key: "iii",
-          align: "center",
-          render: (h, params) => {
-            const row = params.row;
-            return h("div", [
-              h(
-                "Button",
+            ],
+            formPage: {
+                total: 120,
+                current: 1,
+                pageSize: 20
+            },
+            tableHeader: [
                 {
-                  props: {
-                    type: "info", //primary、ghost、dashed、text、info、success、warning、error
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("暂缓!!!" + row.name);
+                    title: "合同类型",
+                    key: "name",
+                    width: 140,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        "/customer/myCustomers/contract?jodId=" +
+                                        row.id
+                                }
+                            },
+                            row.name
+                        );
                     }
-                  }
                 },
-                "暂缓"
-              ),
-              h(
-                "Button",
                 {
-                  props: {
-                    type: "warning",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("终止!!!" + row.name);
-                    }
-                  }
+                    title: "合同开始时间",
+                    key: "hhh",
+                    width: 150,
+                    align: "center"
                 },
-                "终止"
-              ),
-              h(
-                "Button",
                 {
-                  props: {
-                    type: "error",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("失效!!!" + row.name);
-                    }
-                  }
+                    title: "合同结束时间",
+                    key: "hhh",
+                    width: 150,
+                    align: "center"
                 },
-                "失效"
-              )
-            ]);
-          }
-        }
-      ],
-      filetable: [
-        {
-          title: "文件名",
-          key: "fileName",
-          width: 250,
-          align: "center",
-          render: (h, params) => {
-            var row = params.row;
-            return h(
-              "router-link",
-              {
-                attrs: {
-                  to: "/customer/myCustomers/contract?jodId=" + row.id
+
+                {
+                    title: "合同状态",
+                    key: "bbb",
+                    sortable: true,
+                    width: 94,
+                    align: "center"
+                },
+
+                {
+                    title: "BD顾问",
+                    key: "ddd",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "合同编号",
+                    key: "phone",
+                    width: 94,
+                    align: "center"
+                },
+
+                {
+                    title: "操作",
+                    key: "iii",
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "暂缓!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "暂缓"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "warning",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "终止!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "终止"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "error",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "失效!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "失效"
+                            )
+                        ]);
+                    }
                 }
-              },
-              row.fileName
-            );
-          }
-        },
-        {
-          title: "上传人",
-          key: "createBy",
-          width: 250,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "上传时间",
-          key: "createTime",
-          width: 250,
-          align: "center"
-        },
-        {
-          title: "操作",
-          key: "iii",
-          align: "center",
-          render: (h, params) => {
-            const row = params.row;
-            return h("div", [
-              h(
-                "Button",
+            ],
+            filetable: [
                 {
-                  props: {
-                    type: "info", //primary、ghost、dashed、text、info、success、warning、error
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("预览!!!" + row.id);
+                    title: "文件名",
+                    key: "fileName",
+                    width: 250,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        "/customer/myCustomers/contract?jodId=" +
+                                        row.id
+                                }
+                            },
+                            row.fileName
+                        );
                     }
-                  }
                 },
-                "预览"
-              ),
-              h(
-                "Button",
                 {
-                  props: {
-                    type: "warning",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("下载!!!" + row.id);
-                    }
-                  }
+                    title: "上传人",
+                    key: "createBy",
+                    width: 250,
+                    ellipsis: true,
+                    align: "center"
                 },
-                "下载"
-              )
-            ]);
-          }
-        }
-      ],
-      headhunter: [
-        {
-          title: "合同类型",
-          key: "name",
-          width: 100,
-          align: "center",
-          render: (h, params) => {
-            var row = params.row;
-            return h(
-              "router-link",
-              {
-                attrs: {
-                  to: "/customer/myCustomers/contract?jodId=" + row.id
+                {
+                    title: "上传时间",
+                    key: "createTime",
+                    width: 250,
+                    align: "center"
+                },
+                {
+                    title: "操作",
+                    key: "iii",
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "预览!!!" + row.id
+                                            );
+                                        }
+                                    }
+                                },
+                                "预览"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "warning",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "下载!!!" + row.id
+                                            );
+                                        }
+                                    }
+                                },
+                                "下载"
+                            )
+                        ]);
+                    }
                 }
-              },
-              row.name
-            );
-          }
-        },
-        {
-          title: "BD顾问",
-          key: "ddd",
-          width: 65,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "前期服务费",
-          key: "ccc",
-          width: 65,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "服务费比例",
-          key: "ggg",
-          width: 65,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "付款方式",
-          key: "eee",
-          width: 65,
-          ellipsis: true,
-          align: "center"
-        },
-        {
-          title: "合同开始时间",
-          key: "hhh",
-          width: 120,
-          align: "center"
-        },
-        {
-          title: "合同结束时间",
-          key: "hhh",
-          width: 120,
-          align: "center"
-        },
-
-        {
-          title: "合同状态",
-          key: "bbb",
-          sortable: true,
-          width: 94,
-          align: "center"
-        },
-
-        {
-          title: "合同编号",
-          key: "phone",
-          width: 94,
-          align: "center"
-        },
-
-        {
-          title: "操作",
-          key: "iii",
-          align: "center",
-          render: (h, params) => {
-            const row = params.row;
-            return h("div", [
-              h(
-                "Button",
+            ],
+            headhunter: [
                 {
-                  props: {
-                    type: "info", //primary、ghost、dashed、text、info、success、warning、error
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("暂缓!!!" + row.name);
+                    title: "合同类型",
+                    key: "name",
+                    width: 100,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        "/customer/myCustomers/contract?jodId=" +
+                                        row.id
+                                }
+                            },
+                            row.name
+                        );
                     }
-                  }
                 },
-                "暂缓"
-              ),
-              h(
-                "Button",
                 {
-                  props: {
-                    type: "warning",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "6px"
-                  },
-                  on: {
-                    click: () => {
-                      this.$Message.info("终止!!!" + row.name);
-                    }
-                  }
+                    title: "BD顾问",
+                    key: "ddd",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
                 },
-                "终止"
-              )
-            ]);
-          }
+                {
+                    title: "前期服务费",
+                    key: "ccc",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "服务费比例",
+                    key: "ggg",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "付款方式",
+                    key: "eee",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "合同开始时间",
+                    key: "hhh",
+                    width: 120,
+                    align: "center"
+                },
+                {
+                    title: "合同结束时间",
+                    key: "hhh",
+                    width: 120,
+                    align: "center"
+                },
+
+                {
+                    title: "合同状态",
+                    key: "bbb",
+                    sortable: true,
+                    width: 94,
+                    align: "center"
+                },
+
+                {
+                    title: "合同编号",
+                    key: "phone",
+                    width: 94,
+                    align: "center"
+                },
+
+                {
+                    title: "操作",
+                    key: "iii",
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "暂缓!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "暂缓"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "warning",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "终止!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "终止"
+                            )
+                        ]);
+                    }
+                }
+            ],
+            tableLists: [
+                {
+                    id: 96,
+                    name: "猎头协议",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                },
+                {
+                    id: 97,
+                    name: "招商CEO招商CEO",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                }
+            ],
+            headlist: [
+                {
+                    id: 96,
+                    name: "猎头协议",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                },
+                {
+                    id: 97,
+                    name: "招商CEO招商CEO",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                }
+            ],
+            filelist: [
+                //    文件列表
+            ]
+        };
+    },
+    computed: {
+        users() {
+            return this.$store.state.users;
         }
-      ],
-      tableLists: [
-        {
-          id: 96,
-          name: "猎头协议",
-          kehu: "浙江千里马股份有限公司",
-          phone: "Yuxinhua",
-          bbb: "进行中",
-          ccc: "1",
-          ddd: "23",
-          eee: "10",
-          fff: "00",
-          ggg: "00",
-          hhh: "2018-10-10 12:30:40",
-          hhh: "2018-10-10 12:30:40"
+    },
+    methods: {
+        ...mapActions(["getUsers"]),
+        companyInfo() {
+            api
+                .axs("post", "/company/info", { id: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.recordsDetails = data.data;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
-        {
-          id: 97,
-          name: "招商CEO招商CEO",
-          kehu: "浙江千里马股份有限公司",
-          phone: "Yuxinhua",
-          bbb: "进行中",
-          ccc: "1",
-          ddd: "23",
-          eee: "10",
-          fff: "00",
-          ggg: "00",
-          hhh: "2018-10-10 12:30:40",
-          hhh: "2018-10-10 12:30:40"
-        }
-      ],
-      headlist: [
-        {
-          id: 96,
-          name: "猎头协议",
-          kehu: "浙江千里马股份有限公司",
-          phone: "Yuxinhua",
-          bbb: "进行中",
-          ccc: "1",
-          ddd: "23",
-          eee: "10",
-          fff: "00",
-          ggg: "00",
-          hhh: "2018-10-10 12:30:40",
-          hhh: "2018-10-10 12:30:40"
+        getContactLists() {
+            //联系人
+            api
+                .axs("post", "/contact/list", { companyId: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.contactLists = data.data;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
-        {
-          id: 97,
-          name: "招商CEO招商CEO",
-          kehu: "浙江千里马股份有限公司",
-          phone: "Yuxinhua",
-          bbb: "进行中",
-          ccc: "1",
-          ddd: "23",
-          eee: "10",
-          fff: "00",
-          ggg: "00",
-          hhh: "2018-10-10 12:30:40",
-          hhh: "2018-10-10 12:30:40"
+        getFileLists(page) {
+            //文件
+            api
+                .axs("post", "/attachment/page", {
+                    companyId: this.id,
+                    fileType: "DOC",
+                    pageNum: page
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.filelist = data.data.list;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                        this.formPage.total = data.data.total;
+                        this.formPage.pageSize = data.data.pageSize;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        ClickTab(name) {
+            if (name == "contact") this.getContactLists();
+            if (name == "files") this.getFileLists(this.pageNum);
+        },
+        setMainContact(id) {
+            //设置主联系人
+            api
+                .axs("post", "/contact/setIncumbency", {
+                    companyId: this.id,
+                    id: id
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("设置成功!");
+                        this.getContactLists();
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        dimissionFun(id, name) {
+            this.dimissionPop = true;
+            this.contactId = id;
+            this.contactName = name;
+        },
+        selUsersFun(page) {
+            this.userForm.pageNum = page;
+            api
+                .axs("post", "/user/queryLikeForPages", this.userForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$store.state.users = data.data.list;
+                        this.userForm.total = data.data.total;
+                        this.selUsersPop = true;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        sureSelUser() {
+            if (!this.userId) {
+                this.$Message.info("选一个BD啊!");
+                return;
+            }
+            api
+                .axs("post", "/company/changeInto", {
+                    id: this.id,
+                    bdId: this.userId
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("转出成功!");
+                        this.$router.push("/customer/cooperation");
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        delCompany() {
+            api
+                .axs("post", "/company/delete", { id: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("删除成功");
+                        this.$router.push("/customer/cooperation");
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        loadLists(page) {
+            this.ClickTab(name);
+            this.$store.state.spinShow = true;
+            this.$Message.info("当前页: " + page);
+            setTimeout(() => {
+                this.$store.state.spinShow = false;
+            }, 1500);
+        },
+        sureMainper() {
+            this.$Message.info("确认主联系人成功!");
+        },
+        inWork() {
+            //在职
+            this.$Message.info("又回来了?");
+        },
+        sureDim() {
+            //离职确认
+            this.$store.state.spinShow = true;
+            api
+                .axs("post", "/contact/setLeaveStatus", { id: this.contactId })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("离职成功!");
+                        this.getContactLists();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        dimissonFun() {
+            //关闭离职弹窗
+            this.mainperPop = false;
+            this.dimissionPop = false;
         }
-      ],
-      filelist: [
-        //    文件列表
-      ]
-    };
-  },
-  computed: {
-    users() {
-      return this.$store.state.users;
-    }
-  },
-  methods: {
-    ...mapActions(["getUsers"]),
-    companyInfo() {
-      api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
-        if (data.code === "SUCCESS") {
-          this.recordsDetails = data.data;
-          this.$Loading.finish();
-          this.$store.state.spinShow = false;
-        } else {
-          this.$Message.error(data.remark);
-        }
-      });
     },
-    getContactLists() {
-      //联系人
-      api
-        .axs("post", "/contact/list", { companyId: this.id })
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            this.contactLists = data.data;
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
+    mounted() {
+        this.companyInfo();
     },
-    getFileLists(page) {
-      //文件
-      api
-        .axs("post", "/attachment/page", {
-          companyId: this.id,
-          fileType: "DOC",
-          pageNum: page
-        })
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            console.log(data);
-            this.filelist = data.data.list;
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-            this.formPage.total = data.data.total;
-            this.formPage.pageSize = data.data.pageSize;
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
-    },
-    ClickTab(name) {
-      if (name == "contact") this.getContactLists();
-      if (name == "files") this.getFileLists(this.pageNum);
-    },
-    setMainContact(id) {
-      //设置主联系人
-      api
-        .axs("post", "/contact/setIncumbency", { companyId: this.id, id: id })
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            this.$Message.success("设置成功!");
-            this.getContactLists();
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
-    },
-    dimissionFun(id, name) {
-      this.dimissionPop = true;
-      this.contactId = id;
-      this.contactName = name;
-    },
-    selUsersFun(page) {
-      this.userForm.pageNum = page;
-      api
-        .axs("post", "/user/queryLikeForPages", this.userForm)
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            this.$store.state.users = data.data.list;
-            this.userForm.total = data.data.total;
-            this.selUsersPop = true;
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
-    },
-    sureSelUser() {
-      if (!this.userId) {
-        this.$Message.info("选一个BD啊!");
-        return;
-      }
-      api
-        .axs("post", "/company/changeInto", { id: this.id, bdId: this.userId })
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            this.$Message.success("转出成功!");
-            this.$router.push("/customer/cooperation");
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
-    },
-    delCompany() {
-      api.axs("post", "/company/delete", { id: this.id }).then(({ data }) => {
-        if (data.code === "SUCCESS") {
-          this.$Message.success("删除成功");
-          this.$router.push("/customer/cooperation");
-        } else {
-          this.$Message.error(data.remark);
-        }
-      });
-    },
-    loadLists(page) {
-      this.ClickTab(name);
-      this.$store.state.spinShow = true;
-      this.$Message.info("当前页: " + page);
-      setTimeout(() => {
-        this.$store.state.spinShow = false;
-      }, 1500);
-    },
-    sureMainper() {
-      this.$Message.info("确认主联系人成功!");
-    },
-    inWork() {
-      //在职
-      this.$Message.info("又回来了?");
-    },
-    sureDim() {
-      //离职确认
-      this.$store.state.spinShow = true;
-      api
-        .axs("post", "/contact/setLeaveStatus", { id: this.contactId })
-        .then(({ data }) => {
-          if (data.code === "SUCCESS") {
-            this.$Message.success("离职成功!");
-            this.getContactLists();
-            this.$store.state.spinShow = false;
-          } else {
-            this.$Message.error(data.remark);
-          }
-        });
-    },
-    dimissonFun() {
-      //关闭离职弹窗
-      this.mainperPop = false;
-      this.dimissionPop = false;
-    }
-  },
-  mounted() {
-    this.companyInfo();
-  },
-  beforeDestroy() {}
+    beforeDestroy() {}
 };
 </script>
 
 <style lang='less' scoped>
 .myCustomersRecords {
-  .info {
-    display: flex;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    padding: 10px;
-    li {
-      font-size: 14px;
-      span {
-        margin: 0 10px;
-      }
-    }
-  }
-  .recordsContent {
-    margin-top: 10px;
-    .add-record {
-      width: 88%;
-      padding: 20px 20px 10px;
-      background-color: #f2f2f2;
-      .xing {
-        color: #dd3030;
-        padding-right: 2px;
-      }
-      .sels {
-        .tip {
-          line-height: 30px;
-        }
-      }
-      .add-sub {
-        .ivu-icon {
-          font-size: 20px;
-          vertical-align: middle;
-          margin-right: 4px;
-        }
-        span {
-          vertical-align: middle;
-        }
-        .ivu-upload {
-          display: inline-block;
-          vertical-align: top;
-          margin-right: 10px;
-        }
-      }
-    }
-    .history-records {
-      width: 88%;
-      li {
-        background-color: #f2f2f2;
+    .info {
+        display: flex;
+        border: 1px solid #eee;
+        border-radius: 5px;
         padding: 10px;
-        margin: 10px 0;
-        .header {
-          display: flex;
-          .avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+        li {
+            font-size: 14px;
+            span {
+                margin: 0 10px;
+            }
+        }
+    }
+    .recordsContent {
+        margin-top: 10px;
+        .add-record {
+            width: 88%;
+            padding: 20px 20px 10px;
+            background-color: #f2f2f2;
+            .xing {
+                color: #dd3030;
+                padding-right: 2px;
+            }
+            .sels {
+                .tip {
+                    line-height: 30px;
+                }
+            }
+            .add-sub {
+                .ivu-icon {
+                    font-size: 20px;
+                    vertical-align: middle;
+                    margin-right: 4px;
+                }
+                span {
+                    vertical-align: middle;
+                }
+                .ivu-upload {
+                    display: inline-block;
+                    vertical-align: top;
+                    margin-right: 10px;
+                }
+            }
+        }
+        .history-records {
+            width: 88%;
+            li {
+                background-color: #f2f2f2;
+                padding: 10px;
+                margin: 10px 0;
+                .header {
+                    display: flex;
+                    .avatar {
+                        width: 38px;
+                        height: 38px;
+                        border-radius: 50%;
+                        border: 1px solid #eee;
+                        padding: 10px 15px;
+                        margin-bottom: 10px;
+                        .name {
+                            line-height: 32px;
+                            strong {
+                                font-size: 14px;
+                            }
+                            .imp {
+                                padding: 3px 4px;
+                                margin-left: 5px;
+                                border: 1px solid #f1c840;
+                                background-color: #f1c840;
+                                border-radius: 4px;
+                                color: #fff;
+                                cursor: pointer;
+                            }
+                            .imp2 {
+                                background-color: #fff;
+                                border-radius: 4px;
+                                color: #f1c840;
+                            }
+                            .sels {
+                                display: inline-block;
+                                button {
+                                    margin-left: 10px;
+                                }
+                            }
+                        }
+                    }
+                    .name {
+                        margin-left: 15px;
+                        h5 {
+                            font-size: 15px;
+                            font-weight: bold;
+                            color: #333;
+                        }
+                    }
+                    .time {
+                        flex: 2;
+                        text-align: right;
+                    }
+                }
+                .desc {
+                    padding: 8px 0;
+                }
+                .contact {
+                    span {
+                        margin-left: 10px;
+                        color: #207ace;
+                    }
+                }
+            }
+        }
+        .subTabs {
+            width: 85%;
+        }
+        .leta {
+            margin-right: 15%;
+            margin-top: 10px;
+        }
+        .pact {
+            position: relative;
+            .search {
+                position: absolute;
+                right: 15%;
+                top: 0;
+            }
+        }
+    }
+    .contact-lists {
+        width: 88%;
+        li {
             border: 1px solid #eee;
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 50%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            .name {
+                line-height: 32px;
+                strong {
+                    font-size: 14px;
+                }
+                .imp {
+                    padding: 3px 4px;
+                    margin-left: 5px;
+                    border: 1px solid #f1c840;
+                    background-color: #f1c840;
+                    border-radius: 4px;
+                    color: #fff;
+                    cursor: pointer;
+                }
+                .imp2 {
+                    background-color: #fff;
+                    border-radius: 4px;
+                    color: #f1c840;
+                }
+                .sels {
+                    display: inline-block;
+                    button {
+                        margin-left: 10px;
+                    }
+                }
             }
-          }
-          .name {
-            margin-left: 15px;
-            h5 {
-              font-size: 15px;
-              font-weight: bold;
-              color: #333;
+            .desc {
+                padding: 10px 0 0;
+                span {
+                    margin-right: 20px;
+                }
             }
-          }
-          .time {
-            flex: 2;
-            text-align: right;
-          }
         }
-        .desc {
-          padding: 8px 0;
-        }
-        .contact {
-          span {
-            margin-left: 10px;
+    }
+    .job-content {
+        width: 88%;
+    }
+    .other-btns {
+        position: fixed;
+        top: 210px;
+        right: 25px;
+        button {
+            display: block;
+            width: 120px;
+            margin: 10px 0;
             color: #207ace;
-          }
+            background-color: #c3e0fa;
+            border: 2px solid #c3e0fa;
         }
-      }
     }
-    .subTabs {
-      width: 85%;
-    }
-    .leta {
-      margin-right: 15%;
-      margin-top: 10px;
-    }
-    .pact {
-      position: relative;
-      .search {
-        position: absolute;
-        right: 15%;
-        top: 0;
-      }
-    }
-  }
-  .contact-lists {
-    width: 88%;
-    li {
-      border: 1px solid #eee;
-      padding: 10px 15px;
-      margin-bottom: 10px;
-      .name {
-        line-height: 32px;
-        strong {
-          font-size: 14px;
-        }
-        .imp {
-          padding: 3px 4px;
-          margin-left: 5px;
-          border: 1px solid #f1c840;
-          background-color: #f1c840;
-          border-radius: 4px;
-          color: #fff;
-          cursor: pointer;
-        }
-        .imp2 {
-          background-color: #fff;
-          border-radius: 4px;
-          color: #f1c840;
-        }
-        .sels {
-          display: inline-block;
-          button {
-            margin-left: 10px;
-          }
-        }
-      }
-      .desc {
-        padding: 10px 0 0;
-        span {
-          margin-right: 20px;
-        }
-      }
-    }
-  }
-  .job-content {
-    width: 88%;
-  }
-  .other-btns {
-    position: fixed;
-    top: 210px;
-    right: 25px;
-    button {
-      display: block;
-      width: 120px;
-      margin: 10px 0;
-      color: #207ace;
-      background-color: #c3e0fa;
-      border: 2px solid #c3e0fa;
-    }
-  }
 }
 </style>

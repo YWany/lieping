@@ -153,12 +153,53 @@ export default {
           }
         });
     },
+<<<<<<< HEAD
     closePop() {
       this.$parent.contractPop = false;
       this.contractForm.companyName = "";
       this.contractForm.title = "";
       this.contractForm.remindUser = "";
       this.contractForm.remark = "";
+=======
+    methods: {
+        subSave() {
+            var forms = this.contractForm
+            for(var name in forms) {
+                if (!forms[name]) {
+                    this.$Message.error(this.contractFormError[name] + ': 请填写完整!')
+                    return
+                }
+            }
+            if (this.subFlag) this.subFlag = false
+            else return
+            api.axs("post", "/followRemind/saveFollowRemind", this.contractForm)
+            .then(({ data }) => {
+                if ( data.code === 'SUCCESS') {
+                    this.datas = data
+                    this.$Message.success('新增成功!') 
+                    this.reset('contractForm')
+                } else {
+                    this.$Message.error(data.remark)
+                    this.subFlag = true
+                }
+            })
+        },
+        closePop() {
+            this.$parent.contractPop = false
+            this.contractForm.companyName = ''
+            this.contractForm.title = ''
+            this.contractForm.remindUser = ''
+            this.contractForm.remark = ''
+        },
+        reset(key) {
+            Object.keys(this[key]).forEach(item => {
+                this[key][item] = ""
+            })
+        }
+    },
+    mounted() {
+        
+>>>>>>> bc2ddea97b52ecea31b2dd252ff37613d30bf05a
     },
     reset(key) {
       Object.keys(this[key]).forEach(item => {

@@ -145,34 +145,33 @@ export default {
     methods: {
         info() {
             this.$Message.info("这是一条普通的提醒");
-            api
-                .axs("post", "/param/dic/tree", { id: "10" })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        let alllist = data.data;
-                        for (let i = 0; i < alllist.length; i++) {
-                            if (alllist[i].code === "companyType") {
-                                //公司性质
-                                this.naturelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companyStatus") {
-                                this.statelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companyScope") {
-                                this.scalelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "4") {
-                                this.importancelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companySource") {
-                                this.sourcelist = alllist[i].children;
-                            }
+            api.axs("post", "/param/dic/tree", { id: "10" })
+            .then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    let alllist = data.data;
+                    for (let i = 0; i < alllist.length; i++) {
+                        if (alllist[i].code === "companyType") {
+                            //公司性质
+                            this.naturelist = alllist[i].children;
                         }
-                    } else {
-                        this.$Message.error(data.remark);
-                        this.subFlag = true;
+                        if (alllist[i].code === "companyStatus") {
+                            this.statelist = alllist[i].children;
+                        }
+                        if (alllist[i].code === "companyScope") {
+                            this.scalelist = alllist[i].children;
+                        }
+                        if (alllist[i].code === "4") {
+                            this.importancelist = alllist[i].children;
+                        }
+                        if (alllist[i].code === "companySource") {
+                            this.sourcelist = alllist[i].children;
+                        }
                     }
-                });
+                } else {
+                    this.$Message.error(data.remark);
+                    this.subFlag = true;
+                }
+            });
         },
         subSave() {
             if (this.$refs.proCity.cityId === "") {
@@ -193,20 +192,19 @@ export default {
             if (this.subFlag) this.subFlag = false;
             else return;
 
-            api
-                .axs("post", "/company/add", this.companyForm)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.datas = data;
-                        this.$Message.success("新增成功!");
-                        this.$parent.companyPop = false;
-                        this.$parent.loadLists();
-                        this.reset("companyForm");
-                    } else {
-                        this.$Message.error(data.remark);
-                        this.subFlag = true;
-                    }
-                });
+            api.axs("post", "/company/add", this.companyForm)
+            .then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.datas = data;
+                    this.$Message.success("新增成功!");
+                    this.$parent.companyPop = false;
+                    this.$parent.loadLists();
+                    this.reset("companyForm");
+                } else {
+                    this.$Message.error(data.remark);
+                    this.subFlag = true;
+                }
+            });
         },
         selPro() {
             //选择职位

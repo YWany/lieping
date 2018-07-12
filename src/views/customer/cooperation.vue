@@ -17,26 +17,21 @@
             </div>
             <div class="sels">
                 <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
-                    <Option value="部门归属1">部门归属1</Option>
-                    <Option value="部门归属2">部门归属2</Option>
+                    <Option v-for="(dept,index) in deptlist" :key="index" :value="dept.id">{{ dept.departmentName }}</Option>
                 </Select>
 
                 <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业"></Input>
                 <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
-                    <Option value="客户来源1">客户来源1</Option>
-                    <Option value="客户来源2">客户来源2</Option>
+                    <Option v-for="(tree,index) in allTrees[1].children" :key="index" :value="tree.code">{{ tree.codeText }}</Option>
                 </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
+                    <Option v-for="(imports,index) in allTrees[6].children" :key="index" :value="imports.code">{{ imports.codeText }}</Option>
                 </Select>
                 <Select v-model="form.sel5" class='sels-item' placeholder='前期服务费' style="width:100px">
-                    <Option value="前期服务费1">前期服务费1</Option>
-                    <Option value="前期服务费2">前期服务费2</Option>
+                    <Option v-for="(money,index) in allTrees[7].children" :key="index" :value="money.code">{{ money.codeText }}</Option>
                 </Select>
                 <Select v-model="form.sel6" class='sels-item' placeholder='转入客户' style="width:100px">
-                    <Option value="转入客户1">转入客户1</Option>
-                    <Option value="转入客户2">转入客户2</Option>
+                    <Option v-for="(peoples,index) in allTrees[8].children" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
                 </Select>
                 <div class="disInB sels-item">
                     创建时间：
@@ -71,11 +66,11 @@
 
 <script>
 // @ is an alias to /src
-import api from "@/api"
-import ls from "store2"
-import CompanyPop from "@/components/customer/addCompanyPop.vue"
-import Professions from "@/components/common/professions.vue"
-import { mapState, mapMutations, mapActions } from "vuex"
+import api from "@/api";
+import ls from "store2";
+import CompanyPop from "@/components/customer/addCompanyPop.vue";
+import Professions from "@/components/common/professions.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     name: "cooperation",
     components: {
@@ -90,6 +85,7 @@ export default {
             searchVal: "",
             professName: "",
             professId: "",
+            deptlist: [],
             form: {
                 sel1: "",
                 sel2: "",
@@ -171,7 +167,12 @@ export default {
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
-                        return h("span", row.lastFollowTime && row.lastFollowTime.substr(0, 10) || '--');
+                        return h(
+                            "span",
+                            (row.lastFollowTime &&
+                                row.lastFollowTime.substr(0, 10)) ||
+                                "--"
+                        );
                     }
                 },
                 {
@@ -233,8 +234,13 @@ export default {
             ]
         };
     },
+    computed: {
+        allTrees() {
+            return this.$store.state.selTrees;
+        }
+    },
     methods: {
-        ...mapActions(["selTrees"]),
+        ...mapActions(["selTrees", "getRoles"]),
         loadLists(page) {
             this.form.pageNum = page;
             this.$store.state.spinShow = true;
@@ -284,9 +290,14 @@ export default {
         }
     },
 
-    mounted() {
+     mounted() {
         this.loadLists();
         this.selTrees();
+        api.axs("post", "/dept/info", {}).then(({ data: { data, code } }) => {
+            this.deptlist = data;
+            console.log(this.deptlist);
+        });
+        // await this.getRoles()
         // setTimeout(() => {
         //     this.$Loading.finish()
         //     this.$store.state.spinShow = false

@@ -190,7 +190,7 @@ export default {
                     this.$Message.success('新增成功!') 
                      this.$parent.companyPop=false
                      this.$parent.loadLists()
-                    this.reset(this.companyForm)  
+                    this.reset('companyForm')  
                    
                 } else {
                     this.$Message.error(data.remark)

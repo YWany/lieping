@@ -145,7 +145,7 @@ export default {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
                     this.$Message.success('新增成功!') 
-                    this.reset(this.contractForm)
+                    this.reset('contractForm')
                 } else {
                     this.$Message.error(data.remark)
                     this.subFlag = true

@@ -171,19 +171,17 @@ export default {
 
             if (this.subFlag) this.subFlag = false
             else return
-            console.log(this.addForm)
             api.axs("post", "/contact/add", this.addForm)
             .then(({ data }) => {
                 if ( data.code === 'SUCCESS') {
                     this.datas = data
                     this.$Message.success('新增成功!')
-                     this.$parent.contactPop=false
-                    this.reset(this.addForm)
-                   
+                    this.$parent.contactPop=false
+                    this.reset('addForm')
                 } else {
                     this.$Message.error(data.remark)
-                    this.subFlag = true
                 }
+                this.subFlag = true
             })
         },
         addPhones() {
@@ -202,7 +200,7 @@ export default {
         },
         closePop() {
             this.$parent.contactPop=false
-            // this.reset(this.addForm)
+            this.reset('addForm')
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {

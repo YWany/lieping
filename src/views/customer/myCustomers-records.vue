@@ -146,35 +146,23 @@
 				<TabPane label="开票信息" name="xinxi">开票信息</TabPane>
 				<TabPane label="联系人" name="contact">
 					<ul class="contact-lists">
-						<li>
+						<li v-for='list in contactLists' :key='list.id'>
 							<div class="name clearfix">
-								<strong>Wanyu</strong>
-								<span class='imp'>主联系人</span>
-								<p class="sels fr">
-									<Button size='small' @click="inWork">在职</Button>
-									<Button size='small' @click='dimissionPop=true'>离职</Button>
+								<strong>{{list.name}}</strong>
+								<span class='imp' v-if='list.mainContact'>主联系人</span>
+								<span class='imp imp2' v-else @click='setMainContact(list.id)'>设为主联系人</span>
+								<p class="sels fr" v-if='list.incumbency'>
+									<Button type='info' size='small'>在职</Button>
+									<Button type='dashed' size='small' @click='dimissionFun(list.id,list.name)'>离职</Button>
+								</p>
+                                <p class="sels fr" v-else>
+									<Button type='dashed' size='small' @click="inWork">在职</Button>
+									<Button type='error' size='small'>离职</Button>
 								</p>
 							</div>
 							<div class="desc">
-								<span>电话: 0571-2345666655 1875343434344</span>
-								<span>邮箱: 13454323454323@qq.com</span>
-								<a href="javascript:;" class='fr'>查看简历</a>
-							</div>
-						</li>
-						<li>
-							<div class="name clearfix">
-								<strong>Wanyu</strong>
-								<a href="javascript:;">
-									<span class='imp imp2' @click='mainperPop=true'>设为主联系人</span>
-								</a>
-								<p class="sels fr">
-									<Button size='small'>在职</Button>
-									<Button size='small'>离职</Button>
-								</p>
-							</div>
-							<div class="desc">
-								<span>电话: 0571-2345666655 1875343434344</span>
-								<span>邮箱: 13454323454323@qq.com</span>
+								<span>电话: {{list.phone1}} {{list.phone2}} {{list.phone3}} {{list.phone4}}</span>
+								<span v-if='list.email'>邮箱: {{list.email}}</span>
 								<a href="javascript:;" class='fr'>查看简历</a>
 							</div>
 						</li>
@@ -208,7 +196,7 @@
 
 		<!-- 离职确认弹窗 -->
 		<Modal v-model="dimissionPop" title="离职提醒" width='400px' @on-ok="sureDim" @on-cancel="dimissonFun" style='text-align: center'>
-			<p style='font-size:14px;text-align:center;padding:20px 0'>谁谁谁离职, 提醒相关人员</p>
+			<p style='font-size:14px;text-align:center;padding:20px 0'><strong>{{contactName}}</strong>离职, 提醒相关人员</p>
 		</Modal>
 
 		<!-- 选择BD角色 -->
@@ -280,6 +268,8 @@ export default {
             id: this.$route.query.id,
             cname: this.$route.query.cname,
 			level: +this.$route.query.level,
+            contactId: '', //联系人ID
+            contactName: '', //联系人姓名
 			userId: '',
             recordsDetails: {}, //记录详情
             contactLists: [], //联系人列表
@@ -662,6 +652,35 @@ export default {
                 }
             });
 		},
+        getContactLists() { //联系人
+            api.axs("post", "/contact/list", {companyId: this.id}).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+					this.contactLists = data.data
+                    this.$Loading.finish()
+                    this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            });
+        },
+        ClickTab(name) {
+            if (name == 'contact') this.getContactLists()
+        },
+        setMainContact(id) { //设置主联系人
+            api.axs("post", "/contact/setIncumbency", {companyId: this.id, id: id}).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.$Message.success('设置成功!')
+                    this.getContactLists()
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            });
+        },
+        dimissionFun(id,name) {
+            this.dimissionPop = true
+            this.contactId = id
+            this.contactName = name
+        },
 		selUsersFun(page) {
 			this.userForm.pageNum = page
 			api.axs("post", "/user/queryLikeForPages", this.userForm).then(({ data }) => {
@@ -700,20 +719,29 @@ export default {
 		},
 		loadLists() {},
         sureMainper() {
-            this.$Message.info("确认主联系人成功!");
+            this.$Message.info("确认主联系人成功!")
         },
         inWork() {
             //在职
-            this.$Message.info("确认在职成功!");
+            this.$Message.info("又回来了?");
         },
         sureDim() {
             //离职确认
-            this.$Message.info("确认离职成功!");
+            this.$store.state.spinShow = true
+            api.axs("post", "/contact/setLeaveStatus", {id: this.contactId}).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+					this.$Message.success('离职成功!')
+                    this.getContactLists()
+                    this.$store.state.spinShow = false
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
         },
         dimissonFun() {
             //关闭离职弹窗
-            this.mainperPop = false;
-            this.dimissionPop = false;
+            this.mainperPop = false
+            this.dimissionPop = false
         }
     },
     mounted() {
@@ -845,6 +873,7 @@ export default {
                     background-color: #f1c840;
                     border-radius: 4px;
                     color: #fff;
+                    cursor: pointer;
                 }
                 .imp2 {
                     background-color: #fff;

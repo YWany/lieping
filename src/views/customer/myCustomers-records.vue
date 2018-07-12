@@ -30,7 +30,7 @@
 							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
 							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
 							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
-								<Option :value='tree.id' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
+								<Option :value='tree.code' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
 							</Select>
 							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
 							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
@@ -58,39 +58,17 @@
 							<Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
 						</div>
 					</div>
-					<ul class="history-records">
-						<li>
+					<ul class="history-records" v-if='contactRecordlist.length'>
+						<li v-for='lists in contactRecordlist'>
 							<div class="header">
 								<div class="avatar"><img src="@/assets/images/logo.png"></div>
 								<div class="name">
-									<h5>Wanyu</h5>
-									<p class="company">电话沟通 | 浙江钱里面股份有限公司</p>
-								</div>
-								<div class="time">2018-06-12 08:10</div>
-							</div>
-							<p class="desc">这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述</p>
-							<div class="contact">联系人: 巴啦啦 (人力资源中心)
-								<span class="check-files fr">文件(2)</span>
-								<span class="check-pics fr">查看图片(6)</span>
-							</div>
-						</li>
-						<li class='null-records'>
-							<h5 style='text-align:center;padding:20px 0;font-size:14px;'>
-								<Icon type="social-snapchat-outline" style='font-size:22px;vertical-align:middle'></Icon>
-								<span style='vertical-align:middle;padding-left:5px;'>无任何跟进记录</span>
-							</h5>
-						</li>
-					</ul>
-				</TabPane>
-				<TabPane class="pact" label="合同" name="hetong">
-					<!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
-
+									<h5>{{lists.contactName}}</h5>
                                     <p class="company">电话沟通 | {{ lists.companyName }}</p>
-
                                 </div>
                                 <div class="time">{{ lists.followTime }}</div>
                             </div>
-                            <p class="desc">{{ lists.remark }}</p>
+                            <p class="desc">{{ lists.followRecord }}</p>
                             <div class="contact">联系人: {{ lists.createrName }}
                                 <span class="check-files fr">文件({{ lists.imgList.length }})</span>
                                 <span class="check-pics fr">查看图片({{ lists.docList.length }})</span>
@@ -105,7 +83,8 @@
                             </h5>
                         </li>
                     </ul>
-                </TabPane>
+                    
+				</TabPane>
                 <TabPane class="pact" label="合同" name="hetong">
                     <!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
 
@@ -314,20 +293,17 @@ export default {
                 followTime: UTC2Date(new Date(),'y-m-d h:i:s'),
                 followRecord: '',
                 contactRecord: [],
-                attachmentList: [
-                    {
-                        fileName: "f.jpg",
-                        filePath: "g.jpg",
-                        fileSize: 3
-                    }
-                ]
+                attachmentList: [{
+                    "fileName": "f.jpg",
+                    "filePath": "g.jpg",
+                    "fileSize": 3
+                }]
             },
             id: this.$route.query.id,
             cname: this.$route.query.cname,
             level: +this.$route.query.level,
             contactId: "", //联系人ID
             contactName: "", //联系人姓名
-
             userId: "",
             userName: "",
             selUserSelect: false,
@@ -783,7 +759,6 @@ export default {
     methods: {
         ...mapActions(["getUsers"]),
         companyInfo() {
-            console.log(this.id);
             api
                 .axs("post", "/company/info", { id: this.id })
                 .then(({ data }) => {
@@ -796,7 +771,7 @@ export default {
                     }
                 });
             api
-                .axs("post", "/contactRecord/page", { companyId: this.id })
+                .axs("post", "/contactRecord/page", { companyId: this.id, pageSize: 10 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         console.log(data);
@@ -929,7 +904,7 @@ export default {
                 return;
             } else if (this.selUserSelect) {
                 this.userName = this.userId.split("&")[1];
-                this.recordsForm.contactId = this.userId.split("&")[0];
+                this.recordsForm.contactId =this.userId.split("&")[0];
                 this.selUsersPop = false;
                 return;
             }
@@ -993,7 +968,7 @@ export default {
         }
     },
     mounted() {
-        this.companyInfo();
+        this.companyInfo()
     },
     beforeDestroy() {}
 };
@@ -1057,7 +1032,7 @@ export default {
                         height: 38px;
                         border-radius: 50%;
                         border: 1px solid #eee;
-                        padding: 10px 15px;
+                        // padding: 10px 15px;
                         margin-bottom: 10px;
                         img {
                             width: 100%;

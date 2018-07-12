@@ -28,12 +28,12 @@
 				<li>
 					<p>
 						<span>*</span> 跟进时间：</p>
-					<DatePicker :value='atteForm.followTime' format="yyyy-MM-dd" @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
+					<DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
 				</li>
 				<li>
 					<p>
 						<span>*</span> 提醒时间：</p>
-					<DatePicker v-model='atteForm.remindBefore' type="date" placeholder="Select date"></DatePicker>
+					<DatePicker :value='atteForm.remindBefore' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="Select date"></DatePicker>
 				</li>
 				<li>
 					<p>
@@ -51,6 +51,7 @@
 
 <script>
 import api from "@/api";
+import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "addAttePop",
     props: ["attePop"],
@@ -65,8 +66,8 @@ export default {
                 companyId: "",
                 title: "",
                 followUserId: "",
-                followTime: new Date(),
-                remindBefore: new Date(),
+                followTime: UTC2Date(new Date()),
+                remindBefore: UTC2Date(new Date()),
                 remark: ""
             },
             atteFormError: {
@@ -101,7 +102,7 @@ export default {
                     if (data.code === "SUCCESS") {
                         this.datas = data;
                         this.$Message.success("新增成功!");
-                        this.reset(this.atteForm);
+                        this.$parent.attePop = false;
                     } else {
                         this.$Message.error(data.remark);
                         this.subFlag = true;
@@ -109,6 +110,9 @@ export default {
                 });
         },
         seltime(date) {
+            this.atteForm.followTime = date;
+        },
+        seltime1(date) {
             this.atteForm.followTime = date;
         },
         closePop() {
@@ -126,6 +130,7 @@ export default {
     },
     mounted() {
         this.id = this.$parent.id;
+        console.log(this.id);
         api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
             if (data.code === "SUCCESS") {
                 this.company = data.data.companyName;

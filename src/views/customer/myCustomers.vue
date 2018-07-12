@@ -115,6 +115,7 @@ export default {
     name: "home",
     data() {
         return {
+            id:'',
             creatVal: "",
             recordPop: false,
             cname: "",
@@ -144,13 +145,16 @@ export default {
                     width: 50,
                     align: "center",
                     render: (h, params) => {
+                         var row = params.row;
                         return h(
                             "a",
                             {
                                 on: {
                                     click: () => {
+                                         this.id=row.id;
                                         this.attePop = true;
-                                        this.$Message.info("通知通知通知通知");
+                                       
+                                        this.$Message.info(row.id);
                                     }
                                 }
                             },

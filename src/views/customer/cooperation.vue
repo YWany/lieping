@@ -229,7 +229,7 @@ export default {
                     width: 80
                 },
                 {
-                    title: "附件",
+                    title: "文件",
                     key: "totalAttachment",
                     width: 60,
                     align: "center"

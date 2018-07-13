@@ -232,9 +232,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info(
-                                                "详情!!!" + row.name
-                                            );
+                                            this.$route.push('/customer/myCustomers/backcashDetails?id=') + row.id
                                         }
                                     }
                                 },

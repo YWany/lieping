@@ -26,44 +26,44 @@
                     <div class="add-record clearfix">
                         <div class="sels">
                             <span class='xing'>*</span>联系人: &nbsp;&nbsp;
-                            <Input slot="append" @on-focus="selUsersFun(1,'select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input>
-							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
-							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
-							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
-								<Option :value='tree.code' v-for='(tree,index) in genjinTrees' :key="index">{{tree.codeText}}</Option>
-							</Select>
-							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
-							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
-						</div>
-						<div class="add-content">
-							<p style='padding: 15px 0 5px'>
-								<span class='xing'>*</span>跟进记录:</p>
-							<Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
-						</div>
-						<div class="add-sub" style='margin:10px 0 0'>
-							<Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
-								<Button type="ghost">
-									<Icon type="ios-camera-outline"></Icon>
-									<span>图片</span>
-								</Button>
-							</Upload>
-							<Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
-								<Button type="ghost">
-									<Icon type="link"></Icon>
-									<span>附件</span>
-								</Button>
-							</Upload>
-						</div>
-						<div class="add-sub" style='display:block;text-align:center'>
-							<Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
-						</div>
-					</div>
-					<ul class="history-records" v-if='contactRecordlist.length'>
-						<li v-for='lists in contactRecordlist'>
-							<div class="header">
-								<div class="avatar"><img src="@/assets/images/logo.png"></div>
-								<div class="name">
-									<h5>{{lists.contactName}}</h5>
+                            <Input slot="append" @on-focus="getContactLists('select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input>
+                            <Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
+                            <span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
+                            <Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
+                                <Option :value='tree.code' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
+                            </Select>
+                            <span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
+                            <DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
+                        </div>
+                        <div class="add-content">
+                            <p style='padding: 15px 0 5px'>
+                                <span class='xing'>*</span>跟进记录:</p>
+                            <Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+                        </div>
+                        <div class="add-sub" style='margin:10px 0 0'>
+                            <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
+                                <Button type="ghost">
+                                    <Icon type="ios-camera-outline"></Icon>
+                                    <span>图片</span>
+                                </Button>
+                            </Upload>
+                            <Upload class='up-oth' action="//jsonplaceholder.typicode.com/posts/">
+                                <Button type="ghost">
+                                    <Icon type="link"></Icon>
+                                    <span>附件</span>
+                                </Button>
+                            </Upload>
+                        </div>
+                        <div class="add-sub" style='display:block;text-align:center'>
+                            <Button type='info' style='font-size:14px;' @click='subRecord'>提交</Button>
+                        </div>
+                    </div>
+                    <ul class="history-records" v-if='contactRecordlist.length'>
+                        <li v-for='lists in contactRecordlist'>
+                            <div class="header">
+                                <div class="avatar"><img src="@/assets/images/logo.png"></div>
+                                <div class="name">
+                                    <h5>{{lists.contactName}}</h5>
                                     <p class="company">电话沟通 | {{ lists.companyName }}</p>
                                 </div>
                                 <div class="time">{{ lists.followTime }}</div>
@@ -83,8 +83,8 @@
                             </h5>
                         </li>
                     </ul>
-                    
-				</TabPane>
+
+                </TabPane>
                 <TabPane class="pact" label="合同" name="hetong">
                     <!-- <router-link to='/customer/myCustomers/contract'>合同列表</router-link> -->
 
@@ -135,7 +135,7 @@
                                 </p>
                             </div>
                             <div class="desc">
-                                <span>电话: {{list.phone1}} {{list.phone2}} {{list.phone3}} {{list.phone4}}</span>
+                                <span>电话: {{list.phone1}}；{{list.phone2}}；{{list.phone3}}；{{list.phone4}}</span>
                                 <span v-if='list.email'>邮箱: {{list.email}}</span>
                                 <a href="javascript:;" class='fr'>查看简历</a>
                             </div>
@@ -207,6 +207,30 @@
             </div>
         </Modal>
 
+        <!-- 选择联系人 -->
+        <Modal v-model="selContactsPop" width='400px' :mask-closable='false' :closable='false'>
+            <div slot="header">
+                <span style='font-size:14px'>选择联系人</span>
+                <a href="javascript:;" class='fr' @click='closeSelUsersPop'>
+                    <Icon type="close-round"></Icon>
+                </a>
+            </div>
+            <ul class='users-content'>
+                <li v-for='user in contactLists'>
+                    <RadioGroup v-model="recordsForm.contactId">
+                        <Radio :label="user.id + '&' + user.name">
+                            <span class='name'>{{user.name}}</span>
+                            <span class='depart' v-if='user.incumbency'>在职</span>
+                            <span class='depart' v-else style='color:red'>离职</span>
+                        </Radio>
+                    </RadioGroup>
+                </li>
+            </ul>
+            <div slot='footer' style='text-align:center'>
+                <Button type='primary' @click='selContactFun'>确定</Button>
+            </div>
+        </Modal>
+
         <!-- 删除 -->
         <Modal v-model="delCompanyPop" title="删除确认" width='400px' @on-ok="delCompany" style='text-align: center'>
             <p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
@@ -231,6 +255,7 @@
 // @ is an alias to /src
 import api from "@/api"
 import ls from "store2"
+import axios from 'axios'
 import { mapState, mapMutations, mapActions } from "vuex"
 import CompanyPop from "@/components/customer/addCompanyPop.vue"
 import AttePop from "@/components/customer/addAttePop.vue"
@@ -250,7 +275,7 @@ export default {
     data() {
         return {
             subFlag: true,
-            genjinTrees: this.$store.state.selTrees[5].children,
+            genjinTrees: "",
             pageNum: "1",
             pageSize: "10",
             form: {
@@ -260,21 +285,23 @@ export default {
             userForm: {
                 pageNum: 1,
                 total: 1,
-                pageSize: 3
+                pageSize: 6
             },
             recordsForm: {
                 contactId: "",
                 companyId: this.$route.query.id,
-                followType: '',
-                followTime: UTC2Date(new Date(),'y-m-d h:i:s'),
-                followRecord: '',
-                contactRecord: [],
-                attachmentList: [{
-                    "fileName": "f.jpg",
-                    "filePath": "g.jpg",
-                    "fileSize": 3
-                }]
+                followType: "",
+                followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
+                followRecord: "",
+                contactRecord: []
             },
+            attachmentList: [
+                {
+                    fileName: "f.jpg",
+                    filePath: "g.jpg",
+                    fileSize: 3
+                }
+            ],
             id: this.$route.query.id,
             cname: this.$route.query.cname,
             level: +this.$route.query.level,
@@ -293,6 +320,7 @@ export default {
             mainperPop: false, //设置主联系人弹窗
             dimissionPop: false, //离职提醒弹窗
             selUsersPop: false, //选择BD弹窗
+            selContactsPop: false, //选择联系人弹窗
             delCompanyPop: false, //删除弹窗
             companyMod: true,
             cityList: [
@@ -747,7 +775,10 @@ export default {
                     }
                 });
             api
-                .axs("post", "/contactRecord/page", { companyId: this.id, pageSize: 10 })
+                .axs("post", "/contactRecord/page", {
+                    companyId: this.id,
+                    pageSize: 10
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.contactRecordlist = data.data.list;
@@ -773,33 +804,48 @@ export default {
 
             if (this.subFlag) this.subFlag = false;
             else return;
+            this.recordsForm.contactId = this.recordsForm.contactId.split("&")[0]
             this.$store.state.spinShow = true;
-            api
-                .axs("post", "/contactRecord/save", this.recordsForm)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.$Message.error("提交成功!");
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                        this.subFlag = true;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+            
+            var vm = this
+            axios({
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    "Content-Type": "application/json"
+                },
+                method: "post",
+                url: "/boquma-web/contactRecord/save",
+                data: {attachmentList: vm.attachmentList},
+                params: vm.recordsForm,
+            }).then(function(data) {
+                if (data.code === "SUCCESS") {
+                    vm.$Message.error("提交成功!");
+                    vm.$Loading.finish();
+                    vm.$store.state.spinShow = false;
+                    vm.subFlag = true;
+                } else {
+                    vm.$Message.error(data.remark)
+                }
+            });
         },
-        getContactLists() {
+        getContactLists(tag) {
             //联系人
             api
                 .axs("post", "/contact/list", { companyId: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.contactLists = data.data;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
+                        if (tag) this.selContactsPop = true
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
                     } else {
-                        this.$Message.error(data.remark);
+                        this.$Message.error(data.remark)
                     }
                 });
+        },
+        selContactFun() {
+            this.userName = this.recordsForm.contactId.split("&")[1]
+            this.selContactsPop = false
         },
         getFileLists(page) {
             api
@@ -875,13 +921,8 @@ export default {
         },
         sureSelUser() {
             if (!this.userId) {
-                this.$Message.info("选一个BD啊!");
-                return;
-            } else if (this.selUserSelect) {
-                this.userName = this.userId.split("&")[1];
-                this.recordsForm.contactId =this.userId.split("&")[0];
-                this.selUsersPop = false;
-                return;
+                this.$Message.info("选一个BD啊!")
+                return
             }
             api
                 .axs("post", "/company/changeInto", {
@@ -890,32 +931,33 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("转出成功!");
-                        this.$router.push("/customer/cooperation");
-                        this.selUsersPop = false;
+                        this.selUsersPop = false
+                        this.$Message.success("转出成功!")
+                        this.$router.push("/customer/cooperation")
                     } else {
-                        this.$Message.error(data.remark);
+                        this.$Message.error(data.remark)
                     }
                 });
         },
         closeSelUsersPop() {
-            this.selUserSelect = false;
-            this.selUsersPop = false;
+            this.selUserSelect = false
+            this.selUsersPop = false
+            this.selContactsPop = false
         },
         delCompany() {
             api
                 .axs("post", "/company/delete", { id: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("删除成功");
-                        this.$router.push("/customer/cooperation");
+                        this.$Message.success("删除成功")
+                        this.$router.push("/customer/cooperation")
                     } else {
-                        this.$Message.error(data.remark);
+                        this.$Message.error(data.remark)
                     }
-                });
+                })
         },
         sureMainper() {
-            this.$Message.info("确认主联系人成功!");
+            this.$Message.info("确认主联系人成功!")
         },
         inWork() {
             //在职
@@ -943,7 +985,11 @@ export default {
         }
     },
     mounted() {
-        this.companyInfo()
+        this.companyInfo();
+
+        this.genjinTrees =
+            this.$store.state.selTrees.length &&
+            this.$store.state.selTrees[5].children;
     },
     beforeDestroy() {}
 };

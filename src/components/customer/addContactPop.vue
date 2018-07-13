@@ -22,7 +22,7 @@
                     <p>
                         <span>*</span> 联系电话：</p>
                     <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone1'>
+                        <Input v-model='addForm.phone1' :maxlength=11 @on-keyup='inputPhone(addForm.phone1,1)'>
                         <Select v-model='addForm.phone1Type' slot="append" style="width:80px">
                             <Option value="1">工作</Option>
                             <Option value="2">手机</Option>
@@ -34,7 +34,7 @@
                 <li class='li-phone' v-if='addPhone2'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
-                        <Input v-model='addForm.phone2'>
+                        <Input v-model='addForm.phone2' :maxlength=11 @on-keyup='inputPhone(addForm.phone2,2)'>
                         <Select v-model='addForm.phone2Type' slot="append" style="width:80px">
                             <Option value="1">工作</Option>
                             <Option value="2">手机</Option>
@@ -43,7 +43,7 @@
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </div>
                 </li>
-                <li class='li-phone' v-if='addPhone3'>
+                <li class='li-phone' v-if='addPhone3' :maxlength=11 @on-keyup='inputPhone(addForm.phone3,3)'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone3'>
@@ -55,7 +55,7 @@
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </div>
                 </li>
-                <li class='li-phone' v-if='addPhone4'>
+                <li class='li-phone' v-if='addPhone4' :maxlength=11 @on-keyup='inputPhone(addForm.phone4,4)'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone4'>
@@ -139,10 +139,10 @@ export default {
                 phone2: "",
                 phone3: "",
                 phone4: "",
-                phone1Type: "1",
-                phone2Type: "1",
-                phone3Type: "1",
-                phone4Type: "1",
+                phone1Type: "2",
+                phone2Type: "2",
+                phone3Type: "2",
+                phone4Type: "2",
                 job: "",
                 dateType: "1",
                 decisionRelation: "",
@@ -199,15 +199,28 @@ export default {
             if (this.phoneNum == 4) this.addPhone4 = true;
         },
         delPhones() {
-            this.phoneNum -= 1;
-            if (this.phoneNum < 4) this.addPhoneBtn = true;
-            if (this.phoneNum == 1) this.addPhone2 = false;
-            if (this.phoneNum == 2) this.addPhone3 = false;
-            if (this.phoneNum == 3) this.addPhone4 = false;
+            this.phoneNum -= 1
+            if (this.phoneNum < 4) this.addPhoneBtn = true
+            if (this.phoneNum == 1) {
+                this.addPhone2 = false
+                this.addForm.phone2 = ''
+            } else if (this.phoneNum == 2){
+                this.addPhone3 = false
+                this.addForm.phone3 = ''
+            } else if (this.phoneNum == 3){
+                this.addPhone4 = false
+                this.addForm.phone4 = ''
+            }
         },
         closePop() {
             this.$parent.contactPop = false;
             // this.reset(this.addForm)
+        },
+        inputPhone(val,tag) {
+            if (tag == 1) this.addForm.phone1 = val.replace(/[^\d]/g,'')
+            else if(tag == 2) this.addForm.phone2 = val.replace(/[^\d]/g,'')
+            else if(tag == 3) this.addForm.phone3 = val.replace(/[^\d]/g,'')
+            else if(tag == 4) this.addForm.phone4 = val.replace(/[^\d]/g,'')
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {

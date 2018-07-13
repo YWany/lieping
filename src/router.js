@@ -96,6 +96,13 @@ export default new Router({
                     component: () =>
                         import ("./views/customer/myCustomers-contractDetails.vue")
                 },
+                {
+                    meta: { title: '千里马-客户-我的客户-回款详情' },
+                    path: '/customer/myCustomers/backcashDetails',
+                    name: 'myCustomersbackcashDetails',
+                    component: () =>
+                        import ("./views/customer/myCustomers-backcashDetails.vue")
+                },
                 { // manager 管理 =======================================================
                     meta: { title: '千里马-管理-新增账号' },
                     path: '/manager/addacc',

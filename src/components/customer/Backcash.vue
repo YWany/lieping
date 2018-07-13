@@ -229,13 +229,14 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$router.push('/customer/myCustomers/backcashDetails?id=') + row.id
+                                            this.$router.push(
+                                                "/customer/myCustomers/backcashDetails?id="
+                                            ) + row.id;
                                         }
                                     }
                                 },
                                 "详情"
-                            ),
-                            
+                            )
                         ]);
                     }
                 }

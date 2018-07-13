@@ -216,7 +216,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$parent.id);
         this.id = this.$parent.id;
         api.axs("post", "/company/info", { id: this.id }).then(({ data }) => {
             if (data.code === "SUCCESS") {

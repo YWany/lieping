@@ -750,7 +750,6 @@ export default {
                 .axs("post", "/contactRecord/page", { companyId: this.id, pageSize: 10 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data);
                         this.contactRecordlist = data.data.list;
                         this.$Loading.finish();
                         this.$store.state.spinShow = false;

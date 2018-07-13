@@ -63,6 +63,9 @@
         <div class="tablePage fr leta">
             <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
         </div>
+        <div class="returneddetail">
+          
+        </div>
     </div>
 </template>
 
@@ -363,6 +366,11 @@ export default {
     position: relative;
     .search {
         width: 100%;
+    }
+    .returneddetail{
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
     }
 }
 </style>

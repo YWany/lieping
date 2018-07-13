@@ -226,11 +226,7 @@ export default {
                         });
                     }
                 },
-                {computed: {
-        allTrees() {
-            return this.$store.state.selTrees
-        }
-    },
+                {
                     title: "联系人",
                     key: "contactName",
                     width: 94,
@@ -262,8 +258,9 @@ export default {
                                 {
                                     on: {
                                         click: () => {
-                                            this.recordPop = true;
-                                            this.cname = row.name;
+                                            this.atteCompanyId = row.id
+                                            this.recordPop = true
+                                            this.cname = row.companyName
                                         }
                                     }
                                 },
@@ -339,7 +336,7 @@ export default {
             //添加记录
             this.$Message.info("添加记录~~");
             this.$router.push(
-                "/customer/myCustomers/records?cname=" + this.cname
+                "/customer/myCustomers/records?cname=" + this.cname + '&id=' + this.atteCompanyId 
             );
         },
         createDo(val) {

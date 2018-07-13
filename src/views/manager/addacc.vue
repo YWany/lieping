@@ -287,14 +287,9 @@ export default {
                                                     ({
                                                         data: { data, code }
                                                     }) => {
-                                                        console.log(data.list);
                                                         //   this.tableLists=data.list;
                                                         this.formValidate =
-                                                            data.list[0];
-
-                                                        console.log(
-                                                            this.formValidate
-                                                        );
+                                                            data.list[0]
                                                     }
                                                 );
                                             this.handleSubmit(name);

@@ -282,13 +282,11 @@ export default {
         this.info();
         // 企业信息
         if (this.companyMod) {
-            this.companyForm = this.getParentDetails;
+            this.companyForm = this.getParentDetails
         }
-        return this.$parent.recordsDetails;
-        console.log(12345678900);
+        return this.$parent.recordsDetails
         setTimeout(() => {
-            console.log(12345678900);
-            this.companyForm = this.getParentDetails;
+            this.companyForm = this.getParentDetails
         }, 5000);
     }
 };

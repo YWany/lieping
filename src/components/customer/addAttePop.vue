@@ -131,8 +131,6 @@ export default {
     mounted() {
         api.axs("post", "/user/list").then(({ data }) => {
             if (data.code === "SUCCESS") {
-                console.log(data);
-
                 this.userlist = data.data;
             } else {
                 this.$Message.error(data.remark);

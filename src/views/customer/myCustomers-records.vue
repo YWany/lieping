@@ -30,7 +30,7 @@
 							<Button type="primary" shape="circle" size='small' icon="plus" @click='contactPop=true' style='margin:0 30px 0 4px'></Button>
 							<span class='xing'>*</span>跟进方式: &nbsp;&nbsp;
 							<Select v-model="recordsForm.followType" style='width:200px;margin-right:30px'>
-								<Option :value='tree.code' v-for='tree in genjinTrees'>{{tree.codeText}}</Option>
+								<Option :value='tree.code' v-for='(tree,index) in genjinTrees' :key="index">{{tree.codeText}}</Option>
 							</Select>
 							<span class='xing'>*</span>跟进时间: &nbsp;&nbsp;
 							<DatePicker type="datetime" :value='recordsForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width: 200px"></DatePicker>
@@ -107,32 +107,6 @@
                         <TabPane label="猎头(3)" name="name2">
                             <div class="searchTable">
                                 <Table border ref="selection" :columns="headhunter" :data="headlist"></Table>
-
-                            </div>
-                        </TabPane>
-                        <TabPane label="背景调查(1)" name="name3">
-                            <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-                            </div>
-                        </TabPane>
-                        <TabPane label="薪酬调查(1)" name="name4">
-                            <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-                            </div>
-                        </TabPane>
-                        <TabPane label="咨询服务(1)" name="name5">
-                            <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-                            </div>
-                        </TabPane>
-                        <TabPane label="外包(1)" name="name6">
-                            <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-                            </div>
-                        </TabPane>
-                        <TabPane label="其他(1)" name="name7">
-                            <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                             </div>
                         </TabPane>
                     </Tabs>
@@ -140,9 +114,10 @@
                         <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
                     </div>
                 </TabPane>
-                <TabPane label="汇款" name="huikuan">汇款</TabPane>
+                <TabPane label="回款" name="huikuan">
+                    <Backcash />
+                </TabPane>
                 <TabPane label="开票历史" name="lishi">开票历史</TabPane>
-                <TabPane label="开票信息" name="xinxi">开票信息</TabPane>
                 <TabPane label="联系人" name="contact">
                     <ul class="contact-lists">
                         <li v-for='list in contactLists' :key='list.id'>
@@ -183,7 +158,6 @@
                         </div>
                     </div>
                 </TabPane>
-
             </Tabs>
         </div>
         <div class="other-btns">
@@ -239,7 +213,7 @@
         </Modal>
 
         <!-- 新增企业客户弹窗 -->
-        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' :id='id'/>
+        <!-- <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' /> -->
 
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' />
@@ -255,21 +229,23 @@
 
 <script>
 // @ is an alias to /src
-import api from "@/api";
-import ls from "store2";
-import { mapState, mapMutations, mapActions } from "vuex";
-import CompanyPop from "@/components/customer/addCompanyPop.vue";
-import AttePop from "@/components/customer/addAttePop.vue";
-import ContactPop from "@/components/customer/addContactPop.vue";
-import ContractPop from "@/components/customer/addContractPop.vue";
-import { UTC2Date } from "@/assets/js/utils.js";
+import api from "@/api"
+import ls from "store2"
+import { mapState, mapMutations, mapActions } from "vuex"
+import CompanyPop from "@/components/customer/addCompanyPop.vue"
+import AttePop from "@/components/customer/addAttePop.vue"
+import ContactPop from "@/components/customer/addContactPop.vue"
+import ContractPop from "@/components/customer/addContractPop.vue"
+import Backcash from "@/components/customer/Backcash.vue"
+import { UTC2Date } from "@/assets/js/utils.js"
 export default {
     name: "personalDetails",
     components: {
         CompanyPop,
         AttePop,
         ContactPop,
-        ContractPop
+        ContractPop,
+        Backcash
     },
     data() {
         return {
@@ -774,7 +750,6 @@ export default {
                 .axs("post", "/contactRecord/page", { companyId: this.id, pageSize: 10 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data);
                         this.contactRecordlist = data.data.list;
                         this.$Loading.finish();
                         this.$store.state.spinShow = false;

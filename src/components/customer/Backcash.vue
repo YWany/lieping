@@ -1,6 +1,6 @@
 <template>
 	<div class="backcash">
-        回款qqq
+        回款
 	</div>
 </template>
 

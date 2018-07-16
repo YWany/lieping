@@ -17,7 +17,11 @@
                         <FormItem label="创建人" prop="userName">
                             <Input v-model="formValidate.userName" placeholder="请输入用户名字哦"></Input>
                         </FormItem>
-
+                        <FormItem label="合同编号" prop="roleId">
+                            <Select v-model="formValidate.roleId" placeholder="合同编号">
+                                <!-- <Option v-for="(item,index) in rolelist" :value="item.id" :key='index'>{{item.roleName}}</Option> -->
+                            </Select>
+                        </FormItem>
                         <FormItem label="款项类型" prop="sex">
                             <Input v-model="formValidate.sex" placeholder="请输入款项金额哦"></Input>
                         </FormItem>
@@ -229,13 +233,14 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$router.push('/customer/myCustomers/backcashDetails?id=') + row.id
+                                            this.$router.push(
+                                                "/customer/myCustomers/backcashDetails?id="
+                                            ) + row.id;
                                         }
                                     }
                                 },
                                 "详情"
-                            ),
-                            
+                            )
                         ]);
                     }
                 }

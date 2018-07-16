@@ -110,6 +110,20 @@ export default new Router({
                     component: () =>
                         import ("./views/customer/myCustomers-backcashDetails.vue")
                 },
+                {
+                    meta: { title: '千里马-客户-我的客户-新增付款通知书' },
+                    path: '/customer/myCustomers/backcash/addAdvice',
+                    name: 'myCustomersbackcashAddAdvice',
+                    component: () =>
+                        import ("./views/customer/myCustomers-backcash-addAdvice.vue")
+                },
+                {
+                    meta: { title: '千里马-客户-我的客户-新增发票' },
+                    path: '/customer/myCustomers/backcash/addInvoice',
+                    name: 'myCustomersbackcashAddInvoice',
+                    component: () =>
+                        import ("./views/customer/myCustomers-backcash-addInvoice.vue")
+                },
                 { // manager 管理 =======================================================
                     meta: { title: '千里马-管理-新增账号' },
                     path: '/manager/addacc',

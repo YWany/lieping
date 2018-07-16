@@ -449,7 +449,6 @@ export default {
         },
         loadLists(page) {
             this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page);
             setTimeout(() => {
                 this.$store.state.spinShow = false;
             }, 1500);

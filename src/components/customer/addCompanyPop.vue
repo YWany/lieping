@@ -4,7 +4,6 @@
             <div slot='header' style='font-size:14px;color:#444'>
                 <span v-if='companyMod'>编辑企业</span>
                 <span v-else>新增企业</span>
-                {{recordsDetails}}
                 <a href="javascript:;" @click='$parent.companyPop=false'>
                     <Icon type="close" class='fr'></Icon>
                 </a>
@@ -13,7 +12,7 @@
                 <li>
                     <p>
                         <span>*</span> 客户名称：</p>
-                    <Input v-model='companyForm.companyName' placeholder=""></Input>
+                    <Input v-model='companyForm.companyName' placeholder="" class='selpro'></Input>
                 </li>
                 <li>
                     <p>
@@ -27,7 +26,7 @@
                 <li style='text-align:left'>
                     <p style='width:130px'>
                         <span>*</span> 客户对外显示名称：</p>
-                    <Input v-model='companyForm.outerName' placeholder=""></Input>
+                    <Input v-model='companyForm.outerName' placeholder="" class='selpro'></Input>
                 </li>
                 <li>
                     <div style='color:#ff8686'>为保障企业及猎头公司的隐私，我们不会将企业的真实名称展示给经理人</div>
@@ -104,11 +103,7 @@ export default {
         Citysels,
         Professions
     },
-    computed: {
-        getParentDetails() {
-            return this.$parent.recordsDetails;
-        }
-    },
+    computed: {},
     data() {
         return {
             subFlag: true,
@@ -147,11 +142,6 @@ export default {
             }
         };
     },
-    computed: {
-        allTrees() {
-            return this.$store.state.selTrees
-        }
-    },
     methods: {
         info() {
             api
@@ -182,14 +172,10 @@ export default {
                         this.$Message.error(data.remark);
                         this.subFlag = true;
                     }
-                });
-            if (this.companyMod) {
-                this.companyForm = this.recordsDetails;
-            }
+                })
         },
         subSave() {
             if (this.companyMod) {
-                this.companyForm = this.recordsDetails;
 
                 if (this.$refs.proCity.cityId === "") {
                     this.companyForm.areaId = this.$refs.proCity.proId;
@@ -199,28 +185,27 @@ export default {
                 this.companyForm.companyVocation = this.professId;
                 var forms = this.companyForm;
                 for (var name in forms) {
-                    if (!forms[name]) {
+                    if (!forms[name] && this.companyFormError[name]) {
                         this.$Message.error(
                             this.companyFormError[name] + ": 请填写完整!"
                         );
                         return;
                     }
                 }
-                if (this.subFlag) this.subFlag = false;
+                if (this.subFlag) this.subFlag = false
                 else return;
                 api
                     .axs("post", "/company/update", this.changeform)
-                    .then(({ data: { data, code } }) => {
+                    .then(({ data }) => {
                         if (data.code === "SUCCESS") {
                             this.datas = data;
                             this.$Message.success("新增成功!");
-                            this.$parent.companyPop = false;
-                            this.$parent.loadLists();
-                            this.reset("companyForm");
-                            this.companyMod = "false";
+                            this.$emit('compantMod', false);
+                            this.$parent.loadLists()
+                            this.subFlag = true
                         } else {
-                            this.$Message.error(data.remark);
-                            this.subFlag = true;
+                            this.$Message.error(data.remark)
+                            this.subFlag = true
                         }
                     });
             } else {
@@ -232,11 +217,11 @@ export default {
                 this.companyForm.companyVocation = this.professId;
                 var forms = this.companyForm;
                 for (var name in forms) {
-                    if (!forms[name]) {
+                    if (!forms[name] && this.companyFormError[name]) {
                         this.$Message.error(
                             this.companyFormError[name] + ": 请填写完整!"
-                        );
-                        return;
+                        )
+                        return
                     }
                 }
                 if (this.subFlag) this.subFlag = false;
@@ -246,31 +231,31 @@ export default {
                     .axs("post", "/company/add", this.companyForm)
                     .then(({ data }) => {
                         if (data.code === "SUCCESS") {
-                            this.datas = data;
-                            this.$Message.success("新增成功!");
-                            this.$parent.companyPop = false;
-                            this.$parent.loadLists();
-                            this.reset("companyForm");
+                            this.datas = data
+                            this.$Message.success("新增成功!")
+                            this.$parent.companyPop = false
+                            this.$parent.loadLists()
+                            this.reset("companyForm")
                         } else {
-                            this.$Message.error(data.remark);
-                            this.subFlag = true;
+                            this.$Message.error(data.remark)
+                            this.subFlag = true
                         }
-                    });
+                    })
             }
         },
         selPro() {
             //选择职位
-            var idName = this.$refs.professionComp.professVal;
+            var idName = this.$refs.professionComp.professVal
             if (!idName) {
-                this.$Message.warning("不选一个职位么?");
-                return;
+                this.$Message.warning("不选一个职位么?")
+                return
             }
-            this.professId = idName.split("&")[0];
-            this.professName = idName.split("&")[1];
-            this.professPop = false;
+            this.professId = idName.split("&")[0]
+            this.professName = idName.split("&")[1]
+            this.professPop = false
         },
         success(res) {
-            this.professPop = res;
+            this.professPop = res
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -279,15 +264,14 @@ export default {
         }
     },
     mounted() {
-        this.info();
-        // 企业信息
+        this.info()
+
         if (this.companyMod) {
-            this.companyForm = this.getParentDetails
+            this.companyForm = this.recordsDetails
         }
-        return this.$parent.recordsDetails
-        setTimeout(() => {
-            this.companyForm = this.getParentDetails
-        }, 5000);
+    },
+    watch: {
+        'recordsDetails': (newData, oldData) => {}
     }
 };
 </script>

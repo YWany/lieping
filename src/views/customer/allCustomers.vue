@@ -89,9 +89,7 @@
                     </p>
                 </li>
             </ul>
-            <p slot='footer' style='text-align:center'>
-                <router-link :to="'/customer/myCustomers/records?id=' + this.atteCompanyId">查看更多 »</router-link>
-            </p>
+            <p slot='footer' style='text-align:center'></p>
         </Modal>
 
         <!-- 新增跟进提醒弹窗 -->
@@ -136,38 +134,6 @@ export default {
                     align: "center"
                 },
                 {
-                    title: "提醒",
-                    key: "tix",
-                    width: 50,
-                    align: "center",
-                    render: (h, params) => {
-                        const row = params.row
-                        return h(
-                            "a",
-                            {
-                                on: {
-                                    click: () => {
-                                        this.atteCompanyId = row.id
-                                        this.atteCompanyName = row.companyName
-                                        this.attePop = true
-                                    }
-                                }
-                            },
-                            [
-                                h("Icon", {
-                                    style: {
-                                        fontSize: "16px"
-                                    },
-                                    props: {
-                                        type: "android-notifications",
-                                        color: "#d3585f"
-                                    }
-                                })
-                            ]
-                        );
-                    }
-                },
-                {
                     title: "客户状态",
                     key: "companyStatus",
                     width: 94,
@@ -184,23 +150,11 @@ export default {
                     title: "客户名称",
                     key: "companyName",
                     width: 140,
-                    sortable: true,
                     ellipsis: true,
                     render: (h, params) => {
                         var row = params.row;
                         return h(
-                            "a",
-                            {
-                                on: {
-                                    click: () => {
-                                        this.$router.push(
-                                            "/customer/myCustomers/records?id=" +
-                                                row.id
-                                        );
-                                    }
-                                }
-                            },
-                            row.companyName
+                            "span", row.companyName
                         );
                     }
                 },
@@ -286,6 +240,36 @@ export default {
                     key: "updateTime",
                     width: 80,
                     align: "center"
+                },
+                {
+                    title: "操作",
+                    key: "iii",
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "捞取!!!"
+                                            );
+                                        }
+                                    }
+                                },
+                                "捞取"
+                            )
+                        ])
+                    }
                 }
             ],
             tableLists: [],
@@ -325,7 +309,7 @@ export default {
                 .axs("post", "/contactRecord/page", { companyId: id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data.list.slice(0,2)
+                        this.contactLists = data.data.list.slice(0,3)
                         this.recordPop = true
                     } else {
                         this.$Message.error(data.remark)
@@ -337,7 +321,7 @@ export default {
                 this.$Message.warning("想搜点什么?");
                 return;
             }
-            this.tableLists = [];
+            this.tableLists = []
             // this.loadLists()
         },
         addRecord() {

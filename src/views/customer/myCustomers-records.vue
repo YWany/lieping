@@ -237,7 +237,7 @@
         </Modal>
 
         <!-- 新增企业客户弹窗 -->
-        <!-- <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' /> -->
+        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' :id='id' v-if='sonFlag'/>
 
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' />
@@ -275,6 +275,7 @@ export default {
     data() {
         return {
             subFlag: true,
+            sonFlag: false,
             genjinTrees: "",
             pageNum: "1",
             pageSize: "10",
@@ -293,15 +294,15 @@ export default {
                 followType: "",
                 followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
                 followRecord: "",
-                contactRecord: []
             },
-            attachmentList: [
-                {
-                    fileName: "f.jpg",
-                    filePath: "g.jpg",
+            recordsFormBody: {
+                contactRecord: [],
+                attachmentList: [{
+                    fileName: 'f.jpg',
+                    filePath: 'g.jpg',
                     fileSize: 3
-                }
-            ],
+                }],
+            },
             id: this.$route.query.id,
             cname: this.$route.query.cname,
             level: +this.$route.query.level,
@@ -760,6 +761,9 @@ export default {
             return this.$store.state.users;
         }
     },
+    created() {
+        this.companyInfo()
+    },
     methods: {
         ...mapActions(["getUsers"]),
         companyInfo() {
@@ -767,7 +771,8 @@ export default {
                 .axs("post", "/company/info", { id: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.recordsDetails = data.data;
+                        this.recordsDetails = data.data
+                        this.sonFlag = true
                         // this.$Loading.finish();
                         // this.$store.state.spinShow = false;
                     } else {
@@ -792,41 +797,54 @@ export default {
         subRecord() {
             //提交记录
             if (!this.recordsForm.contactId) {
-                this.$Message.error("请选择联系人!");
-                return;
+                this.$Message.error("请选择联系人!")
+                return
             } else if (!this.recordsForm.followType) {
-                this.$Message.error("请选择跟进方式!");
-                return;
+                this.$Message.error("请选择跟进方式!")
+                return
             } else if (!this.recordsForm.followRecord) {
-                this.$Message.error("请填写跟进记录!");
-                return;
+                this.$Message.error("请填写跟进记录!")
+                return
             }
 
-            if (this.subFlag) this.subFlag = false;
-            else return;
+            if (this.subFlag) this.subFlag = false
+            else return
             this.recordsForm.contactId = this.recordsForm.contactId.split("&")[0]
-            this.$store.state.spinShow = true;
-            
-            var vm = this
-            axios({
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    "Content-Type": "application/json"
-                },
-                method: "post",
-                url: "/boquma-web/contactRecord/save",
-                data: {attachmentList: vm.attachmentList},
-                params: vm.recordsForm,
-            }).then(function(data) {
-                if (data.code === "SUCCESS") {
-                    vm.$Message.error("提交成功!");
-                    vm.$Loading.finish();
-                    vm.$store.state.spinShow = false;
-                    vm.subFlag = true;
-                } else {
-                    vm.$Message.error(data.remark)
-                }
-            });
+            this.$store.state.spinShow = true
+
+            api
+                .axs("post", "/contactRecord/save", this.recordsForm, this.recordsFormBody.attachmentList)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.error("提交成功!")
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
+                        this.subFlag = true
+                    } else {
+                        this.$Message.error(data.remark)
+                    }
+                })
+
+            // var vm = this
+            // axios({
+            //     headers: {
+            //         'X-Requested-With': 'XMLHttpRequest',
+            //         "Content-Type": "application/json"
+            //     },
+            //     method: "post",
+            //     url: "/boquma-web/contactRecord/save",
+            //     // data: {attachmentList: vm.attachmentList},
+            //     params: vm.recordsForm,
+            // }).then(function(data) {
+            //     if (data.code === "SUCCESS") {
+            //         vm.$Message.error("提交成功!")
+            //         vm.$Loading.finish()
+            //         vm.$store.state.spinShow = false
+            //         vm.subFlag = true
+            //     } else {
+            //         vm.$Message.error(data.remark)
+            //     }
+            // })
         },
         getContactLists(tag) {
             //联系人
@@ -897,7 +915,6 @@ export default {
         loadLists(page) {
             this.clickTab(name);
             this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page);
             setTimeout(() => {
                 this.$store.state.spinShow = false;
             }, 1500);
@@ -985,8 +1002,6 @@ export default {
         }
     },
     mounted() {
-        this.companyInfo();
-
         this.genjinTrees =
             this.$store.state.selTrees.length &&
             this.$store.state.selTrees[5].children;

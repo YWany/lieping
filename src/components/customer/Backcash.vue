@@ -81,7 +81,7 @@ export default {
                 createDate: "",
                 signDate: ""
             },
-            genjinTrees: this.$store.state.selTrees[5].children,
+            genjinTrees: this.$store.state.selTrees.length && this.$store.state.selTrees[5].children,
             pageNum: "1",
             pageSize: "10",
             formPage: {
@@ -229,7 +229,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$route.push('/customer/myCustomers/backcashDetails?id=') + row.id
+                                            this.$router.push('/customer/myCustomers/backcashDetails?id=') + row.id
                                         }
                                     }
                                 },
@@ -275,8 +275,7 @@ export default {
     methods: {
         loadLists(page) {
             // this.clickTab(name);
-            this.$store.state.spinShow = true;
-            this.$Message.info("当前页: " + page);
+            this.$store.state.spinShow = true
             setTimeout(() => {
                 this.$store.state.spinShow = false;
             }, 1500);

@@ -17,6 +17,7 @@
             <router-link to='/customer/contract'><MenuItem name="/customer/contract">客户合同</MenuItem></router-link>
             <router-link to='/customer/jobDoing'><MenuItem name="/customer/jobDoing">职位进展</MenuItem></router-link>
             <router-link to='/customer/myCustomers'><MenuItem name="/customer/myCustomers">我的客户</MenuItem></router-link>
+            <router-link to='/customer/allCustomers'><MenuItem name="/customer/allCustomers">公海池</MenuItem></router-link>
         </Submenu>
         <Submenu name="2">
             <template slot="title">

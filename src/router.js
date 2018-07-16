@@ -76,6 +76,13 @@ export default new Router({
                         import ("./views/customer/myCustomers.vue")
                 },
                 {
+                    meta: { title: '千里马-客户-我的客户' },
+                    path: '/customer/allCustomers',
+                    name: 'allCustomers',
+                    component: () =>
+                        import ("./views/customer/allCustomers.vue")
+                },
+                {
                     meta: { title: '千里马-客户-我的客户-记录' },
                     path: '/customer/myCustomers/records',
                     name: 'myCustomersRecords',

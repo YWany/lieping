@@ -28,7 +28,7 @@
 				<li>
 					<p>
 						<span>*</span> 跟进时间：</p>
-					<DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
+					<DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
 				</li>
 				<li>
 					<p>

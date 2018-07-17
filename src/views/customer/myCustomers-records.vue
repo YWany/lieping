@@ -100,8 +100,7 @@
                     <Tabs size='small' :animated=false class="subTabs" value="name1">
                         <TabPane label="所有合同(3)" name="name1">
                             <div class="searchTable">
-                                <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-
+                                <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
                         <TabPane label="猎头(3)" name="name2">
@@ -111,15 +110,22 @@
                         </TabPane>
                     </Tabs>
                     <div class="tablePage fr leta">
-                        <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                        <Page :total='hetongForm.total' :page-size='hetongForm.pageSize' show-total @on-change='getHetongLists'></Page>
                     </div>
                 </TabPane>
                 <TabPane label="回款" name="huikuan">
                     <Backcash />
                 </TabPane>
-                <TabPane label="开票历史" name="lishi">开票历史</TabPane>
+                <TabPane label="开票历史" name="lishi">
+                    <div class="job-content searchTable">
+                        <!-- <Table border ref="selection" :columns="hetongHeader" :data="tableLists"></Table> -->
+                        <div class="tablePage fr">
+                            <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                        </div>
+                    </div>
+                </TabPane>
                 <TabPane label="联系人" name="contact">
-                    <ul class="contact-lists">
+                    <ul class="contact-lists" v-if='contactLists.length'>
                         <li v-for='list in contactLists' :key='list.id'>
                             <div class="name clearfix">
                                 <strong>{{list.name}}</strong>
@@ -144,7 +150,7 @@
                 </TabPane>
                 <TabPane label="职位" name="job">
                     <div class="job-content searchTable">
-                        <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
+                        <!-- <Table border ref="selection" :columns="hetongHeader" :data="tableLists"></Table> -->
                         <div class="tablePage fr">
                             <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
                         </div>
@@ -164,7 +170,7 @@
             <Button @click='contactPop=true'>新增联系人</Button>
             <Button @click='contractPop=true'>新建合同</Button>
             <Button @click='attePop=true'>设置跟进提醒</Button>
-            <Button>发票申请</Button>
+            <Button>新增发票</Button>
         </div>
 
         <!-- 设置主联系人弹窗 -->
@@ -234,7 +240,7 @@
         <!-- 删除 -->
         <Modal v-model="delCompanyPop" title="删除确认" width='400px' @on-ok="delCompany" style='text-align: center'>
             <p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
-        </Modal>
+        </Modal>    
 
         <!-- 新增企业客户弹窗 -->
         <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' :id='id' v-if='sonFlag'/>
@@ -246,7 +252,7 @@
         <ContactPop :contactPop='contactPop' />
 
         <!-- 新增合同弹窗 -->
-        <ContractPop :contractPop='contractPop' />
+        <ContractPop :contractPop='contractPop' :recordsDetails='recordsDetails' v-if='sonFlag'/>
 
     </div>
 </template>
@@ -288,14 +294,18 @@ export default {
                 total: 1,
                 pageSize: 6
             },
+            hetongForm: {
+                companyId: this.id,
+                pageNum: 1,
+                total: 1,
+                pageSize: 10
+            },
             recordsForm: {
                 contactId: "",
                 companyId: this.$route.query.id,
                 followType: "",
                 followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
                 followRecord: "",
-            },
-            recordsFormBody: {
                 contactRecord: [],
                 attachmentList: [{
                     fileName: 'f.jpg',
@@ -312,6 +322,7 @@ export default {
             userName: "",
             selUserSelect: false,
             contactRecordlist: [], //跟进记录
+            hetongLists: [],
             recordsDetails: {}, //记录详情
             contactLists: [], //联系人列表
             companyPop: false, //新增企业客户弹窗
@@ -351,43 +362,29 @@ export default {
                 current: 1,
                 pageSize: 10
             },
-            tableHeader: [
+            hetongHeader: [
                 {
                     title: "合同类型",
-                    key: "name",
+                    key: "contractType",
                     width: 140,
-                    align: "center",
-                    render: (h, params) => {
-                        var row = params.row;
-                        return h(
-                            "router-link",
-                            {
-                                attrs: {
-                                    to:
-                                        "/customer/myCustomers/contract?jodId=" +
-                                        row.id
-                                }
-                            },
-                            row.name
-                        );
-                    }
+                    align: "center"
                 },
                 {
                     title: "合同开始时间",
-                    key: "hhh",
+                    key: "strartTime",
                     width: 150,
                     align: "center"
                 },
                 {
                     title: "合同结束时间",
-                    key: "hhh",
+                    key: "endTime",
                     width: 150,
                     align: "center"
                 },
 
                 {
                     title: "合同状态",
-                    key: "bbb",
+                    key: "contractStatus",
                     sortable: true,
                     width: 94,
                     align: "center"
@@ -395,21 +392,20 @@ export default {
 
                 {
                     title: "BD顾问",
-                    key: "ddd",
+                    key: "bdName",
                     width: 65,
                     ellipsis: true,
                     align: "center"
                 },
                 {
                     title: "合同编号",
-                    key: "phone",
-                    width: 94,
+                    key: "code",
+                    width: 200,
                     align: "center"
                 },
 
                 {
                     title: "操作",
-                    key: "iii",
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -427,18 +423,18 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "暂缓!!!" + row.name
+                                                "暂缓!!!"
                                             );
                                         }
                                     }
                                 },
-                                "暂缓"
+                                "撤回修改"
                             ),
                             h(
                                 "Button",
                                 {
                                     props: {
-                                        type: "warning",
+                                        type: "normal",
                                         size: "small"
                                     },
                                     style: {
@@ -447,12 +443,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "终止!!!" + row.name
+                                                "终止!!!"
                                             );
                                         }
                                     }
                                 },
-                                "终止"
+                                "详情"
                             ),
                             h(
                                 "Button",
@@ -467,12 +463,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "失效!!!" + row.name
+                                                "失效!!!"
                                             );
                                         }
                                     }
                                 },
-                                "失效"
+                                "附件"
                             )
                         ]);
                     }
@@ -773,12 +769,17 @@ export default {
                     if (data.code === "SUCCESS") {
                         this.recordsDetails = data.data
                         this.sonFlag = true
-                        // this.$Loading.finish();
-                        // this.$store.state.spinShow = false;
+                        // this.$Loading.finish()
+                        // this.$store.state.spinShow = false
                     } else {
-                        this.$Message.error(data.remark);
+                        this.$Message.error(data.remark)
                     }
-                });
+                })
+
+            this.getRecordsLists()
+            
+        },
+        getRecordsLists () { //获取记录
             api
                 .axs("post", "/contactRecord/page", {
                     companyId: this.id,
@@ -786,11 +787,27 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactRecordlist = data.data.list;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
+                        this.contactRecordlist = data.data.list
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
                     } else {
                         this.$Message.error(data.remark);
+                    }
+                })
+        },
+        getHetongLists(page) {
+            this.$store.state.spinShow = true
+            this.hetongForm.pageNum = page
+            api
+                .axs("post", "/contract/page", this.hetongForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.hetongLists = data.data.list
+                        this.hetongForm.total = data.data.total
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
+                    } else {
+                        this.$Message.error(data.remark)
                     }
                 });
         },
@@ -812,39 +829,23 @@ export default {
             this.recordsForm.contactId = this.recordsForm.contactId.split("&")[0]
             this.$store.state.spinShow = true
 
+            this.recordsForm.contactRecord = JSON.stringify(this.recordsForm.contactRecord)
+            this.recordsForm.attachmentList = JSON.stringify(this.recordsForm.attachmentList)
             api
-                .axs("post", "/contactRecord/save", this.recordsForm, this.recordsFormBody.attachmentList)
+                .axs("post", "/contactRecord/save", this.recordsForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.error("提交成功!")
+                        this.$Message.success("提交成功!")
+                        this.reset('recordsForm')
+                        this.userName = ''
                         this.$Loading.finish()
                         this.$store.state.spinShow = false
                         this.subFlag = true
+                        this.getRecordsLists()
                     } else {
                         this.$Message.error(data.remark)
                     }
                 })
-
-            // var vm = this
-            // axios({
-            //     headers: {
-            //         'X-Requested-With': 'XMLHttpRequest',
-            //         "Content-Type": "application/json"
-            //     },
-            //     method: "post",
-            //     url: "/boquma-web/contactRecord/save",
-            //     // data: {attachmentList: vm.attachmentList},
-            //     params: vm.recordsForm,
-            // }).then(function(data) {
-            //     if (data.code === "SUCCESS") {
-            //         vm.$Message.error("提交成功!")
-            //         vm.$Loading.finish()
-            //         vm.$store.state.spinShow = false
-            //         vm.subFlag = true
-            //     } else {
-            //         vm.$Message.error(data.remark)
-            //     }
-            // })
         },
         getContactLists(tag) {
             //联系人
@@ -852,8 +853,13 @@ export default {
                 .axs("post", "/contact/list", { companyId: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data;
-                        if (tag) this.selContactsPop = true
+                        this.contactLists = data.data
+                        if (!data.data.length) {
+                            this.$Message.warning('请先添加联系人!')
+                            return
+                        } else {
+                            this.selContactsPop = true
+                        }
                         this.$Loading.finish()
                         this.$store.state.spinShow = false
                     } else {
@@ -889,7 +895,8 @@ export default {
         },
         clickTab(name) {
             if (name == "contact") this.getContactLists();
-            if (name == "files") this.getFileLists(this.pageNum);
+            if (name == "files") this.getFileLists(this.pageNum)
+            if (name == "hetong") this.getHetongLists()
         },
         setMainContact(id) {
             //设置主联系人
@@ -928,9 +935,9 @@ export default {
                 .axs("post", "/user/queryLikeForPages", this.userForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$store.state.users = data.data.list;
-                        this.userForm.total = data.data.total;
-                        this.selUsersPop = true;
+                        this.$store.state.users = data.data.list
+                        this.userForm.total = data.data.total
+                        this.selUsersPop = true
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -999,12 +1006,17 @@ export default {
             //关闭离职弹窗
             this.mainperPop = false;
             this.dimissionPop = false;
+        },
+        reset(key) {
+            Object.keys(this[key]).forEach(item => {
+                this[key][item] = "";
+            })
         }
     },
     mounted() {
         this.genjinTrees =
             this.$store.state.selTrees.length &&
-            this.$store.state.selTrees[5].children;
+            this.$store.state.selTrees[5].children
     },
     beforeDestroy() {}
 };

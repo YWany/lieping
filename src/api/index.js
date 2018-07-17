@@ -3,7 +3,7 @@ import qs from 'qs'
 
 const headers = {
     'X-Requested-With': 'XMLHttpRequest',
-    'Content-Type': 'application/json', //'application/json', //'application/x-www-form-urlencoded; charset=UTF-8'
+    'Content-Type': 'application/json; charset=UTF-8', //'application/json', //'application/x-www-form-urlencoded; charset=UTF-8'
     'diy': '1234567890'
 }
 
@@ -31,7 +31,19 @@ const config = {}
 config.api = '/boquma-web'
 
 export default {
-    axs(method, url, data = {}, bodyData) {
+    axs(method, url, data = {}) {
+        return axios({
+                // ...baseConfig,
+                method: method,
+                url: config.api + url,
+                // params: data,
+                data: qs.stringify(data),
+                // data: bodyData
+            })
+            .then(doSucc)
+            .then(doError)
+    },
+    axss(method, url, data = {}, bodyData) {
         return axios({
                 ...baseConfig,
                 method: method,

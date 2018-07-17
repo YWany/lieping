@@ -289,7 +289,7 @@ export default {
             this.$store.state.spinShow = true;
 
             api
-                .axs("post", "/company/myPage", this.form)
+                .axs("post", "/company/freePage", this.form)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.tableLists = this.tableLists.concat(

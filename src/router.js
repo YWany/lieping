@@ -33,6 +33,7 @@ export default new Router({
                     component: () =>
                         import ("./views/About.vue")
                 },
+
                 { // customer 客户=======================================================
                     meta: { title: '千里马-客户-合作中的客户' },
                     path: '/customer/cooperation',
@@ -83,6 +84,13 @@ export default new Router({
                         import ("./views/customer/allCustomers.vue")
                 },
                 {
+                    meta: { title: '千里马-客户-我的客户' },
+                    path: '/customer/overCustomers',
+                    name: 'overCustomers',
+                    component: () =>
+                        import ("./views/customer/overCustomers.vue")
+                },
+                {
                     meta: { title: '千里马-客户-我的客户-记录' },
                     path: '/customer/myCustomers/records',
                     name: 'myCustomersRecords',
@@ -124,6 +132,7 @@ export default new Router({
                     component: () =>
                         import ("./views/customer/myCustomers-backcash-addInvoice.vue")
                 },
+
                 { // manager 管理 =======================================================
                     meta: { title: '千里马-管理-新增账号' },
                     path: '/manager/addacc',

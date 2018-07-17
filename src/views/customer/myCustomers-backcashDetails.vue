@@ -3,7 +3,7 @@
         <div class="returneddetail">
             <div class="detail-header">
                 <p class="p1">SO.20180620001.2</p>
-                <p>负责人：郑万可 | 关联职位：-</p>
+                <p>负责人：{{ massages.dutyUserName }} | 关联职位：-</p>
             </div>
             <div class="detail-button">
                 <router-link to='/customer/myCustomers/backcash/addAdvice'>
@@ -76,43 +76,43 @@
         </div>
         <ul class="detail-list">
             <li>
-                <span>回款编号：</span>so.201806200001.2
+                <span>回款编号：</span>{{ massages.contractId }}
             </li>
             <li>
-                <span>计划回款金额：</span>so.201806200001.2
+                <span>计划回款金额：</span>{{ massages.amount }}
             </li>
             <li>
-                <span>实收金额：</span>so.201806200001.2
+                <span>实收金额：</span>--
             </li>
             <li>
-                <span>未收金额：</span>so.201806200001.2
+                <span>未收金额：</span>--
             </li>
             <li>
-                <span>回款状态：</span>so.201806200001.2
+                <span>回款状态：</span>{{ massages.fundStatus }}
             </li>
             <li>
-                <span>开票金额：</span>so.201806200001.2
+                <span>开票金额：</span>{{ massages.invoiceAmount }}
             </li>
             <li>
-                <span>客户：</span>so.201806200001.2
+                <span>客户：</span>{{ massages.dutyUserName }}
             </li>
             <li>
-                <span>合同：</span>so.201806200001.2
+                <span>合同：</span>{{ massages.contractId }}
             </li>
             <li>
-                <span>回款类型：</span>so.201806200001.2
+                <span>回款类型：</span>{{ massages.fundType }}
             </li>
             <li>
-                <span>负责人：</span>so.201806200001.2
+                <span>负责人：</span>{{ massages.dutyUserName }}
             </li>
             <li>
-                <span>预计回款日期：</span>so.201806200001.2
+                <span>预计回款日期：</span>{{ massages.receiveTime }}
             </li>
             <li>
-                <span>实际收款日期：</span>so.201806200001.2
+                <span>实际收款日期：</span>--
             </li>
             <li>
-                <span>备注：</span>so.201806200001.2
+                <span>备注：</span>{{ massages.instruction }}
             </li>
         </ul>
         <div class="detail-title">
@@ -120,10 +120,10 @@
         </div>
         <ul class="detail-list">
             <li>
-                <span>创建人：</span>so.201806200001.2
+                <span>创建人：</span>{{ massages.dutyUserName }}
             </li>
             <li>
-                <span>创建时间：</span>so.201806200001.2
+                <span>创建时间：</span>{{ massages.createTime }}
             </li>
         </ul>
     </div>
@@ -139,6 +139,8 @@ export default {
 
     data() {
         return {
+            id: this.$route.query.id,
+            massages:[],
             modal2: false,
             formValidate: {
                 password: "",
@@ -259,6 +261,18 @@ export default {
 
     mounted() {
         this.$store.state.spinShow = false;
+        console.log(this.$route.query.id);
+        api
+            .axs("post", "/receivePlan/info", { id: this.id })
+            .then(({ data: { data, code } }) => {
+                if (code === "SUCCESS") {
+                    this.$Message.success("Success!");
+                    console.log(data)
+                   this.massages=data;
+                } else if (code === "PHONE_REPEAT") {
+                    this.$Message.error(" 操作有误");
+                }
+            });
     }
 };
 </script>

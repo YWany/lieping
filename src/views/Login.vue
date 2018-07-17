@@ -34,7 +34,8 @@ export default {
             .then(({ data }) => {
                 if (data.code === 'SUCCESS') {
                     ls.set('account', data.data.account)
-                    ls.set('id', data.data.id)
+                    ls.set('accid', data.data.id)
+                    ls.set('phone', data.data.phone)
                     this.$router.push("index")
                     this.$Message.success('登录成功')
                 } else {

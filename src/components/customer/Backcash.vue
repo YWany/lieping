@@ -379,19 +379,19 @@ export default {
             var _this = this;
 
             api
-                .axs("post", "/receivePlan/list", {
+                .axs("post", "/receivePlan/page", {
                     pageNum: page,
                     fundStatus: "unPayed"
                 })
                 .then(({ data: { data, code } }) => {
                    
-                    _this.formPage.total = data.total;
-                    _this.formPage.pageSize = data.pageSize;
-                    _this.tableLists = data;
-                });
+                    _this.formPage.total = data.total
+                    _this.formPage.pageSize = data.pageSize
+                    _this.tableLists = data.list
+                })
 
             api
-                .axs("post", "/receivePlan/list", {
+                .axs("post", "/receivePlan/page", {
                     pageNum: page,
                     fundStatus: "payed"
                 })
@@ -399,7 +399,7 @@ export default {
                    
                     _this.formPage.total = data.total;
                     _this.formPage1.pageSize = data.pageSize;
-                    _this.tableLists1 = data;
+                    _this.tableLists1 = data.list;
                 });
         },
 

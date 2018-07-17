@@ -16,11 +16,20 @@ export default {
     methods: {},
     mounted() {
         // console.log(process.env.NODE_ENV)
+
+        //字典数
         api.axs("post", "/param/dic/tree").then(({ data }) => {
             if (data.code === "SUCCESS") {
-                this.$store.state.selTrees = data.data;
+                this.$store.state.selTrees = data.data
             }
-        });
+        })
+
+        //职位
+        api.axs("post", "/param/industry/tree").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.$store.state.jobTrees = data.data
+            }
+        })
     },
     watch: {
         $route() {

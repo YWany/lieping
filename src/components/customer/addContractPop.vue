@@ -222,13 +222,13 @@ export default {
     },
     methods: {
         subSave() {
-            var forms = this.contractForm;
+            var forms = this.contractForm
             for (var name in forms) {
                 if (!forms[name] && this.contractFormError[name]) {
                     this.$Message.error(
                         this.contractFormError[name] + ": 请填写完整!"
-                    );
-                    return;
+                    )
+                    return
                 }
             }
             if (this.subFlag) this.subFlag = false;
@@ -237,12 +237,13 @@ export default {
                 .axs("post", "/contract/add", this.contractForm, this.contractFormBody.receivePlanList)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.datas = data;
-                        this.$Message.success("新增成功!");
-                        this.reset("contractForm");
+                        this.datas = data
+                        this.$Message.success("新增成功!")
+                        this.$parent.contractPop = false
+                        this.reset("contractForm")
                     } else {
-                        this.$Message.error(data.remark);
-                        this.subFlag = true;
+                        this.$Message.error(data.remark)
+                        this.subFlag = true
                     }
                 });
         },

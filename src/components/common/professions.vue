@@ -38,15 +38,21 @@ export default {
         };
     },
     props: ["professPop"],
+    computed: {
+        jobTrees() {
+            return this.$store.state.jobTrees
+        }
+    },
     methods: {
         getProfess() {
-            api.axs("post", "/param/industry/tree").then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.proLists = data.data;
-                } else {
-                    this.$Message.error(data.remark);
-                }
-            });
+            this.proLists = this.jobTrees
+            // api.axs("post", "/param/industry/tree").then(({ data }) => {
+            //     if (data.code === "SUCCESS") {
+            //         this.proLists = data.data;
+            //     } else {
+            //         this.$Message.error(data.remark);
+            //     }
+            // });
         }
     },
     mounted() {

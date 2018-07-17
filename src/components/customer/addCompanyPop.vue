@@ -103,7 +103,11 @@ export default {
         Citysels,
         Professions
     },
-    computed: {},
+    computed: {
+        selTrees() {
+            return this.$store.state.selTrees
+        }
+    },
     data() {
         return {
             subFlag: true,
@@ -144,35 +148,25 @@ export default {
     },
     methods: {
         info() {
-            api
-                .axs("post", "/param/dic/tree", { id: "10" })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        let alllist = data.data;
-                        this.$store.state.selTrees = data.data;
-                        for (let i = 0; i < alllist.length; i++) {
-                            if (alllist[i].code === "companyType") {
-                                //公司性质
-                                this.naturelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companyStatus") {
-                                this.statelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companyScope") {
-                                this.scalelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "importantLevel") {
-                                this.importancelist = alllist[i].children;
-                            }
-                            if (alllist[i].code === "companySource") {
-                                this.sourcelist = alllist[i].children;
-                            }
-                        }
-                    } else {
-                        this.$Message.error(data.remark);
-                        this.subFlag = true;
-                    }
-                })
+            let alllist = this.selTrees
+            for (let i = 0; i < alllist.length; i++) {
+                if (alllist[i].code === "companyType") {
+                    //公司性质
+                    this.naturelist = alllist[i].children;
+                }
+                if (alllist[i].code === "companyStatus") {
+                    this.statelist = alllist[i].children;
+                }
+                if (alllist[i].code === "companyScope") {
+                    this.scalelist = alllist[i].children;
+                }
+                if (alllist[i].code === "importantLevel") {
+                    this.importancelist = alllist[i].children;
+                }
+                if (alllist[i].code === "companySource") {
+                    this.sourcelist = alllist[i].children;
+                }
+            }
         },
         subSave() {
             if (this.companyMod) {
@@ -265,7 +259,6 @@ export default {
     },
     mounted() {
         this.info()
-
         if (this.companyMod) {
             this.companyForm = this.recordsDetails
         }

@@ -312,7 +312,7 @@ export default {
 
      mounted() {
         this.loadLists();
-        this.selTrees();
+        // this.selTrees();
         api.axs("post", "/dept/info", {}).then(({ data: { data, code } }) => {
             this.deptlist = data;
             console.log(this.deptlist);

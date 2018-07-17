@@ -21,7 +21,7 @@
             <li>最后跟进时间: {{recordsDetails.updateTime}}</li>
         </ul>
         <div class="recordsContent">
-            <Tabs type="card" value="jilu" :animated=false @on-click='clickTab'>
+            <Tabs type="card" :value="tabShow" :animated=false @on-click='clickTab'>
                 <TabPane label="跟进记录" name="jilu">
                     <div class="add-record clearfix">
                         <div class="sels">
@@ -116,12 +116,9 @@
                 <TabPane label="回款" name="huikuan">
                     <Backcash />
                 </TabPane>
-                <TabPane label="开票历史" name="lishi">
+                <TabPane label="开票历史" name="invoice">
                     <div class="job-content searchTable">
-                        <!-- <Table border ref="selection" :columns="hetongHeader" :data="tableLists"></Table> -->
-                        <div class="tablePage fr">
-                            <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
-                        </div>
+                        <Table border ref="selection" :columns="invoiceHeader" :data="invoiceLists"></Table>
                     </div>
                 </TabPane>
                 <TabPane label="联系人" name="contact">
@@ -170,7 +167,7 @@
             <Button @click='contactPop=true'>新增联系人</Button>
             <Button @click='contractPop=true'>新建合同</Button>
             <Button @click='attePop=true'>设置跟进提醒</Button>
-            <Button>新增发票</Button>
+            <Button @click="$router.push('/customer/myCustomers/backcash/addInvoice?id='+id+'&level='+recordsDetails.importantLevel+'&cname='+recordsDetails.companyName)">新增发票</Button>
         </div>
 
         <!-- 设置主联系人弹窗 -->
@@ -282,6 +279,7 @@ export default {
         return {
             subFlag: true,
             sonFlag: false,
+            tabShow: ls.get('recordTabShow') || 'jilu',
             genjinTrees: "",
             pageNum: "1",
             pageSize: "10",
@@ -295,10 +293,13 @@ export default {
                 pageSize: 6
             },
             hetongForm: {
-                companyId: this.id,
+                companyId: this.$route.query.id,
                 pageNum: 1,
                 total: 1,
                 pageSize: 10
+            },
+            invoiceForm: {
+                companyId: this.$route.query.id
             },
             recordsForm: {
                 contactId: "",
@@ -316,7 +317,6 @@ export default {
                 ]
             },
             id: this.$route.query.id,
-            cname: this.$route.query.cname,
             level: +this.$route.query.level,
             contactId: "", //联系人ID
             contactName: "", //联系人姓名
@@ -325,6 +325,7 @@ export default {
             selUserSelect: false,
             contactRecordlist: [], //跟进记录
             hetongLists: [],
+            invoiceLists: [],
             recordsDetails: {}, //记录详情
             contactLists: [], //联系人列表
             companyPop: false, //新增企业客户弹窗
@@ -403,14 +404,16 @@ export default {
                     title: "合同编号",
                     key: "code",
                     width: 200,
-                    align: "center"
-                },
-
-                {
-                    title: "操作",
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row;
+                        return h('span',params.row.code || '--')
+                    }
+                },
+                {
+                    title: "操作",
+                    key: "cz",
+                    align: "center",
+                    render: (h, params) => {
                         return h("div", [
                             h(
                                 "Button",
@@ -434,7 +437,7 @@ export default {
                                 "Button",
                                 {
                                     props: {
-                                        type: "normal",
+                                        type: "primary",
                                         size: "small"
                                     },
                                     style: {
@@ -469,6 +472,58 @@ export default {
                         ]);
                     }
                 }
+            ],
+            invoiceHeader: [
+                {
+                    title: "开票时间",
+                    key: "billingTime",
+                    width: 140,
+                    align: "center"
+                },
+                {
+                    title: "开票金额",
+                    key: "amount",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span',params.row.amount + '元' || '--')
+                    }
+                },
+                {
+                    title: "开票内容",
+                    key: "instruction",
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span',params.row.instruction || '--')
+                    }
+                },
+                {
+                    title: "实际到款",
+                    key: "xxx",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span','--')
+                    }
+                },
+                {
+                    title: "到款时间",
+                    key: "xxx",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span','--')
+                    }
+                },
+                {
+                    title: "累积开票金额",
+                    key: "totalAmount",
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        return h('span',params.row.totalAmount || 0)
+                    }
+                },
             ],
             filetable: [
                 {
@@ -627,7 +682,7 @@ export default {
 
                 {
                     title: "合同编号",
-                    key: "phone",
+                    key: "num",
                     width: 94,
                     align: "center"
                 },
@@ -808,6 +863,42 @@ export default {
                     }
                 });
         },
+        getInvoiceLists(page) {
+            this.$store.state.spinShow = true
+            api
+                .axs("post", "/invoice/list", this.invoiceForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.invoiceLists = data.data
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
+                    } else {
+                        this.$Message.error(data.remark)
+                    }
+                });
+        },
+        getContactLists(tag) {
+            //联系人
+            api
+                .axs("post", "/contact/list", { companyId: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.contactLists = data.data
+                        if (tag) {
+                            if (!data.data.length) {
+                                this.$Message.warning('请先添加联系人!')
+                                return
+                            } else {
+                                this.selContactsPop = true
+                            }
+                        }
+                        this.$Loading.finish()
+                        this.$store.state.spinShow = false
+                    } else {
+                        this.$Message.error(data.remark)
+                    }
+                });
+        },
         subRecord() {
             //提交记录
             if (!this.recordsForm.contactId) {
@@ -850,26 +941,6 @@ export default {
                     }
                 });
         },
-        getContactLists(tag) {
-            //联系人
-            api
-                .axs("post", "/contact/list", { companyId: this.id })
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.contactLists = data.data;
-                        if (!data.data.length) {
-                            this.$Message.warning("请先添加联系人!");
-                            return;
-                        } else {
-                            this.selContactsPop = true;
-                        }
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
-        },
         selContactFun() {
             this.userName = this.recordsForm.contactId.split("&")[1];
             this.selContactsPop = false;
@@ -897,9 +968,11 @@ export default {
             this.recordsForm.followTime = date;
         },
         clickTab(name) {
+            this.tabShow = name
             if (name == "contact") this.getContactLists();
-            if (name == "files") this.getFileLists(this.pageNum);
-            if (name == "hetong") this.getHetongLists();
+            if (name == "files") this.getFileLists()
+            if (name == "hetong") this.getHetongLists()
+            if (name == "invoice") this.getInvoiceLists()
         },
         setMainContact(id) {
             //设置主联系人
@@ -1017,12 +1090,20 @@ export default {
         }
     },
     mounted() {
+
+        if (this.tabShow == "contact") this.getContactLists()
+        else if (this.tabShow == "files") this.getFileLists()
+        else if (this.tabShow == "hetong") this.getHetongLists()
+        else if (this.tabShow == "invoice") this.getInvoiceLists()
+        
         this.genjinTrees =
             this.$store.state.selTrees.length &&
-            this.$store.state.selTrees[5].children;
-        ls.set("companyID", this.id);
+            this.$store.state.selTrees[5].children
+        ls.set('companyId', this.$route.query.id)
     },
-    beforeDestroy() {}
+    beforeDestroy() {
+        ls.set('recordTabShow',this.tabShow)
+    }
 };
 </script>
 

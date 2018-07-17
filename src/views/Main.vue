@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import api from "@/api"
 import "@/assets/css/reset.css"
 import "@/assets/css/index.less"
 import Allmenu from "@/components/Menu.vue"
@@ -49,7 +50,13 @@ export default {
     },
     methods: {
         logout() {
-            window.location.href = '/#/login'
+            api.axs("post", "/loginOut").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    window.location.href = '/#/login'
+                } else {
+                    this.$Message.error(data.remark)
+                }
+            })
         }
     },
     mounted() {

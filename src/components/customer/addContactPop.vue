@@ -165,6 +165,11 @@ export default {
             addPhone4: false
         };
     },
+    computed: {
+        selTrees() {
+            return this.$store.state.selTrees
+        }
+    },
     methods: {
         subSave() {
             this.addForm.companyId = this.id;
@@ -181,12 +186,12 @@ export default {
             console.log(this.addForm);
             api.axs("post", "/contact/add", this.addForm).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.datas = data;
-                    this.$Message.success("新增成功!");
-                    this.$parent.contactPop = false;
-                    this.reset("addForm");
+                    this.datas = data
+                    this.$Message.success("新增成功!")
+                    this.$parent.contactPop = false
+                    this.reset("addForm")
                 } else {
-                    this.$Message.error(data.remark);
+                    this.$Message.error(data.remark)
                 }
                 this.subFlag = true;
             });
@@ -248,21 +253,14 @@ export default {
                 }
             }
         } else {
-            api.axs("post", "/param/dic/tree", { id: "10" }).then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    let alllist = data.data;
-                    this.$store.state.selTrees = data.data
-                    for (let i = 0; i < alllist.length; i++) {
-                        if (alllist[i].code === "decisionRelation") {
-                            //公司性质
-                            this.decisionlist = alllist[i].children;
-                        }
-                    }
-                } else {
-                    this.$Message.error(data.remark);
-                    this.subFlag = true;
+
+            let alllist = this.selTrees
+            for (let i = 0; i < alllist.length; i++) {
+                if (alllist[i].code === "decisionRelation") {
+                    //公司性质
+                    this.decisionlist = alllist[i].children;
                 }
-            });
+            }
         }
         
     }

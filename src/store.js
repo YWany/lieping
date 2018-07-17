@@ -8,6 +8,7 @@ export default new Vuex.Store({
     state: {
         spinShow: true,
         selTrees: [],
+        jobTrees: [],
         roles: [],
         users: []
     },
@@ -24,7 +25,6 @@ export default new Vuex.Store({
     },
     actions: {
         async selTrees({ commit }) {
-            console.log('你请求了这个接口..')
             const { data } = await api.axs('post', '/param/dic/tree')
             if (data) commit('selTrees', data.data)
         },

@@ -145,7 +145,7 @@ export default {
                 fundType: "1",
                 fundStatus: "unPayed",
                 invoiceStatus: "1",
-                dutyUserId: ls.get("id"),
+                dutyUserId: ls.get("accid"),
                 dutyUserName: ls.get("account")
             },
             ruleValidate: {
@@ -268,6 +268,8 @@ export default {
                                     },
                                     on: {
                                         click: () => {
+                                             ls.set("receivePlanID", row.contractId);
+                                             ls.set("contractID", row.id);
                                             this.$router.push(
                                                 "/customer/myCustomers/backcashDetails?id="+ row.id
                                             ) 
@@ -358,9 +360,11 @@ export default {
                                     },
                                     on: {
                                         click: () => {
+                                             ls.set("receivePlanID", row.contractId);
+                                              ls.set("contractID", row.id);
                                             this.$router.push(
-                                                "/customer/myCustomers/backcashDetails?id="
-                                            ) + row.id;
+                                                 "/customer/myCustomers/backcashDetails?id="+ row.id
+                                            ) 
                                         }
                                     }
                                 },
@@ -384,34 +388,33 @@ export default {
                     fundStatus: "unPayed"
                 })
                 .then(({ data: { data, code } }) => {
-                   
-                    _this.formPage.total = data.total
-                    _this.formPage.pageSize = data.pageSize
-                    _this.tableLists = data.list
-                })
+                   console.log(data)
+                    _this.formPage.total = data.total;
+                    _this.formPage.pageSize = data.pageSize;
+                    _this.tableLists = data.list;
+                });
 
             api
                 .axs("post", "/receivePlan/page", {
                     pageNum: page,
                     fundStatus: "payed"
                 })
-                .then(({ data: { data, code } }) => {
-                   
-                    _this.formPage.total = data.total;
+                .then(({ data: { data, code } }) => {             
+                    _this.formPage1.total = data.total;
                     _this.formPage1.pageSize = data.pageSize;
                     _this.tableLists1 = data.list;
                 });
         },
 
         loadLists(page) {
-            // this.clickTab(name);
+            this.Init(page);
             this.$store.state.spinShow = true;
             setTimeout(() => {
                 this.$store.state.spinShow = false;
             }, 1500);
         },
         loadLists1(page) {
-            // this.clickTab(name);
+            this.Init(page);
             this.$store.state.spinShow = true;
             setTimeout(() => {
                 this.$store.state.spinShow = false;
@@ -448,7 +451,6 @@ export default {
     },
     mounted() {
         this.Init(this.pageNum);
-        console.log(ls.get("account"));
         api
             .axs("post", "/contract/page", {
                 id: this.id

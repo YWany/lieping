@@ -237,10 +237,10 @@
         <!-- 删除 -->
         <Modal v-model="delCompanyPop" title="删除确认" width='400px' @on-ok="delCompany" style='text-align: center'>
             <p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
-        </Modal>    
+        </Modal>
 
         <!-- 新增企业客户弹窗 -->
-        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' :id='id' v-if='sonFlag'/>
+        <CompanyPop :recordsDetails='recordsDetails' :companyPop='companyPop' :companyMod='companyMod' :id='id' v-if='sonFlag' />
 
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' />
@@ -249,23 +249,23 @@
         <ContactPop :contactPop='contactPop' />
 
         <!-- 新增合同弹窗 -->
-        <ContractPop :contractPop='contractPop' :recordsDetails='recordsDetails' v-if='sonFlag'/>
+        <ContractPop :contractPop='contractPop' :recordsDetails='recordsDetails' v-if='sonFlag' />
 
     </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import api from "@/api"
-import ls from "store2"
-import axios from 'axios'
-import { mapState, mapMutations, mapActions } from "vuex"
-import CompanyPop from "@/components/customer/addCompanyPop.vue"
-import AttePop from "@/components/customer/addAttePop.vue"
-import ContactPop from "@/components/customer/addContactPop.vue"
-import ContractPop from "@/components/customer/addContractPop.vue"
-import Backcash from "@/components/customer/Backcash.vue"
-import { UTC2Date } from "@/assets/js/utils.js"
+import api from "@/api";
+import ls from "store2";
+import axios from "axios";
+import { mapState, mapMutations, mapActions } from "vuex";
+import CompanyPop from "@/components/customer/addCompanyPop.vue";
+import AttePop from "@/components/customer/addAttePop.vue";
+import ContactPop from "@/components/customer/addContactPop.vue";
+import ContractPop from "@/components/customer/addContractPop.vue";
+import Backcash from "@/components/customer/Backcash.vue";
+import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "personalDetails",
     components: {
@@ -308,11 +308,13 @@ export default {
                 followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
                 followRecord: "",
                 contactRecord: [],
-                attachmentListJson: [{
-                    fileName: 'f.jpg',
-                    filePath: 'g.jpg',
-                    fileSize: 3
-                }],
+                attachmentList: [
+                    {
+                        fileName: "f.jpg",
+                        filePath: "g.jpg",
+                        fileSize: 3
+                    }
+                ]
             },
             id: this.$route.query.id,
             level: +this.$route.query.level,
@@ -425,9 +427,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info(
-                                                "暂缓!!!"
-                                            );
+                                            this.$Message.info("暂缓!!!");
                                         }
                                     }
                                 },
@@ -445,9 +445,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info(
-                                                "终止!!!"
-                                            );
+                                            this.$Message.info("终止!!!");
                                         }
                                     }
                                 },
@@ -465,9 +463,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info(
-                                                "失效!!!"
-                                            );
+                                            this.$Message.info("失效!!!");
                                         }
                                     }
                                 },
@@ -813,7 +809,7 @@ export default {
         }
     },
     created() {
-        this.companyInfo()
+        this.companyInfo();
     },
     methods: {
         ...mapActions(["getUsers"]),
@@ -822,19 +818,20 @@ export default {
                 .axs("post", "/company/info", { id: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.recordsDetails = data.data
-                        this.sonFlag = true
+                        this.recordsDetails = data.data;
+                        this.sonFlag = true;
+                        ls.set("companyName", data.data.companyName);
                         // this.$Loading.finish()
                         // this.$store.state.spinShow = false
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
-                })
+                });
 
-            this.getRecordsLists()
-            
+            this.getRecordsLists();
         },
-        getRecordsLists () { //获取记录
+        getRecordsLists() {
+            //获取记录
             api
                 .axs("post", "/contactRecord/page", {
                     companyId: this.id,
@@ -842,27 +839,27 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactRecordlist = data.data.list
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
+                        this.contactRecordlist = data.data.list;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
                     } else {
                         this.$Message.error(data.remark);
                     }
-                })
+                });
         },
         getHetongLists(page) {
-            this.$store.state.spinShow = true
-            this.hetongForm.pageNum = page
+            this.$store.state.spinShow = true;
+            this.hetongForm.pageNum = page;
             api
                 .axs("post", "/contract/page", this.hetongForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.hetongLists = data.data.list
-                        this.hetongForm.total = data.data.total
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
+                        this.hetongLists = data.data.list;
+                        this.hetongForm.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -905,42 +902,48 @@ export default {
         subRecord() {
             //提交记录
             if (!this.recordsForm.contactId) {
-                this.$Message.error("请选择联系人!")
-                return
+                this.$Message.error("请选择联系人!");
+                return;
             } else if (!this.recordsForm.followType) {
-                this.$Message.error("请选择跟进方式!")
-                return
+                this.$Message.error("请选择跟进方式!");
+                return;
             } else if (!this.recordsForm.followRecord) {
-                this.$Message.error("请填写跟进记录!")
-                return
+                this.$Message.error("请填写跟进记录!");
+                return;
             }
 
-            if (this.subFlag) this.subFlag = false
-            else return
-            this.recordsForm.contactId = this.recordsForm.contactId.split("&")[0]
-            this.$store.state.spinShow = true
+            if (this.subFlag) this.subFlag = false;
+            else return;
+            this.recordsForm.contactId = this.recordsForm.contactId.split(
+                "&"
+            )[0];
+            this.$store.state.spinShow = true;
 
-            this.recordsForm.contactRecord = JSON.stringify(this.recordsForm.contactRecord)
-            this.recordsForm.attachmentListJson = JSON.stringify(this.recordsForm.attachmentListJson)
+            this.recordsForm.contactRecord = JSON.stringify(
+                this.recordsForm.contactRecord
+            );
+            this.recordsForm.attachmentList = JSON.stringify(
+                this.recordsForm.attachmentList
+            );
             api
                 .axs("post", "/contactRecord/save", this.recordsForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("提交成功!")
-                        this.reset('recordsForm')
-                        this.userName = ''
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
-                        this.subFlag = true
-                        this.getRecordsLists()
+                        this.$Message.success("提交成功!");
+                        this.reset("recordsForm");
+                        this.userName = "";
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                        this.subFlag = true;
+                        this.getRecordsLists();
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
-                })
+                });
         },
         selContactFun() {
-            this.userName = this.recordsForm.contactId.split("&")[1]
-            this.selContactsPop = false
+            this.userName = this.recordsForm.contactId.split("&")[1];
+            this.selContactsPop = false;
         },
         getFileLists(page) {
             api
@@ -1008,9 +1011,9 @@ export default {
                 .axs("post", "/user/queryLikeForPages", this.userForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$store.state.users = data.data.list
-                        this.userForm.total = data.data.total
-                        this.selUsersPop = true
+                        this.$store.state.users = data.data.list;
+                        this.userForm.total = data.data.total;
+                        this.selUsersPop = true;
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -1018,8 +1021,8 @@ export default {
         },
         sureSelUser() {
             if (!this.userId) {
-                this.$Message.info("选一个BD啊!")
-                return
+                this.$Message.info("选一个BD啊!");
+                return;
             }
             api
                 .axs("post", "/company/changeInto", {
@@ -1028,33 +1031,33 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.selUsersPop = false
-                        this.$Message.success("转出成功!")
-                        this.$router.push("/customer/cooperation")
+                        this.selUsersPop = false;
+                        this.$Message.success("转出成功!");
+                        this.$router.push("/customer/cooperation");
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
         closeSelUsersPop() {
-            this.selUserSelect = false
-            this.selUsersPop = false
-            this.selContactsPop = false
+            this.selUserSelect = false;
+            this.selUsersPop = false;
+            this.selContactsPop = false;
         },
         delCompany() {
             api
                 .axs("post", "/company/delete", { id: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("删除成功")
-                        this.$router.push("/customer/cooperation")
+                        this.$Message.success("删除成功");
+                        this.$router.push("/customer/cooperation");
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
-                })
+                });
         },
         sureMainper() {
-            this.$Message.info("确认主联系人成功!")
+            this.$Message.info("确认主联系人成功!");
         },
         inWork() {
             //在职
@@ -1083,7 +1086,7 @@ export default {
         reset(key) {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = "";
-            })
+            });
         }
     },
     mounted() {

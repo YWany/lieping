@@ -10,7 +10,7 @@
                     <Input disabled style="color:red;" :readonly="true" v-model="formValidate.companyName" placeholder="请输入接受单位名字哦"></Input>
                 </FormItem>
 
-                <FormItem  label="发出单位" prop="sex">
+                <FormItem label="发出单位" prop="sex">
                     <Input disabled :readonly="true" v-model="formValidate.sendCompanyName" placeholder="请输入款项金额哦"></Input>
                 </FormItem>
                 <FormItem label="接受人员">
@@ -43,28 +43,29 @@
                 <FormItem label="合同名称">
                     <Input disabled :readonly="true" v-model="formValidate.contractName" placeholder="请输入合同名称哦"></Input>
                 </FormItem>
-                <FormItem label="收费比例" prop="phone">
-                    <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                <FormItem label="收费比例">
+                    <Input v-model="formValidate.payRatio" placeholder="请输入款项金额哦"></Input>
                 </FormItem>
                 <div v-if="five">
-                    <FormItem label="候选人姓名" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="候选人姓名">
+                        <Input v-model="formValidate.candidateName" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
-                    <FormItem label="上岗时间" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="上岗时间">
+                        <DatePicker :value='formValidate.startWorkTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
+
                     </FormItem>
-                    <FormItem label="录用职位" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="录用职位" prop="">
+                        <Input v-model="formValidate.positionName" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
-                    <FormItem label="年薪" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="年薪">
+                        <Input v-model="formValidate.annualSalary" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
-                    <FormItem label="总服务费" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="总服务费">
+                        <Input v-model="formValidate.totalFee" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
                 </div>
-                <FormItem label="前期服务费" prop="phone">
-                    <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                <FormItem label="前期服务费">
+                    <Input v-model="formValidate.preFee" placeholder="请输入款项金额哦"></Input>
                 </FormItem>
                 <FormItem label="付款方式" style="width:100%;">
                     <RadioGroup v-model="formValidate.settleType">
@@ -77,40 +78,53 @@
                 </FormItem>
                 <ul v-if="show">
                     <li class='li-phone'>
-                        <FormItem label="付款日期" prop="phone">
-                            <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                        <FormItem label="付款日期">
+                            <DatePicker :value='formValidate.payTime1' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
+
                         </FormItem>
-                        <FormItem label="金额" prop="phone">
-                            <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                        <FormItem label="金额">
+                            <Input v-model="formValidate.payAmount1" placeholder="请输入款项金额哦"></Input>
 
                         </FormItem>
                         <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
                     </li>
                     <li class='li-phone' v-if='addPhone2'>
-                        <FormItem label="付款日期" prop="phone">
-                            <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                        <FormItem label="付款日期">
+                            <DatePicker :value='formValidate.payTime2' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
+
                         </FormItem>
-                        <FormItem label="金额" prop="phone">
-                            <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                        <FormItem label="金额">
+                            <Input v-model="formValidate.payAmount2" placeholder="请输入款项金额哦"></Input>
 
                         </FormItem>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </li>
-                    <FormItem label="本次应收" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <li class='li-phone' v-if='addPhone3'>
+                        <FormItem label="付款日期">
+                            <DatePicker :value='formValidate.payTime3' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
+
+                        </FormItem>
+                        <FormItem label="金额" prop="">
+                            <Input v-model="formValidate.payAmount3" placeholder="请输入款项金额哦"></Input>
+
+                        </FormItem>
+                        <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+                    </li>
+                    <FormItem label="本次应收" prop="">
+                        <Input v-model="formValidate.receiveAmount" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
                 </ul>
                 <ul v-else-if="!show">
                     <FormItem label="本次应收" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.receiveAmount" placeholder="请输入款项金额哦"></Input>
                     </FormItem>
-                    <FormItem label="金额" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="付款时间" prop="phone">
+                        <DatePicker :value='formValidate.payTime3' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
 
                     </FormItem>
                 </ul>
-                <FormItem label="备注" prop="phone" style="width:100%;">
-                    <Input v-model="formValidate.phone" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="不少于10字"></Input>
+                <FormItem label="备注" style="width:100%;">
+                    <Input v-model="formValidate.instruction" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="不少于10字"></Input>
                 </FormItem>
             </Form>
             <div class="footer">
@@ -139,7 +153,7 @@ export default {
             account: ls.get("account"),
             phone: ls.get("phone"),
             contractID: ls.get("contractID"),
-            receivePlanID: ls.get("receivePlanID"),
+            
             contactlist: [],
             phoneNum: 1,
             addPhoneBtn: true,
@@ -147,9 +161,10 @@ export default {
             addPhone3: false,
             addPhone4: false,
             formValidate: {
-                contractId: this.contractID,
+                contractId: ls.get("contractID"),
                 companyId: ls.get("companyID"),
                 companyName: ls.get("companyName"),
+                receivePlanID: ls.get("receivePlanID"),
                 sendCompanyName: "浙江千里马人力资源股份有限公司",
                 sendCompanyId: "",
                 sendUserId: ls.get("accid"),
@@ -160,15 +175,21 @@ export default {
                 contractName: " 人才服务协议",
                 fundType: "PRE_FEE",
                 settleType: "fullSection",
-                password: "",
-                userName: "",
-                none: "无",
-                roleId: "",
-                deptId: "",
-                account: UTC2Date(new Date(), "y-m-d h:i:s"),
-                sex: "1",
-                locked: true,
-                isLeader: "2"
+                payRatio: "",
+                candidateName: "",
+                startWorkTime: UTC2Date(new Date(), "y-m-d h:i:s"),
+                positionName: "",
+                annualSalary: "",
+                totalFee: "",
+                preFee: "",
+                payTime1: UTC2Date(new Date(), "y-m-d h:i:s"),
+                payAmount1: "",
+                payTime2: UTC2Date(new Date(), "y-m-d h:i:s"),
+                payAmount2: "",
+                payTime3: UTC2Date(new Date(), "y-m-d h:i:s"),
+                payAmount3: "",
+                receiveAmount: "",
+                instruction: ""
             },
             ruleValidate: {
                 userName: [
@@ -213,6 +234,7 @@ export default {
     methods: {
         addPhones() {
             this.phoneNum += 1;
+
             if (this.phoneNum > 3) this.addPhoneBtn = false;
             if (this.phoneNum == 2) this.addPhone2 = true;
             if (this.phoneNum == 3) this.addPhone3 = true;
@@ -230,12 +252,11 @@ export default {
             this.$refs[name].validate(valid => {
                 if (valid) {
                     api
-                        .axs("post", "/receivePlan/add", this.formValidate)
+                        .axs("post", "/receivePlanNotice/add", this.formValidate)
                         .then(({ data: { data, code } }) => {
                             if (code === "SUCCESS") {
                                 this.$Message.success("Success!");
-                                this.modal1 = false;
-                                this.Init(this.pageNum);
+                               
                             }
                         });
                 } else {
@@ -263,25 +284,25 @@ export default {
             if (this.formValidate.fundType == "PRE_FEE") {
                 this.five = false;
                 this.show = false;
-                this.formValidate.settleType="fullSection"
+                this.formValidate.settleType = "fullSection";
             } else if (this.formValidate.fundType == "TOTLE_FEE") {
                 this.five = true;
                 this.show = false;
-                this.formValidate.settleType="fullSection"
+                this.formValidate.settleType = "fullSection";
             } else if (this.formValidate.fundType == "PRE_WITH_FULL") {
                 this.five = true;
                 this.show = false;
-                this.formValidate.settleType="fullSection"
+                this.formValidate.settleType = "fullSection";
             } else if (this.formValidate.fundType == "PRE_WITH_INSTALLMENT") {
                 this.five = true;
                 this.show = true;
-                this.formValidate.settleType="installment"
+                this.formValidate.settleType = "installment";
             } else if (
                 this.formValidate.fundType == "NO_PRE_WITH_INSTALLMENT"
             ) {
                 this.five = true;
                 this.show = true;
-                this.formValidate.settleType="installment"
+                this.formValidate.settleType = "installment";
             }
         }
     },
@@ -303,8 +324,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.colors{
-   color: red !important; 
+.colors {
+    color: red !important;
 }
 .addBackcashAdvice {
     .advicebox {

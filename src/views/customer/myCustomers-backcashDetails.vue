@@ -6,64 +6,12 @@
                 <p>负责人：郑万可 | 关联职位：-</p>
             </div>
             <div class="detail-button">
-                <Button type="primary"@click="modal1 = true;" >新增付款通知书</Button>
-                    <Modal v-model="modal1" title="新增付款通知书">
-                <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                    <FormItem label="关联职位" prop="userName">
-                        <Input v-model="formValidate.userName" placeholder="请输入用户名字哦"></Input>
-                    </FormItem>
-
-                    <FormItem label="回款编号" prop="sex">
-                        <Input v-model="formValidate.sex" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="计划回款" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="实收金额" prop="account">
-                        <DatePicker :value='formValidate.account' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
-
-                    </FormItem>
-                    <FormItem label="未收金额" prop="roleId">
-                        <Select v-model="formValidate.roleId" placeholder="回款状态">
-                            <!-- <Option v-for="(item,index) in rolelist" :value="item.id" :key='index'>{{item.roleName}}</Option> -->
-                        </Select>
-                    </FormItem>
-                    <FormItem label="回款状态" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="开票金额" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="客户" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="合同" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="回款类型" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="预计回款日期" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-                    <FormItem label="实际收款日期" prop="phone">
-                        <Input v-model="formValidate.phone" placeholder="请输入款项金额哦"></Input>
-                    </FormItem>
-
-                    <FormItem label="回款状态" prop="desc">
-                        <Input v-model="formValidate.deptId" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="不少于10字"></Input>
-                    </FormItem>
-
-                </Form>
-                <div slot="footer">
-
-                    <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
-                    <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
-
-                </div>
-            </Modal>
-
-                <Button type="primary">新增发票</Button>
+                <router-link to='/customer/myCustomers/backcash/addAdvice'>
+                    <Button type="primary">新增付款通知书</Button>
+                </router-link>
+                <router-link to='/customer/myCustomers/backcash/addInvoice'>
+                    <Button type="primary">新增发票</Button>
+                </router-link>
                 <Button type="primary">新增回款</Button>
             </div>
         </div>
@@ -191,7 +139,6 @@ export default {
 
     data() {
         return {
-            modal1: false,
             modal2: false,
             formValidate: {
                 password: "",

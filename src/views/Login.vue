@@ -17,6 +17,7 @@
 
 <script>
 import api from "@/api"
+import ls from 'store2'
 import loginForm from "@/components/login-form/login-form.vue"
 export default {
     components: {
@@ -32,6 +33,8 @@ export default {
             api.axs("post", "/login", datas)
             .then(({ data }) => {
                 if (data.code === 'SUCCESS') {
+                    ls.set('account', data.data.account)
+                    ls.set('id', data.data.id)
                     this.$router.push("index")
                     this.$Message.success('登录成功')
                 } else {

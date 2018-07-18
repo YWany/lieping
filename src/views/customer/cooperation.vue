@@ -39,7 +39,7 @@
                 </div>
                 <div class="disInB sels-item">
                     创建时间：
-                    <DatePicker type="date" v-model='form.createTimeStart' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' style="width: 180px"></DatePicker> -- 
+                    <DatePicker type="date" v-model='form.createTimeStart' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' style="width: 180px"></DatePicker> --
                     <DatePicker type="date" v-model='form.createTimeEnd' placeholder="选择日期" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime2' style="width: 180px"></DatePicker>
                 </div>
                 <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
@@ -89,7 +89,7 @@ export default {
             deptlist: [],
             form: {
                 deptId: "",
-                industryId: '',
+                industryId: "",
                 sel2: "",
                 companySource: "",
                 importantLevel: "",
@@ -162,9 +162,17 @@ export default {
                     width: 90,
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row
-                        if (this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
-                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        const row = params.row;
+                        if (
+                            this.allTrees[12].children[row.companyStatus] &&
+                            this.allTrees[12].children[row.companyStatus]
+                                .codeText
+                        ) {
+                            return h(
+                                "span",
+                                this.allTrees[12].children[row.companyStatus]
+                                    .codeText
+                            );
                         }
                     }
                 },
@@ -265,20 +273,20 @@ export default {
             });
         },
         searchIn(type) {
-            if (this.selVal == "企业名称")
-                this.form.companyName = this.searchVal
-            else if (this.selVal == "搜索顾问")
-                this.form.companyName = this.searchVal
-            else if (this.selVal == "客户来源")
-                this.form.companyName = this.searchVal
-
-            if (!this.searchVal && !type) {
-                this.$Message.warning("想搜点什么?")
-                return
+            if (this.selVal == "企业名称") {
+                this.form.companyName = this.searchVal;
+                this.form.bdName = "";
+            } else if (this.selVal == "搜索顾问") {
+                this.form.bdName = this.searchVal;
+                this.form.companyName = "";
             }
-            this.form.pageNum = 1
-            this.tableLists = []
-            this.loadLists()
+            if (!this.searchVal && type != "selSearch") {
+                this.$Message.warning("想搜点什么?");
+                return;
+            }
+            this.form.pageNum = 1;
+            this.tableLists = [];
+            this.loadLists();
         },
         selPro() {
             //选择职位
@@ -287,30 +295,30 @@ export default {
                 this.$Message.warning("不选一个职位么?");
                 return;
             }
-            this.professId = idName.split("&")[0]
-            this.professName = idName.split("&")[1]
-            this.form.industryId = idName.split("&")[0]
-            this.professPop = false
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.form.industryId = idName.split("&")[0];
+            this.professPop = false;
         },
         seltime1(date) {
-            this.form.createTimeStart = date
+            this.form.createTimeStart = date;
         },
         seltime2(date) {
-            this.form.createTimeEnd = date
+            this.form.createTimeEnd = date;
         },
         seltime3(date) {
-            this.form.signRange = date
+            this.form.signRange = date;
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = "";
             });
             this.form.selVal = "企业名称";
-            this.form.pageSize = 10
+            this.form.pageSize = 10;
         }
     },
 
-     mounted() {
+    mounted() {
         this.loadLists();
         // this.selTrees();
         api.axs("post", "/dept/info", {}).then(({ data: { data, code } }) => {

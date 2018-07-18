@@ -1,214 +1,213 @@
 <template>
+    <div class="personalDetails">
+        <div class='currentNav'>当前位置:
+            <router-link to='/customer/jobDoing'>职位进展</router-link> >
+            <router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
+        <div class="detailsWrap">
+            <div class="content-left">
+                <div class="mass">
+                    <div class="mass-title">
+                        推荐信息
+                    </div>
+                    <ul class="mass-ul">
+                        <li>
+                            <span>朗超群</span>
+                            <span>2018-06-16推荐</span>
+                            <span>浙江某建筑企业财务总监</span>
+                            <span>财务总监</span>
+                        </li>
+                        <li>
+                            <span>朗超群</span>
+                            <span>2018-06-16推荐</span>
+                            <span>浙江某建筑企业财务总监</span>
+                            <span>财务总监</span>
+                        </li>
+                    </ul>
+                    <div class="tip">
+                        温馨提醒：录用未上岗（或上岗 未过保，或者上岗 已过保 或客户公司在职或客户公司已离职 可推荐）
+                    </div>
+                </div>
+                <div class="detail-c">
+                    <Tabs value="name1" class="tab">
+                        <TabPane label="人才详情" name="name1">
+                            <div class="jl-c">
+                                <div class="updata">
+                                    最后更新于 2018-06-16 20:12:00
+                                </div>
+                                <div class="header-c">
+                                    <h4>高三吉</h4>
+                                    <div class="header-name">
+                                        <span class="education">
+                                            <Icon type="briefcase"></Icon>本科学历</span>
+                                        <span class="experience">
+                                            <Icon type="briefcase"></Icon>12年经验</span>
+                                        <span class="site">
+                                            <Icon type="briefcase"></Icon>杭州</span>
+                                        <span class="university">
+                                            <Icon type="briefcase"></Icon>浙江教育学院</span>
+                                        <span class="purpose">
+                                            <Icon type="briefcase"></Icon>我怼现在工作表满意，考虑跳槽</span>
+                                    </div>
+                                    <div class="header-img">
+                                        <img src="@/assets/images/logo.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="purpose-c">
+                                    <h4>求职意向</h4>
+                                    <div class="purpose-name">
+                                        <span class="education">
+                                            <Icon type="briefcase"></Icon>杭州</span>
+                                        <span class="experience">
+                                            <Icon type="briefcase"></Icon>10k-20k</span>
+                                    </div>
+                                </div>
+                                <div class="experience-c">
+                                    <h4>工作经历</h4>
+                                    <ul class="experience-name">
+                                        <li>
+                                            <div class="ex-c">
+                                                <span class="company">杭州千里马科技有限公司</span>
+                                                <span class="job">UI设计师</span>
+                                                <span class="money">4000-6000/月</span>
+                                                <span class="time">2017.6~2018.6</span>
+                                            </div>
+                                            <p class="ex-de">
+                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
 
-	<div class="personalDetails">
-		<div class='currentNav'>当前位置:
-			<router-link to='/customer/jobDoing'>职位进展</router-link> >
-			<router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
-		<div class="detailsWrap">
-			<div class="content-left">
-				<div class="mass">
-					<div class="mass-title">
-						推荐信息
-					</div>
-					<ul class="mass-ul">
-						<li>
-							<span>朗超群</span>
-							<span>2018-06-16推荐</span>
-							<span>浙江某建筑企业财务总监</span>
-							<span>财务总监</span>
-						</li>
-						<li>
-							<span>朗超群</span>
-							<span>2018-06-16推荐</span>
-							<span>浙江某建筑企业财务总监</span>
-							<span>财务总监</span>
-						</li>
-					</ul>
-					<div class="tip">
-						温馨提醒：录用未上岗（或上岗 未过保，或者上岗 已过保 或客户公司在职或客户公司已离职 可推荐）
-					</div>
-				</div>
-				<div class="detail-c">
-					<Tabs value="name1" class="tab">
-						<TabPane label="人才详情" name="name1">
-							<div class="jl-c">
-								<div class="updata">
-									最后更新于 2018-06-16 20:12:00
-								</div>
-								<div class="header-c">
-									<h4>高三吉</h4>
-									<div class="header-name">
-										<span class="education">
-											<Icon type="briefcase"></Icon>本科学历</span>
-										<span class="experience">
-											<Icon type="briefcase"></Icon>12年经验</span>
-										<span class="site">
-											<Icon type="briefcase"></Icon>杭州</span>
-										<span class="university">
-											<Icon type="briefcase"></Icon>浙江教育学院</span>
-										<span class="purpose">
-											<Icon type="briefcase"></Icon>我怼现在工作表满意，考虑跳槽</span>
-									</div>
-									<div class="header-img">
-										<img src="@/assets/images/logo.png" alt="">
-									</div>
-								</div>
-								<div class="purpose-c">
-									<h4>求职意向</h4>
-									<div class="purpose-name">
-										<span class="education">
-											<Icon type="briefcase"></Icon>杭州</span>
-										<span class="experience">
-											<Icon type="briefcase"></Icon>10k-20k</span>
-									</div>
-								</div>
-								<div class="experience-c">
-									<h4>工作经历</h4>
-									<ul class="experience-name">
-										<li>
-											<div class="ex-c">
-												<span class="company">杭州千里马科技有限公司</span>
-												<span class="job">UI设计师</span>
-												<span class="money">4000-6000/月</span>
-												<span class="time">2017.6~2018.6</span>
-											</div>
-											<p class="ex-de">
-												圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
+                                            </p>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="project-c">
+                                    <h4>项目经历</h4>
+                                    <ul class="project-name">
+                                        <li>
+                                            <div class="pr-c">
+                                                <span class="project">蚂蚁金服</span>
+                                                <span class="time">2017.6~2018.6</span>
+                                            </div>
+                                            <p class="pr-de">
+                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
 
-											</p>
-										</li>
-									</ul>
-								</div>
-								<div class="project-c">
-									<h4>项目经历</h4>
-									<ul class="project-name">
-										<li>
-											<div class="pr-c">
-												<span class="project">蚂蚁金服</span>
-												<span class="time">2017.6~2018.6</span>
-											</div>
-											<p class="pr-de">
-												圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
+                                            </p>
+                                        </li>
 
-											</p>
-										</li>
+                                    </ul>
+                                </div>
+                                <div class="education-c">
+                                    <h4>教育经历</h4>
+                                    <ul class="education-name">
+                                        <li>
+                                            <div class="ed-c">
+                                                <span class="company">武汉生物工程学院</span>
+                                                <span class="job">计算机科学与技术</span>
+                                                <span class="money">本科</span>
+                                                <span class="time">2017.6~2018.6</span>
+                                            </div>
 
-									</ul>
-								</div>
-								<div class="education-c">
-									<h4>教育经历</h4>
-									<ul class="education-name">
-										<li>
-											<div class="ed-c">
-												<span class="company">武汉生物工程学院</span>
-												<span class="job">计算机科学与技术</span>
-												<span class="money">本科</span>
-												<span class="time">2017.6~2018.6</span>
-											</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="personal-c">
+                                    <h4>自我评价</h4>
+                                    <p class="pe-de">
+                                        圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
 
-										</li>
-									</ul>
-								</div>
-								<div class="personal-c">
-									<h4>自我评价</h4>
-									<p class="pe-de">
-										圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
+                                    </p>
+                                </div>
+                            </div>
+                        </TabPane>
+                        <TabPane label="推荐报告" name="name2">推荐报告</TabPane>
+                        <TabPane label="背景核实" name="name3">背景核实</TabPane>
+                        <TabPane label="其他简历" name="name4">其他简历</TabPane>
+                    </Tabs>
+                    <div class="buts">
+                        <Button type="primary">和他聊聊</Button>
+                        <Button type="primary">分组</Button>
+                        <Button type="primary">加关注</Button>
+                    </div>
+                </div>
 
-									</p>
-								</div>
-							</div>
-						</TabPane>
-						<TabPane label="推荐报告" name="name2">推荐报告</TabPane>
-						<TabPane label="背景核实" name="name3">背景核实</TabPane>
-						<TabPane label="其他简历" name="name4">其他简历</TabPane>
-					</Tabs>
-					<div class="buts">
-						<Button type="primary">和他聊聊</Button>
-						<Button type="primary">分组</Button>
-						<Button type="primary">加关注</Button>
-					</div>
-				</div>
+            </div>
+            <div class="content-right">
+                <div class="handle">
+                    <Button class="bu1" type="text"> 推荐共享职位</Button>
+                    <Button class="bu2" type="text">转发简历</Button>
+                    <Button class="bu3" type="text">加入职位CallList</Button>
+                    <Button class="bu4" type="text">导出推荐报告</Button>
+                    <Button class="bu5" type="text">背景核实</Button>
+                    <Button class="bu6" type="text">举报简历</Button>
+                </div>
+                <div class="remark">
+                    <div class="re-title">
+                        备注记录
 
-			</div>
-			<div class="content-right">
-				<div class="handle">
-					<Button class="bu1" type="text"> 推荐共享职位</Button>
-					<Button class="bu2" type="text">转发简历</Button>
-					<Button class="bu3" type="text">加入职位CallList</Button>
-					<Button class="bu4" type="text">导出推荐报告</Button>
-					<Button class="bu5" type="text">背景核实</Button>
-					<Button class="bu6" type="text">举报简历</Button>
-				</div>
-				<div class="remark">
-					<div class="re-title">
-						备注记录
+                        <Button type="primary" shape="circle" icon="plus" @click="modal1 = true"></Button>
+                        <Modal v-model="modal1" title="添加备注信息" @on-ok="ok" @on-cancel="cancel">
+                            <p>Content of dialog</p>
+                            <p>Content of dialog</p>
+                            <p>Content of dialog</p>
+                        </Modal>
+                    </div>
+                    <ul class="re-list">
+                        <li>
+                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-						<Button type="primary" shape="circle" icon="plus" @click="modal1 = true"></Button>
-						<Modal v-model="modal1" title="添加备注信息" @on-ok="ok" @on-cancel="cancel">
-							<p>Content of dialog</p>
-							<p>Content of dialog</p>
-							<p>Content of dialog</p>
-						</Modal>
-					</div>
-					<ul class="re-list">
-						<li>
-							<span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
+                        </li>
+                        <li>
+                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-						</li>
-						<li>
-							<span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
+                        </li>
+                        <li>
+                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-						</li>
-						<li>
-							<span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
+                        </li>
+                        <li>
+                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-						</li>
-						<li>
-							<span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
+                        </li>
+                        <li>
+                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-						</li>
-						<li>
-							<span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
+                        </li>
+                    </ul>
+                    <Button class="more" type="ghost" long>查看更多</Button>
+                </div>
 
-						</li>
-					</ul>
-					<Button class="more" type="ghost" long>查看更多</Button>
-				</div>
+                <div class="tickling">
+                    <div class="ti-title">
 
-				<div class="tickling">
-					<div class="ti-title">
+                        客户反馈记录
 
-						客户反馈记录
+                    </div>
+                    <ul class="ti-list">
+                        <li>
+                            <span>杭州明白网络科技有限公司
+                                <b>2018-05-01</b>
+                            </span>
+                            <p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
+                            <a>面试反馈</a>
+                        </li>
+                        <li>
+                            <span>杭州明白网络科技有限公司
+                                <b>2018-05-01</b>
+                            </span>
+                            <p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
+                            <a>面试反馈</a>
+                        </li>
+                        <li>
+                            <span>杭州明白网络科技有限公司
+                                <b>2018-05-01</b>
+                            </span>
+                            <p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
+                            <a>面试反馈</a>
+                        </li>
+                    </ul>
 
-					</div>
-					<ul class="ti-list">
-						<li>
-							<span>杭州明白网络科技有限公司
-								<b>2018-05-01</b>
-							</span>
-							<p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
-							<a>面试反馈</a>
-						</li>
-						<li>
-							<span>杭州明白网络科技有限公司
-								<b>2018-05-01</b>
-							</span>
-							<p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
-							<a>面试反馈</a>
-						</li>
-						<li>
-							<span>杭州明白网络科技有限公司
-								<b>2018-05-01</b>
-							</span>
-							<p>说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话</p>
-							<a>面试反馈</a>
-						</li>
-					</ul>
-
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>

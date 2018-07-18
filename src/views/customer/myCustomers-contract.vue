@@ -171,6 +171,7 @@ export default {
     }
 };
 </script>
+
 <style lang='less' scoped>
 .template-box {
     width: 100%;

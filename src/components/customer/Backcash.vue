@@ -103,7 +103,7 @@ import ls from "store2";
 import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "backcash",
-    props: [],
+    props: ["recordsDetails"],
     components: {},
     data() {
         return {
@@ -195,19 +195,19 @@ export default {
                 {
                     title: "状态",
                     key: "fundType",
-                    width: 140,
+                    width: 80,
                     align: "center"
                 },
                 {
                     title: "应汇款时间",
                     key: "receiveTime",
-                    width: 120,
+                    width: 80,
                     align: "center"
                 },
                 {
                     title: "逾期天数",
                     key: "updateTime",
-                    width: 120,
+                    width: 80,
                     align: "center"
                 },
 
@@ -218,7 +218,6 @@ export default {
                     width: 94,
                     align: "center"
                 },
-
                 {
                     title: "发票",
                     key: "invoiceAmount",
@@ -229,7 +228,6 @@ export default {
                 {
                     title: "款项内容",
                     key: "instruction",
-                    width: 94,
                     align: "center"
                 },
                 {
@@ -241,7 +239,6 @@ export default {
                 {
                     title: "对应合同",
                     key: "contractId",
-                    width: 94,
                     align: "center"
                 },
                 {
@@ -253,6 +250,7 @@ export default {
                 {
                     title: "操作",
                     key: "iii",
+                    width: 60,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -276,7 +274,13 @@ export default {
                                             ls.set("contractID", row.id);
                                             this.$router.push(
                                                 "/customer/myCustomers/backcashDetails?id=" +
-                                                    row.id
+                                                    row.id +
+                                                    "&level=" +
+                                                    this.recordsDetails
+                                                        .importantLevel +
+                                                    "&cname=" +
+                                                    this.recordsDetails
+                                                        .companyName
                                             );
                                         }
                                     }
@@ -372,7 +376,13 @@ export default {
                                             ls.set("contractID", row.id);
                                             this.$router.push(
                                                 "/customer/myCustomers/backcashDetails?id=" +
-                                                    row.id
+                                                    row.id +
+                                                    "&level=" +
+                                                    this.recordsDetails
+                                                        .importantLevel +
+                                                    "&cname=" +
+                                                    this.recordsDetails
+                                                        .companyName
                                             );
                                         }
                                     }

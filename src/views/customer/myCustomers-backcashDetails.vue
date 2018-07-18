@@ -1,5 +1,13 @@
 <template>
     <div class="backcashDetails">
+        <div class='currentNav'>当前位置:
+            <router-link to='/customer/myCustomers'>我的客户</router-link> >
+            <router-link :to="`/customer/myCustomers/records?id=${id}`">
+                {{cname}}
+                <Rate disabled :value='level' style='font-size:14px'></Rate>
+            </router-link>
+            >&nbsp;&nbsp;回款详情
+        </div>
         <div class="returneddetail">
             <div class="detail-header">
                 <p class="p1">SO.20180620001.2</p>
@@ -140,7 +148,9 @@ export default {
     data() {
         return {
             id: this.$route.query.id,
-            massages:[],
+            level: +this.$route.query.level,
+            cname: this.$route.query.cname,
+            massages: [],
             modal2: false,
             formValidate: {
                 password: "",
@@ -154,7 +164,11 @@ export default {
             },
             ruleValidate: {
                 userName: [
-                    { required: true, message: "请输入姓名", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入姓名",
+                        trigger: "blur"
+                    }
                 ],
                 account: [
                     {
@@ -180,15 +194,32 @@ export default {
                 sex: [],
                 isLeader: [],
                 phone: [
-                    { required: true, message: "请输入手机号", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入手机号",
+                        trigger: "blur"
+                    }
                 ],
                 roleId: [
-                    { required: true, message: "未赋予角色", trigger: "change" }
+                    {
+                        required: true,
+                        message: "未赋予角色",
+                        trigger: "change"
+                    }
                 ],
                 deptId: [
-                    { required: true, message: "未赋予部门", trigger: "change" }
+                    {
+                        required: true,
+                        message: "未赋予部门",
+                        trigger: "change"
+                    }
                 ],
-                locked: [{ required: true, trigger: "change" }]
+                locked: [
+                    {
+                        required: true,
+                        trigger: "change"
+                    }
+                ]
             }
         };
     },
@@ -263,12 +294,14 @@ export default {
         this.$store.state.spinShow = false;
         console.log(this.$route.query.id);
         api
-            .axs("post", "/receivePlan/info", { id: this.id })
+            .axs("post", "/receivePlan/info", {
+                id: this.id
+            })
             .then(({ data: { data, code } }) => {
                 if (code === "SUCCESS") {
                     this.$Message.success("Success!");
-                    console.log(data)
-                   this.massages=data;
+                    console.log(data);
+                    this.massages = data;
                 } else if (code === "PHONE_REPEAT") {
                     this.$Message.error(" 操作有误");
                 }
@@ -276,6 +309,7 @@ export default {
     }
 };
 </script>
+
 <style lang='less' scoped>
 .backcashDetails {
     .returneddetail {
@@ -297,7 +331,6 @@ export default {
             justify-content: flex-end;
             align-items: center;
             flex: 1;
-
             button {
                 margin-right: 20px;
             }

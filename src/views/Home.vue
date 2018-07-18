@@ -1,6 +1,6 @@
 <template>
     <div class="home" style='text-align: center'>
-        <img src="@/assets/images/logo.png">
+        <img src="@/assets/images/logo.png" style='margin-top:100px'>
         <HelloWorld msg="Qianlima" />
     </div>
 </template>
@@ -22,9 +22,9 @@ export default {
 
     mounted() {
         setTimeout(() => {
-            this.$Loading.finish()
-            this.$store.state.spinShow = false
-        }, 1500)
+            this.$Loading.finish();
+            this.$store.state.spinShow = false;
+        }, 1500);
     },
     data() {
         return {

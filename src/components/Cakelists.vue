@@ -1,7 +1,7 @@
 <template>
-	<div class="cakelists">
-		<ul class='lists'></ul>
-	</div>
+    <div class="cakelists">
+        <ul class='lists'></ul>
+    </div>
 </template>
 
 <script>
@@ -10,7 +10,7 @@ export default {
     name: "Cakelists",
     data() {
         return {
-            lists: cakelists,
+            lists: cakelists
         };
     },
     mounted() {}

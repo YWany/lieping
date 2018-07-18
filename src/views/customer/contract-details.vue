@@ -1,5 +1,10 @@
 <template>
     <div class="customer">
+        <div class='currentNav'>
+            当前位置:
+            <router-link to='/customer/contract'>客户合同</router-link> > 合同详情 --
+            <small>{{cname}}</small>
+        </div>
         <h1>合同详情.....</h1>
         <div class="contract-details">
             <div class="con-title">
@@ -8,17 +13,16 @@
 
             </div>
             <ul>
-                <li>前期服务费：5000元</li>
-                <li>收费比例：30%</li>
-                <li>付款方式：一次性</li>
-                <li>最低收费：30000元</li>
-                <li>合同开始时间：20180703</li>
-                <li>合同结束时间：20180703</li>
-                <li>特殊说明：无</li>
-                <li>保证期：3个月</li>
-                <li>前期服务费:5000元</li>
-                <li>回款日期：20180710</li>
-                <li>目前状态：未收费</li>
+                <li>前期服务费：{{cdetails.preFee}}元</li>
+                <li>收费比例：{{cdetails.payRatio}}</li>
+                <li>付款方式：{{cdetails.payType}}</li>
+                <li>最低收费：{{cdetails.minCharge}}元</li>
+                <li>合同开始时间：{{cdetails.strartTime}}</li>
+                <li>合同结束时间：{{cdetails.endTime}}</li>
+                <li>特殊说明：{{cdetails.instruction || '--'}}</li>
+                <li>保证期：{{cdetails.ensurePeriod}}</li>
+                <li>回款日期：</li>
+                <li>目前状态：</li>
                 <li>回款计划：</li>
             </ul>
         </div>
@@ -137,17 +141,37 @@ import api from "@/api";
 import ls from "store2";
 export default {
     name: "home",
+    data() {
+        return {
+            id: this.$route.query.id,
+            cname: this.$route.query.cname,
+            cdetails: {}
+        };
+    },
     components: {},
-    methods: {},
-
+    methods: {
+        contractDetails() {
+            api
+                .axs("post", "/contract/info", {
+                    id: this.id
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.cdetails = data.data;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        }
+    },
     mounted() {
-        setTimeout(() => {
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-        }, 1500);
+        this.contractDetails();
     }
 };
 </script>
+
 <style lang='less' scoped>
 .contract-details {
     width: 100%;
@@ -173,6 +197,7 @@ export default {
         }
     }
 }
+
 .con-detail {
     width: 100%;
     padding: 0.75rem;

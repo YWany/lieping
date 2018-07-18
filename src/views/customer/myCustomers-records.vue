@@ -1,5 +1,4 @@
 <template>
-
     <div class="myCustomersRecords">
         <div class='currentNav'>当前位置:
             <router-link to='/customer/myCustomers'>我的客户</router-link> > {{recordsDetails.companyName}}
@@ -98,14 +97,14 @@
                     </div>
 
                     <Tabs size='small' :animated=false class="subTabs" value="name1">
-                        <TabPane label="所有合同(3)" name="name1">
+                        <TabPane label="所有合同(3)" name="name1" @on-change="getHetongLists(1,'all')">
                             <div class="searchTable">
                                 <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
-                        <TabPane label="猎头(3)" name="name2">
+                        <TabPane label="猎头(3)" name="name2" @on-change="getHetongLists(1,'lt')">
                             <div class="searchTable">
-                                <Table border ref="selection" :columns="headhunter" :data="headlist"></Table>
+                                <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
                     </Tabs>
@@ -114,7 +113,7 @@
                     </div>
                 </TabPane>
                 <TabPane label="回款" name="huikuan">
-                    <Backcash />
+                    <Backcash :recordsDetails='recordsDetails' />
                 </TabPane>
                 <TabPane label="开票历史" name="invoice">
                     <div class="job-content searchTable">
@@ -414,6 +413,7 @@ export default {
                     key: "cz",
                     align: "center",
                     render: (h, params) => {
+                        const row = params.row;
                         return h("div", [
                             h(
                                 "Button",
@@ -445,7 +445,12 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info("终止!!!");
+                                            this.$router.push(
+                                                "/customer/contract/details?id=" +
+                                                    row.id +
+                                                    "&cname=" +
+                                                    row.companyName
+                                            );
                                         }
                                     }
                                 },
@@ -522,6 +527,32 @@ export default {
                     align: "center",
                     render: (h, params) => {
                         return h("span", params.row.totalAmount || 0);
+                    }
+                },
+                {
+                    title: "操作",
+                    key: "totalAmount",
+                    width: 50,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        "/customer/myCustomers/backcash/invoiceDetails?id=" +
+                                        this.id +
+                                        "&vid=" +
+                                        row.id +
+                                        "&level=" +
+                                        this.recordsDetails.importantLevel +
+                                        "&cname=" +
+                                        this.recordsDetails.companyName
+                                }
+                            },
+                            "详情"
+                        );
                     }
                 }
             ],
@@ -815,7 +846,9 @@ export default {
         ...mapActions(["getUsers"]),
         companyInfo() {
             api
-                .axs("post", "/company/info", { id: this.id })
+                .axs("post", "/company/info", {
+                    id: this.id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.recordsDetails = data.data;
@@ -848,13 +881,16 @@ export default {
                     }
                 });
         },
-        getHetongLists(page) {
+        getHetongLists(page, tag) {
             this.$store.state.spinShow = true;
             this.hetongForm.pageNum = page;
+
+            // if (tag == 'lt') 猎头
             api
                 .axs("post", "/contract/page", this.hetongForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
+                        console.log(data);
                         this.hetongLists = data.data.list;
                         this.hetongForm.total = data.data.total;
                         this.$Loading.finish();
@@ -881,7 +917,9 @@ export default {
         getContactLists(tag) {
             //联系人
             api
-                .axs("post", "/contact/list", { companyId: this.id })
+                .axs("post", "/contact/list", {
+                    companyId: this.id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.contactLists = data.data;
@@ -1047,7 +1085,9 @@ export default {
         },
         delCompany() {
             api
-                .axs("post", "/company/delete", { id: this.id })
+                .axs("post", "/company/delete", {
+                    id: this.id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("删除成功");
@@ -1068,7 +1108,9 @@ export default {
             //离职确认
             this.$store.state.spinShow = true;
             api
-                .axs("post", "/contact/setLeaveStatus", { id: this.contactId })
+                .axs("post", "/contact/setLeaveStatus", {
+                    id: this.contactId
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("离职成功!");

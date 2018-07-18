@@ -17,8 +17,8 @@ export default {
         return {
             provinces: [],
             cities: [],
-            proId: '',
-            cityId: ''
+            proId: "",
+            cityId: ""
         };
     },
     props: ["professPop"],
@@ -26,36 +26,38 @@ export default {
         getProvinces() {
             api.axs("post", "/param/area/provinceList").then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.provinces = data.data
+                    this.provinces = data.data;
                 } else {
-                    this.$Message.error(data.remark)
+                    this.$Message.error(data.remark);
                 }
             });
         },
         getCities() {
-            api.axs("post", "/param/area/childList",{parentId: this.proId}).then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.cities = data.data
-                } else {
-                    this.$Message.error(data.remark)
-                }
-            });
+            api
+                .axs("post", "/param/area/childList", { parentId: this.proId })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.cities = data.data;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         }
     },
     mounted() {
-        this.getProvinces()
+        this.getProvinces();
     }
 };
 </script>
 
 <style lang="less">
-    .selProAndCity {
-        display: inline-block;
-        .selw300 {
-            width: 300px
-        }
-        .selw150 {
-            width: 150px
-        }
+.selProAndCity {
+    display: inline-block;
+    .selw300 {
+        width: 300px;
     }
+    .selw150 {
+        width: 150px;
+    }
+}
 </style>

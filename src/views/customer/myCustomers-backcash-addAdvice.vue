@@ -276,7 +276,11 @@ export default {
                 sex: [],
                 isLeader: [],
                 phone: [
-                    { required: true, message: "请输入手机号", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入手机号",
+                        trigger: "blur"
+                    }
                 ],
                 contactId: [
                     {
@@ -286,9 +290,18 @@ export default {
                     }
                 ],
                 deptId: [
-                    { required: true, message: "未赋予部门", trigger: "change" }
+                    {
+                        required: true,
+                        message: "未赋予部门",
+                        trigger: "change"
+                    }
                 ],
-                locked: [{ required: true, trigger: "change" }]
+                locked: [
+                    {
+                        required: true,
+                        trigger: "change"
+                    }
+                ]
             }
         };
     },
@@ -323,11 +336,12 @@ export default {
                                 this.$Message.success("Success!");
                                 this.$router.push(
                                     "/customer/myCustomers/backcash/addInvoice?id=" +
-                                        ls.get("companyID") +
+                                        ls.get("companyId") +
                                         "&level=" +
                                         ls.get("level") +
                                         "&cname=" +
-                                        ls.get("companyName")
+                                        ls.get("companyName")+
+                                        "&tag=fromhk"
                                 );
                             }
                         });
@@ -395,12 +409,14 @@ export default {
         console.log(this.companyid);
         console.log(this.companyname);
         api
-            .axs("post", "/contact/list", { companyId: this.companyid })
+            .axs("post", "/contact/list", {
+                companyId: this.companyid
+            })
             .then(({ data: { data, code } }) => {
                 if (code === "SUCCESS") {
                     console.log(data);
                     this.contactlist = data;
-                    if (data.length ===0) {
+                    if (data.length === 0) {
                         this.$Message.error("请先添加该公司联系人");
                     }
                 }
@@ -414,6 +430,7 @@ export default {
 .colors {
     color: red !important;
 }
+
 .book-title {
     width: 100%;
     margin: 10px 0;
@@ -421,6 +438,7 @@ export default {
     font-weight: 700;
     border-left: 2px solid #2d8cf0;
 }
+
 .basic {
     width: 100%;
     overflow: auto;
@@ -431,6 +449,7 @@ export default {
         margin-top: 10px;
     }
 }
+
 .basic2 {
     width: 100%;
     overflow: auto;
@@ -439,6 +458,7 @@ export default {
         margin-top: 10px;
     }
 }
+
 .addBackcashAdvice {
     .advicebox {
         width: 100%;

@@ -1,5 +1,5 @@
 <template>
-	<div id="main">
+    <div id="main">
         <nav>
             <div class="logo">
                 <img src="@/assets/images/logo.png" alt="">
@@ -9,36 +9,38 @@
                 <div class="avatar fl">
                     <img src="@/assets/images/logo.png" alt="">
                 </div>
-                <Dropdown trigger="click" :transfer="true"> 
+                <Dropdown trigger="click" :transfer="true">
                     <a href="javascript:void(0)">
                         Adminnn
                         <Icon type="arrow-down-b"></Icon>
                     </a>
                     <DropdownMenu slot="list">
-                        <a href='javascript:;' @click='logout'><DropdownItem name='zhuxiao'>注销</DropdownItem></a>
+                        <a href='javascript:;' @click='logout'>
+                            <DropdownItem name='zhuxiao'>注销</DropdownItem>
+                        </a>
                         <DropdownItem name='modpsd'>修改密码</DropdownItem>
                         <DropdownItem name='avatar'>上传头像</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
         </nav>
-		<div class="allWrap">
+        <div class="allWrap">
             <Allmenu />
-			<div class="content">
-				<transition name="fade" mode="out-in">
-					<router-view/>
-				</transition>
+            <div class="content">
+                <transition name="fade" mode="out-in">
+                    <router-view/>
+                </transition>
                 <Spin size="large" fix v-if="$store.state.spinShow"></Spin>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
-import api from "@/api"
-import "@/assets/css/reset.css"
-import "@/assets/css/index.less"
-import Allmenu from "@/components/Menu.vue"
+import api from "@/api";
+import "@/assets/css/reset.css";
+import "@/assets/css/index.less";
+import Allmenu from "@/components/Menu.vue";
 export default {
     data() {
         return {
@@ -52,11 +54,11 @@ export default {
         logout() {
             api.axs("post", "/loginOut").then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    window.location.href = '/#/login'
+                    window.location.href = "/#/login";
                 } else {
-                    this.$Message.error(data.remark)
+                    this.$Message.error(data.remark);
                 }
-            })
+            });
         }
     },
     mounted() {
@@ -83,7 +85,7 @@ export default {
         height: 49px;
         line-height: 49px;
         font-size: 14px;
-        background-color: #fff;//#495060;
+        background-color: #fff; //#495060;
         color: #fff;
         box-shadow: 0 0 10px #ddd;
         .logo {

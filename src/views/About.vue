@@ -65,20 +65,19 @@ export default {
                 ]
             };
 
-            myChart.hideLoading()
+            myChart.hideLoading();
 
             // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option)
-        }, 3000)
+            myChart.setOption(option);
+        }, 3000);
     }
-}
-
+};
 </script>
 <style lang='less' scoped>
 .about {
     padding-top: 1.5rem;
 }
-.form{
+.form {
     width: 50%;
 }
 </style>

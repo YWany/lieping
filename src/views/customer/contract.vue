@@ -4,17 +4,17 @@
             <Button type="info" class='addNew fr'>
                 <Icon type="arrow-down-c"></Icon> 下载</Button>
             <span class='fr'>&nbsp;&nbsp;</span>
-            <Button type="success" class='addNew fr' @click='contractPop=true'>
-                <Icon type="plus"></Icon> 创建新合同</Button>
+            <!-- <Button type="success" class='addNew fr' @click='contractPop=true'>
+                    <Icon type="plus"></Icon> 创建新合同</Button> -->
         </div>
         <form class="searches">
             <div class="search">
-                <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
+                <Input v-model="form.searchVal" @on-enter='searchIn' placeholder="请输入要搜索的内容...">
                 <Select v-model="form.selVal" slot="prepend" class='search-sels' style="width:80px">
                     <Option value="客户名称">客户名称</Option>
                     <Option value="搜索顾问">搜索顾问</Option>
                 </Select>
-                <Button slot="append" icon="ios-search"></Button>
+                <Button slot="append" icon="ios-search" @click='searchIn'></Button>
                 </Input>
             </div>
             <div class="sels">
@@ -43,18 +43,18 @@
                     <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
                 </div>
                 <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
-                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
+                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search " @click="searchIn('selSearch')">搜索</Button>
             </div>
         </form>
         <div class="searchTable">
-            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
+            <Table border ref="selection" :columns="tableHeader" :data="hetongLists"></Table>
             <div class="tablePage fr">
-                <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                <Page :total='hetongForm.total' :page-size='hetongForm.pageSize' show-total @on-change='getHetongLists'></Page>
             </div>
         </div>
 
         <!-- 新增合同弹窗 -->
-        <ContractPop :contractPop='contractPop' />
+        <!-- <ContractPop :contractPop='contractPop' /> -->
 
     </div>
 </template>
@@ -81,15 +81,16 @@ export default {
                 createDate: "",
                 signDate: ""
             },
-            formPage: {
-                total: 120,
-                current: 1,
-                pageSize: 20
+            hetongForm: {
+                pageNum: 1,
+                total: 1,
+                pageSize: 10
             },
+            hetongLists: [],
             tableHeader: [
                 {
                     title: "客户名称",
-                    key: "name",
+                    key: "companyName",
                     width: 140,
                     sortable: true,
                     ellipsis: true,
@@ -97,46 +98,59 @@ export default {
                 },
                 {
                     title: "BD顾问",
-                    key: "kehu",
+                    key: "bdName",
                     width: 94,
                     sortable: true,
                     align: "center"
                 },
                 {
                     title: "前期服务费",
-                    key: "phone",
+                    key: "preFee",
                     width: 94,
                     align: "center"
                 },
                 {
                     title: "服务费比列",
-                    key: "bbb",
+                    key: "payRatio",
                     sortable: true,
                     width: 94,
                     align: "center"
                 },
                 {
                     title: "付款方式",
-                    key: "ccc",
+                    key: "payType",
                     width: 65,
                     align: "center"
                 },
                 {
                     title: "合同开始时间",
-                    key: "ddd",
+                    key: "strartTime",
                     width: 90,
-                    ellipsis: true,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h(
+                            "span",
+                            params.row.strartTime &&
+                                params.row.strartTime.substr(0, 10)
+                        );
+                    }
                 },
                 {
                     title: "合同结束时间",
-                    key: "eee",
-                    maxWidth: 94,
-                    align: "center"
+                    key: "endTime",
+                    maxWidth: 90,
+                    align: "center",
+                    render: (h, params) => {
+                        return h(
+                            "span",
+                            params.row.endTime &&
+                                params.row.endTime.substr(0, 10)
+                        );
+                    }
                 },
                 {
                     title: "保证期",
-                    key: "fff",
+                    key: "ensurePeriod",
                     width: 66,
                     align: "center"
                 },
@@ -144,13 +158,19 @@ export default {
                     title: "合同状态",
                     key: "ggg",
                     width: 66,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h("span", "--");
+                    }
                 },
                 {
                     title: "合同编号",
-                    key: "hhh",
+                    key: "code",
                     width: 120,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h("span", "--");
+                    }
                 },
                 {
                     title: "操作",
@@ -161,7 +181,11 @@ export default {
                             "router-link",
                             {
                                 attrs: {
-                                    to: "/customer/cooperation"
+                                    to:
+                                        "/customer/contract/details?id=" +
+                                        params.row.id +
+                                        "&cname=" +
+                                        params.row.companyName
                                 }
                             },
                             "详情"
@@ -201,11 +225,40 @@ export default {
         ContractPop
     },
     methods: {
-        loadLists(page) {
+        getHetongLists(page) {
             this.$store.state.spinShow = true;
-            setTimeout(() => {
-                this.$store.state.spinShow = false;
-            }, 1500);
+            this.hetongForm.pageNum = page;
+            this.hetongForm = this.hetongForm;
+            Object.assign(this.hetongForm, this.form);
+            api
+                .axs("post", "/contract/page", this.hetongForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.hetongLists = data.data.list;
+                        this.hetongForm.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        searchIn(type) {
+            if (this.form.selVal == "客户名称") {
+                this.form.companyName = this.form.searchVal;
+                this.form.bdName = "";
+            } else if (this.form.selVal == "搜索顾问") {
+                this.form.bdName = this.form.searchVals;
+                this.form.companyName = "";
+            }
+
+            if (!this.form.searchVal && type != "selSearch") {
+                this.$Message.warning("想搜点什么?");
+                return;
+            }
+            this.hetongForm.pageNum = 1;
+            this.hetongLists = [];
+            this.getHetongLists();
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -216,10 +269,7 @@ export default {
     },
 
     mounted() {
-        setTimeout(() => {
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-        }, 1500);
+        this.getHetongLists();
     }
 };
 </script>

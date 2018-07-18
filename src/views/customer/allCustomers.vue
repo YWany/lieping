@@ -1,12 +1,12 @@
-<template>
+{{{{{{{{{{{<template>
     <div class="myCustomers">
         <div class='currentNav'>当前位置: 我的客户
             <div class='fr'>
                 <Select v-model='creatVal' placeholder='创建' @on-change='createDo' style="width:70px">
-                    <Option value='客户'>客户</Option>
-                    <Option value='联系人'>联系人</Option>
-                    <Option value='合同'>合同</Option>
-                </Select>
+                                            <Option value='客户'>客户</Option>
+                                            <Option value='联系人'>联系人</Option>
+                                            <Option value='合同'>合同</Option>
+                                        </Select>
                 <span>&nbsp;&nbsp;</span>
                 <Button type="success" class='addNew'>导入</Button>
                 <span>&nbsp;&nbsp;</span>
@@ -21,29 +21,29 @@
             </div>
             <div class="sels">
                 <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
-                    <Option value="部门归属1">部门归属1</Option>
-                    <Option value="部门归属2">部门归属2</Option>
-                </Select>
+                                            <Option value="部门归属1">部门归属1</Option>
+                                            <Option value="部门归属2">部门归属2</Option>
+                                        </Select>
                 <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
-                    <Option value="客户行业1">客户行业1</Option>
-                    <Option value="客户行业2">客户行业2</Option>
-                </Select>
+                                            <Option value="客户行业1">客户行业1</Option>
+                                            <Option value="客户行业2">客户行业2</Option>
+                                        </Select>
                 <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
-                    <Option value="客户来源1">客户来源1</Option>
-                    <Option value="客户来源2">客户来源2</Option>
-                </Select>
+                                            <Option value="客户来源1">客户来源1</Option>
+                                            <Option value="客户来源2">客户来源2</Option>
+                                        </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
-                </Select>
+                                            <Option value="客户重要性1">客户重要性1</Option>
+                                            <Option value="客户重要性2">客户重要性2</Option>
+                                        </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户状态' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
-                </Select>
+                                            <Option value="客户重要性1">客户重要性1</Option>
+                                            <Option value="客户重要性2">客户重要性2</Option>
+                                        </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户等级' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
-                </Select>
+                                            <Option value="客户重要性1">客户重要性1</Option>
+                                            <Option value="客户重要性2">客户重要性2</Option>
+                                        </Select>
                 <div class="disInB sels-item">
                     创建时间：
                     <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
@@ -73,7 +73,7 @@
                 <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
-
+    
         <Modal v-model="recordPop" :closable=false width='400px'>
             <p slot="header">
                 <span>最近更新记录</span>
@@ -91,10 +91,10 @@
             </ul>
             <p slot='footer' style='text-align:center'></p>
         </Modal>
-
+    
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' :atteCompanyId='atteCompanyId' :atteCompanyName='atteCompanyName' />
-
+    
     </div>
 </template>
 
@@ -107,13 +107,13 @@ export default {
     name: "home",
     data() {
         return {
-            id:'',
+            id: "",
             creatVal: "",
             recordPop: false,
             cname: "",
             attePop: false, //新增提醒弹窗
-            atteCompanyId: '',
-            atteCompanyName: '',
+            atteCompanyId: "",
+            atteCompanyName: "",
             form: {
                 sel1: "",
                 sel2: "",
@@ -140,9 +140,18 @@ export default {
                     sortable: true,
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row
-                        if (this.allTrees[12] && this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
-                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        const row = params.row;
+                        if (
+                            this.allTrees[12] &&
+                            this.allTrees[12].children[row.companyStatus] &&
+                            this.allTrees[12].children[row.companyStatus]
+                                .codeText
+                        ) {
+                            return h(
+                                "span",
+                                this.allTrees[12].children[row.companyStatus]
+                                    .codeText
+                            );
                         }
                     }
                 },
@@ -153,9 +162,7 @@ export default {
                     ellipsis: true,
                     render: (h, params) => {
                         var row = params.row;
-                        return h(
-                            "span", row.companyName
-                        );
+                        return h("span", row.companyName);
                     }
                 },
                 {
@@ -199,28 +206,24 @@ export default {
                     ellipsis: true,
                     align: "center",
                     render: (h, params) => {
-                        var row = params.row
+                        var row = params.row;
                         if (row.lastFollowRecord) {
                             return h(
                                 "a",
                                 {
                                     on: {
                                         click: () => {
-                                            this.atteCompanyId = row.id
-                                            this.cname = row.companyName
-                                            this.getContactLists(row.id)
+                                            this.atteCompanyId = row.id;
+                                            this.cname = row.companyName;
+                                            this.getContactLists(row.id);
                                         }
                                     }
                                 },
                                 row.lastFollowRecord.substr(0, 5) + "..."
                             );
                         } else {
-                            return h(
-                                "span",
-                                "无记录"
-                            );
+                            return h("span", "无记录");
                         }
-                        
                     }
                 },
                 {
@@ -260,15 +263,13 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info(
-                                                "捞取!!!"
-                                            );
+                                            this.$Message.info("捞取!!!");
                                         }
                                     }
                                 },
                                 "捞取"
                             )
-                        ])
+                        ]);
                     }
                 }
             ],
@@ -281,38 +282,36 @@ export default {
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees
+            return this.$store.state.selTrees;
         }
     },
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
 
-            api
-                .axs("post", "/company/freePage", this.form)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.tableLists = this.tableLists.concat(
-                            data.data.list
-                        );
-                        this.form.total = data.data.total;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+            api.axs("post", "/company/freePage", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.tableLists = this.tableLists.concat(data.data.list);
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         getContactLists(id) {
             //记录
             api
-                .axs("post", "/contactRecord/page", { companyId: id })
+                .axs("post", "/contactRecord/page", {
+                    companyId: id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data.list.slice(0,3)
-                        this.recordPop = true
+                        this.contactLists = data.data.list.slice(0, 2);
+                        this.recordPop = true;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -321,14 +320,17 @@ export default {
                 this.$Message.warning("想搜点什么?");
                 return;
             }
-            this.tableLists = []
+            this.tableLists = [];
             // this.loadLists()
         },
         addRecord() {
             //添加记录
             this.$Message.info("添加记录~~");
             this.$router.push(
-                "/customer/myCustomers/records?cname=" + this.cname + '&id=' + this.atteCompanyId 
+                "/customer/myCustomers/records?cname=" +
+                    this.cname +
+                    "&id=" +
+                    this.atteCompanyId
             );
         },
         createDo(val) {
@@ -343,7 +345,7 @@ export default {
     },
 
     mounted() {
-        this.loadLists()
+        this.loadLists();
     }
 };
 </script>
@@ -351,6 +353,7 @@ export default {
 <style lang='less' scoped>
 .myCustomers {
 }
+
 .popContent {
     li {
         border-bottom: 1px solid #eee;
@@ -374,3 +377,4 @@ export default {
     }
 }
 </style>
+}}}}}}}}}}}

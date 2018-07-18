@@ -127,6 +127,7 @@ export default {
             id: this.$route.query.id,
             level: +this.$route.query.level,
             cname: this.$route.query.cname,
+            tag: this.$route.query.tag,
             hetongLists: [],
             fundTrees: [], //款项dic
             invoiceTrees: [], //发票类型dic
@@ -251,7 +252,8 @@ export default {
                             this.$store.state.spinShow = false;
                             if (data.code === "SUCCESS") {
                                 this.$Message.success("新增成功!");
-                                this.$router.go(-1);
+                                if (tag == 'fromhk') this.$router.push('/customer/myCustomers/records?id='+this.id)
+                                else this.$router.go(-1);
                             } else {
                                 this.$Message.error(data.remark);
                             }

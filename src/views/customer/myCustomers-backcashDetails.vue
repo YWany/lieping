@@ -2,7 +2,7 @@
     <div class="backcashDetails">
         <div class='currentNav'>当前位置:
             <router-link to='/customer/myCustomers'>我的客户</router-link> >
-            <router-link :to="`/customer/myCustomers/records?id=${id}`">
+            <router-link :to="`/customer/myCustomers/records?id=${cid}`">
                 {{cname}}
                 <Rate disabled :value='level' style='font-size:14px'></Rate>
             </router-link>
@@ -148,6 +148,7 @@ export default {
     data() {
         return {
             id: this.$route.query.id,
+            cid: this.$route.query.cid,
             level: +this.$route.query.level,
             cname: this.$route.query.cname,
             massages: [],
@@ -228,8 +229,6 @@ export default {
         handleSubmit(name) {
             this.$refs[name].validate(valid => {
                 if (valid) {
-                    console.log(this.formValidate);
-
                     if (this.local == true) {
                         api
                             .axs("post", "/user/save", {

@@ -258,9 +258,8 @@ export default {
     methods: {
         ...mapActions(["selTrees", "getRoles"]),
         loadLists(page) {
-            this.form.pageNum = page;
             this.$store.state.spinShow = true;
-
+            this.form.pageNum = page;
             api.axs("post", "/company/allPage", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     this.tableLists = data.data.list;

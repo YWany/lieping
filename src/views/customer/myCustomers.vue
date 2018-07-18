@@ -363,9 +363,11 @@ export default {
             this.form.selVal = "企业名称";
         }
     },
-
     mounted() {
         this.loadLists();
+    },
+    beforeDestroy() {
+        ls.set("recordTabShow", "");
     }
 };
 </script>

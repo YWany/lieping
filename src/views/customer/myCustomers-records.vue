@@ -307,7 +307,7 @@ export default {
                 followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
                 followRecord: "",
                 contactRecord: [],
-                attachmentList: [
+                attachmentListJson: [
                     {
                         fileName: "f.jpg",
                         filePath: "g.jpg",
@@ -769,66 +769,6 @@ export default {
                     }
                 }
             ],
-            tableLists: [
-                {
-                    id: 96,
-                    name: "猎头协议",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                },
-                {
-                    id: 97,
-                    name: "招商CEO招商CEO",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                }
-            ],
-            headlist: [
-                {
-                    id: 96,
-                    name: "猎头协议",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                },
-                {
-                    id: 97,
-                    name: "招商CEO招商CEO",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                }
-            ],
             filelist: [
                 //    文件列表
             ]
@@ -960,8 +900,8 @@ export default {
             this.recordsForm.contactRecord = JSON.stringify(
                 this.recordsForm.contactRecord
             );
-            this.recordsForm.attachmentList = JSON.stringify(
-                this.recordsForm.attachmentList
+            this.recordsForm.attachmentListJson = JSON.stringify(
+                this.recordsForm.attachmentListJson
             );
             api
                 .axs("post", "/contactRecord/save", this.recordsForm)
@@ -969,6 +909,7 @@ export default {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("提交成功!");
                         this.reset("recordsForm");
+                        this.followTime = UTC2Date(new Date(), "y-m-d h:i:s")
                         this.userName = "";
                         this.$Loading.finish();
                         this.$store.state.spinShow = false;

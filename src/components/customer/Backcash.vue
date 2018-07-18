@@ -275,6 +275,9 @@ export default {
                                             this.$router.push(
                                                 "/customer/myCustomers/backcashDetails?id=" +
                                                     row.id +
+                                                    "&cid=" +
+                                                    this.recordsDetails
+                                                        .id +
                                                     "&level=" +
                                                     this.recordsDetails
                                                         .importantLevel +

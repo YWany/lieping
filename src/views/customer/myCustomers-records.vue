@@ -279,7 +279,7 @@ export default {
         return {
             subFlag: true,
             sonFlag: false,
-            tabShow: ls.get('recordTabShow') || 'jilu',
+            tabShow: ls.get("recordTabShow") || "jilu",
             genjinTrees: "",
             pageNum: "1",
             pageSize: "10",
@@ -406,7 +406,7 @@ export default {
                     width: 200,
                     align: "center",
                     render: (h, params) => {
-                        return h('span',params.row.code || '--')
+                        return h("span", params.row.code || "--");
                     }
                 },
                 {
@@ -487,7 +487,7 @@ export default {
                     width: 150,
                     align: "center",
                     render: (h, params) => {
-                        return h('span',params.row.amount + '元' || '--')
+                        return h("span", params.row.amount + "元" || "--");
                     }
                 },
                 {
@@ -495,7 +495,7 @@ export default {
                     key: "instruction",
                     align: "center",
                     render: (h, params) => {
-                        return h('span',params.row.instruction || '--')
+                        return h("span", params.row.instruction || "--");
                     }
                 },
                 {
@@ -504,7 +504,7 @@ export default {
                     width: 150,
                     align: "center",
                     render: (h, params) => {
-                        return h('span','--')
+                        return h("span", "--");
                     }
                 },
                 {
@@ -513,7 +513,7 @@ export default {
                     width: 150,
                     align: "center",
                     render: (h, params) => {
-                        return h('span','--')
+                        return h("span", "--");
                     }
                 },
                 {
@@ -522,7 +522,7 @@ export default {
                     width: 150,
                     align: "center",
                     render: (h, params) => {
-                        return h('span',params.row.totalAmount || 0)
+                        return h("span", params.row.totalAmount || 0);
                     }
                 },
                 {
@@ -841,6 +841,7 @@ export default {
                         this.recordsDetails = data.data;
                         this.sonFlag = true;
                         ls.set("companyName", data.data.companyName);
+                        ls.set("level", data.data.importantLevel);
                         // this.$Loading.finish()
                         // this.$store.state.spinShow = false
                     } else {
@@ -886,16 +887,16 @@ export default {
                 });
         },
         getInvoiceLists(page) {
-            this.$store.state.spinShow = true
+            this.$store.state.spinShow = true;
             api
                 .axs("post", "/invoice/list", this.invoiceForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.invoiceLists = data.data
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
+                        this.invoiceLists = data.data;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -905,19 +906,19 @@ export default {
                 .axs("post", "/contact/list", { companyId: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data
+                        this.contactLists = data.data;
                         if (tag) {
                             if (!data.data.length) {
-                                this.$Message.warning('请先添加联系人!')
-                                return
+                                this.$Message.warning("请先添加联系人!");
+                                return;
                             } else {
-                                this.selContactsPop = true
+                                this.selContactsPop = true;
                             }
                         }
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -990,11 +991,11 @@ export default {
             this.recordsForm.followTime = date;
         },
         clickTab(name) {
-            this.tabShow = name
+            this.tabShow = name;
             if (name == "contact") this.getContactLists();
-            if (name == "files") this.getFileLists()
-            if (name == "hetong") this.getHetongLists()
-            if (name == "invoice") this.getInvoiceLists()
+            if (name == "files") this.getFileLists();
+            if (name == "hetong") this.getHetongLists();
+            if (name == "invoice") this.getInvoiceLists();
         },
         setMainContact(id) {
             //设置主联系人
@@ -1112,19 +1113,19 @@ export default {
         }
     },
     mounted() {
+        if (this.tabShow == "contact") this.getContactLists();
+        else if (this.tabShow == "files") this.getFileLists();
+        else if (this.tabShow == "hetong") this.getHetongLists();
+        else if (this.tabShow == "invoice") this.getInvoiceLists();
 
-        if (this.tabShow == "contact") this.getContactLists()
-        else if (this.tabShow == "files") this.getFileLists()
-        else if (this.tabShow == "hetong") this.getHetongLists()
-        else if (this.tabShow == "invoice") this.getInvoiceLists()
-        
         this.genjinTrees =
             this.$store.state.selTrees.length &&
-            this.$store.state.selTrees[5].children
-        ls.set('companyId', this.$route.query.id)
+            this.$store.state.selTrees[5].children;
+
+        ls.set("companyId", this.$route.query.id);
     },
     beforeDestroy() {
-        ls.set('recordTabShow',this.tabShow)
+        ls.set("recordTabShow", this.tabShow);
     }
 };
 </script>

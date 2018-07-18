@@ -117,8 +117,8 @@ export default {
             hkstatus: this.$store.state.selTrees[16].children,
             pactlist: [],
             form: {
-                createDate: "",
-                signDate: ""
+                createDate: UTC2Date(new Date(), "y-m-d h:i:s"),
+                signDate: UTC2Date(new Date(), "y-m-d h:i:s")
             },
             genjinTrees:
                 this.$store.state.selTrees.length &&
@@ -136,6 +136,7 @@ export default {
                 pageSize: 10
             },
             formValidate: {
+                companyId: this.$route.query.id,
                 invoiceAmount: "",
                 dutyUserName: "",
                 amount: "",
@@ -266,11 +267,14 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                             ls.set("receivePlanID", row.contractId);
-                                             ls.set("contractID", row.id);
+                                            ls.set(
+                                                "receivePlanID",
+                                                row.contractId
+                                            )
+                                            ls.set("contractID", row.id)
                                             this.$router.push(
                                                  "/customer/myCustomers/backcashDetails?id="+row.id+'&level='+this.recordsDetails.importantLevel+'&cname='+this.recordsDetails.companyName
-                                            ) 
+                                            )
                                         }
                                     }
                                 },
@@ -358,11 +362,14 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                             ls.set("receivePlanID", row.contractId);
-                                              ls.set("contractID", row.id);
+                                            ls.set(
+                                                "receivePlanID",
+                                                row.contractId
+                                            );
+                                            ls.set("contractID", row.id);
                                             this.$router.push(
                                                  "/customer/myCustomers/backcashDetails?id="+row.id+'&level='+this.recordsDetails.importantLevel+'&cname='+this.recordsDetails.companyName
-                                            ) 
+                                            )
                                         }
                                     }
                                 },
@@ -383,10 +390,11 @@ export default {
             api
                 .axs("post", "/receivePlan/page", {
                     pageNum: page,
-                    fundStatus: "unPayed"
+                    fundStatus: "unPayed",
+                    companyId: this.id
                 })
                 .then(({ data: { data, code } }) => {
-                   console.log(data)
+                    console.log(data);
                     _this.formPage.total = data.total;
                     _this.formPage.pageSize = data.pageSize;
                     _this.tableLists = data.list;
@@ -395,9 +403,10 @@ export default {
             api
                 .axs("post", "/receivePlan/page", {
                     pageNum: page,
-                    fundStatus: "payed"
+                    fundStatus: "payed",
+                    companyId: this.id
                 })
-                .then(({ data: { data, code } }) => {             
+                .then(({ data: { data, code } }) => {
                     _this.formPage1.total = data.total;
                     _this.formPage1.pageSize = data.pageSize;
                     _this.tableLists1 = data.list;

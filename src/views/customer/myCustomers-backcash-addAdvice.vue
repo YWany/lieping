@@ -200,7 +200,7 @@ export default {
             show: false,
             five: false,
             trees: this.$store.state.selTrees[14].children,
-            companyid: ls.get("companyID"),
+            companyid: ls.get("companyId"),
             companyname: ls.get("companyName"),
             accid: ls.get("accid"),
             account: ls.get("account"),
@@ -215,7 +215,7 @@ export default {
             addPhone4: false,
             formValidate: {
                 contractId: ls.get("contractID"),
-                companyId: ls.get("companyID"),
+                companyId: ls.get("companyId"),
                 companyName: ls.get("companyName"),
                 receivePlanID: ls.get("receivePlanID"),
                 sendCompanyName: "浙江千里马人力资源股份有限公司",
@@ -400,6 +400,9 @@ export default {
                 if (code === "SUCCESS") {
                     console.log(data);
                     this.contactlist = data;
+                    if (data.length ===0) {
+                        this.$Message.error("请先添加该公司联系人");
+                    }
                 }
             });
     }

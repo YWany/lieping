@@ -69,7 +69,7 @@
 
                         <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
                         <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
-                       
+
                     </div>
                 </Modal>
             </div>
@@ -136,6 +136,7 @@ export default {
                 pageSize: 10
             },
             formValidate: {
+                companyId: this.$route.query.id,
                 invoiceAmount: "",
                 dutyUserName: "",
                 amount: "",
@@ -268,11 +269,15 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                             ls.set("receivePlanID", row.contractId);
-                                             ls.set("contractID", row.id);
+                                            ls.set(
+                                                "receivePlanID",
+                                                row.contractId
+                                            );
+                                            ls.set("contractID", row.id);
                                             this.$router.push(
-                                                "/customer/myCustomers/backcashDetails?id="+ row.id
-                                            ) 
+                                                "/customer/myCustomers/backcashDetails?id=" +
+                                                    row.id
+                                            );
                                         }
                                     }
                                 },
@@ -360,11 +365,15 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                             ls.set("receivePlanID", row.contractId);
-                                              ls.set("contractID", row.id);
+                                            ls.set(
+                                                "receivePlanID",
+                                                row.contractId
+                                            );
+                                            ls.set("contractID", row.id);
                                             this.$router.push(
-                                                 "/customer/myCustomers/backcashDetails?id="+ row.id
-                                            ) 
+                                                "/customer/myCustomers/backcashDetails?id=" +
+                                                    row.id
+                                            );
                                         }
                                     }
                                 },
@@ -385,10 +394,11 @@ export default {
             api
                 .axs("post", "/receivePlan/page", {
                     pageNum: page,
-                    fundStatus: "unPayed"
+                    fundStatus: "unPayed",
+                    companyId: this.id
                 })
                 .then(({ data: { data, code } }) => {
-                   console.log(data)
+                    console.log(data);
                     _this.formPage.total = data.total;
                     _this.formPage.pageSize = data.pageSize;
                     _this.tableLists = data.list;
@@ -397,9 +407,10 @@ export default {
             api
                 .axs("post", "/receivePlan/page", {
                     pageNum: page,
-                    fundStatus: "payed"
+                    fundStatus: "payed",
+                    companyId: this.id
                 })
-                .then(({ data: { data, code } }) => {             
+                .then(({ data: { data, code } }) => {
                     _this.formPage1.total = data.total;
                     _this.formPage1.pageSize = data.pageSize;
                     _this.tableLists1 = data.list;

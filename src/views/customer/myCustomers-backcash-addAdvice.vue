@@ -1,6 +1,13 @@
 <template>
     <div class="addBackcashAdvice">
-        新增付款通知书
+        <div class='currentNav'>当前位置:
+            <router-link to='/customer/myCustomers'>我的客户</router-link> >
+            <router-link :to="`/customer/myCustomers/records?id=${companyid}`">
+                {{companyname}}
+                <Rate disabled :value='level' style='font-size:14px'></Rate>
+            </router-link>
+            >&nbsp;&nbsp;新增付款通知书
+        </div>
         <div class="advicebox">
             <div class="detail-title">
                 基本资料
@@ -10,10 +17,10 @@
                     <Input disabled style="color:red;" :readonly="true" v-model="formValidate.companyName" placeholder="请输入接受单位名字哦"></Input>
                 </FormItem>
 
-                <FormItem label="发出单位" prop="sex">
+                <FormItem label="发出单位">
                     <Input disabled :readonly="true" v-model="formValidate.sendCompanyName" placeholder="请输入款项金额哦"></Input>
                 </FormItem>
-                <FormItem label="接受人员">
+                <FormItem label="接受人员" prop="contactId">
                     <Select v-model="formValidate.contactId" placeholder="请选择接受人员" @on-change='getphone'>
                         <Option v-for="(item,index) in contactlist" :value="item.id" :key='index'>{{item.name}}</Option>
                     </Select>
@@ -43,29 +50,29 @@
                 <FormItem label="合同名称">
                     <Input disabled :readonly="true" v-model="formValidate.contractName" placeholder="请输入合同名称哦"></Input>
                 </FormItem>
-                <FormItem label="收费比例">
-                    <Input v-model="formValidate.payRatio" placeholder="请输入款项金额哦"></Input>
+                <FormItem label="收费比例" prop="payRatio">
+                    <Input v-model="formValidate.payRatio" placeholder="请输入收费比例"></Input>
                 </FormItem>
                 <div v-if="five">
                     <FormItem label="候选人姓名">
-                        <Input v-model="formValidate.candidateName" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.candidateName" placeholder="请输入候选人姓名哦"></Input>
                     </FormItem>
                     <FormItem label="上岗时间">
                         <DatePicker :value='formValidate.startWorkTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
 
                     </FormItem>
                     <FormItem label="录用职位" prop="">
-                        <Input v-model="formValidate.positionName" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.positionName" placeholder="请输入录用职位哦"></Input>
                     </FormItem>
                     <FormItem label="年薪">
-                        <Input v-model="formValidate.annualSalary" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.annualSalary" placeholder="请输入年薪金额哦"></Input>
                     </FormItem>
                     <FormItem label="总服务费">
-                        <Input v-model="formValidate.totalFee" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.totalFee" placeholder="请输入总服务费金额哦"></Input>
                     </FormItem>
                 </div>
                 <FormItem label="前期服务费">
-                    <Input v-model="formValidate.preFee" placeholder="请输入款项金额哦"></Input>
+                    <Input v-model="formValidate.preFee" placeholder="请输入前期服务费金额哦"></Input>
                 </FormItem>
                 <FormItem label="付款方式" style="width:100%;">
                     <RadioGroup v-model="formValidate.settleType">
@@ -83,7 +90,7 @@
 
                         </FormItem>
                         <FormItem label="金额">
-                            <Input v-model="formValidate.payAmount1" placeholder="请输入款项金额哦"></Input>
+                            <Input v-model="formValidate.payAmount1" placeholder="请输入金额哦"></Input>
 
                         </FormItem>
                         <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
@@ -94,7 +101,7 @@
 
                         </FormItem>
                         <FormItem label="金额">
-                            <Input v-model="formValidate.payAmount2" placeholder="请输入款项金额哦"></Input>
+                            <Input v-model="formValidate.payAmount2" placeholder="请输入金额哦"></Input>
 
                         </FormItem>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
@@ -105,31 +112,76 @@
 
                         </FormItem>
                         <FormItem label="金额" prop="">
-                            <Input v-model="formValidate.payAmount3" placeholder="请输入款项金额哦"></Input>
+                            <Input v-model="formValidate.payAmount3" placeholder="请输入金额哦"></Input>
 
                         </FormItem>
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </li>
                     <FormItem label="本次应收" prop="">
-                        <Input v-model="formValidate.receiveAmount" placeholder="请输入款项金额哦"></Input>
+                        <Input v-model="formValidate.receiveAmount" placeholder="请输入本次应收金额哦"></Input>
                     </FormItem>
                 </ul>
                 <ul v-else-if="!show">
-                    <FormItem label="本次应收" prop="phone">
-                        <Input v-model="formValidate.receiveAmount" placeholder="请输入款项金额哦"></Input>
+                    <FormItem label="本次应收">
+                        <Input v-model="formValidate.receiveAmount" placeholder="请输入本次应收金额哦"></Input>
                     </FormItem>
-                    <FormItem label="付款时间" prop="phone">
-                        <DatePicker :value='formValidate.payTime3' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
+                    <FormItem label="付款时间">
+                        <DatePicker :value='formValidate.payTime1' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
 
                     </FormItem>
                 </ul>
                 <FormItem label="备注" style="width:100%;">
-                    <Input v-model="formValidate.instruction" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="不少于10字"></Input>
+                    <Input v-model="formValidate.instruction" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="必填，若无相关备注，请写“无”"></Input>
                 </FormItem>
             </Form>
             <div class="footer">
                 <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
-                <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
+                <Button type="ghost" @click="handleSubmit('formValidate')" style="margin-left: 8px">发票申请</Button>
+                <span style="margin-left: 10px;cursor: pointer;color: #2d8cf0;" @click="getnote">预览</span>
+                <Modal width="620" v-model="modal1" title="付款通知书">
+                    <div class="book-title">
+                        基本资料
+                    </div>
+                    <ul class="basic">
+                        <li>接受单位：{{ formValidate.companyName }}</li>
+                        <li>发出单位：{{ formValidate.sendCompanyName }}</li>
+                        <li>接收人员：{{ formValidate.contactId }}</li>
+                        <li>发出人员：{{ formValidate.sendUserName }}</li>
+                        <li>接收人电话：{{ formValidate.contact_phone }}</li>
+                        <li>发出人电话：{{ formValidate.sendUserPhone }}</li>
+                    </ul>
+                    <div class="book-title">
+                        致敬爱的客户
+                    </div>
+                    <ul class="basic">
+                        <li>款项内容：{{ formValidate.fundType }}</li>
+                        <li>职位名称：{{ formValidate.positionName }}</li>
+                        <li>合同名称：人才服务协议</li>
+                        <li>付款方式：汇款或转账</li>
+                        <li>付款日期：{{ formValidate.payTime1 }}</li>
+                        <li>人选姓名：{{ formValidate.candidateName }}</li>
+                        <li>人选上岗日期：{{ formValidate.startWorkTime }}</li>
+                        <li>年薪：{{ formValidate.annualSalary }}</li>
+                        <li>前期服务费：{{ formValidate.preFee }}</li>
+                        <li>项目总服务费：{{ formValidate.totalFee }}</li>
+                        <li>备注：{{ formValidate.instruction }}</li>
+                    </ul>
+                    <div class="book-title">
+                        请将服务费打入以下账户
+                    </div>
+                    <ul class="basic2">
+                        <li>开户名称：浙江千里马人力资源股份有限公司</li>
+                        <li>开户银行：杭州银行学院路支行</li>
+                        <li>开户账号：74218100011811</li>
+                        <li>财务部电话：0571-89301250</li>
+                        <li>指定联系人：{{ formValidate.sendUserName }}</li>
+                        <li>联系人电话：{{ formValidate.sendUserPhone }}</li>
+                    </ul>
+                    <div slot="footer">
+                        <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+                        <Button type="primary" @click="handleSubmit('formValidate')" style="margin-left: 8px">发票申请</Button>
+                    </div>
+                </Modal>
             </div>
         </div>
     </div>
@@ -144,6 +196,7 @@ export default {
     components: {},
     data() {
         return {
+            modal1: false,
             show: false,
             five: false,
             trees: this.$store.state.selTrees[14].children,
@@ -153,7 +206,7 @@ export default {
             account: ls.get("account"),
             phone: ls.get("phone"),
             contractID: ls.get("contractID"),
-            
+            level: ls.get("level"),
             contactlist: [],
             phoneNum: 1,
             addPhoneBtn: true,
@@ -192,8 +245,12 @@ export default {
                 instruction: ""
             },
             ruleValidate: {
-                userName: [
-                    { required: true, message: "请输入姓名", trigger: "blur" }
+                payRatio: [
+                    {
+                        required: true,
+                        message: "请输入收费比例",
+                        trigger: "blur"
+                    }
                 ],
                 account: [
                     {
@@ -221,8 +278,12 @@ export default {
                 phone: [
                     { required: true, message: "请输入手机号", trigger: "blur" }
                 ],
-                roleId: [
-                    { required: true, message: "未赋予角色", trigger: "change" }
+                contactId: [
+                    {
+                        required: true,
+                        message: "请选择相关人员",
+                        trigger: "change"
+                    }
                 ],
                 deptId: [
                     { required: true, message: "未赋予部门", trigger: "change" }
@@ -252,11 +313,22 @@ export default {
             this.$refs[name].validate(valid => {
                 if (valid) {
                     api
-                        .axs("post", "/receivePlanNotice/add", this.formValidate)
+                        .axs(
+                            "post",
+                            "/receivePlanNotice/add",
+                            this.formValidate
+                        )
                         .then(({ data: { data, code } }) => {
                             if (code === "SUCCESS") {
                                 this.$Message.success("Success!");
-                               
+                                this.$router.push(
+                                    "/customer/myCustomers/backcash/addInvoice?id=" +
+                                        ls.get("companyID") +
+                                        "&level=" +
+                                        ls.get("level") +
+                                        "&cname=" +
+                                        ls.get("companyName")
+                                );
                             }
                         });
                 } else {
@@ -304,6 +376,18 @@ export default {
                 this.show = true;
                 this.formValidate.settleType = "installment";
             }
+        },
+        getnote() {
+            this.modal1 = true;
+            api
+                .axs("post", "/receivePlanNotice/infoByReceivePlanId", {
+                    receivePlanId: ls.get("receivePlanID")
+                })
+                .then(({ data: { data, code } }) => {
+                    if (code === "SUCCESS") {
+                        console.log(data);
+                    }
+                });
         }
     },
     mounted() {
@@ -326,6 +410,31 @@ export default {
 <style lang="less" scoped>
 .colors {
     color: red !important;
+}
+.book-title {
+    width: 100%;
+    margin: 10px 0;
+    padding: 0 10px;
+    font-weight: 700;
+    border-left: 2px solid #2d8cf0;
+}
+.basic {
+    width: 100%;
+    overflow: auto;
+    padding: 0 10px;
+    li {
+        width: 50%;
+        float: left;
+        margin-top: 10px;
+    }
+}
+.basic2 {
+    width: 100%;
+    overflow: auto;
+    padding: 0 10px;
+    li {
+        margin-top: 10px;
+    }
 }
 .addBackcashAdvice {
     .advicebox {

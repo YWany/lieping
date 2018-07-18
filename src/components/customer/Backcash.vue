@@ -69,7 +69,7 @@
 
                         <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
                         <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
-
+                       
                     </div>
                 </Modal>
             </div>
@@ -117,8 +117,8 @@ export default {
             hkstatus: this.$store.state.selTrees[16].children,
             pactlist: [],
             form: {
-                createDate: "",
-                signDate: ""
+                createDate: UTC2Date(new Date(), "y-m-d h:i:s"),
+                signDate: UTC2Date(new Date(), "y-m-d h:i:s")
             },
             genjinTrees:
                 this.$store.state.selTrees.length &&

@@ -1,18 +1,7 @@
 <template>
     <div class="hello">
         <h1>{{ msg }}</h1>
-        <template>
-            <i-button @click="success">显示成功提示</i-button>
-            <i-button @click="warning">显示警告提示</i-button>
-            <i-button @click="error">显示错误提示</i-button>
-        </template>
-        <Modal title="普通的Modal对话框标题">
-            <p>对话框内容</p>
-            <p>对话框内容</p>
-            <p>对话框内容</p>
-        </Modal>
     </div>
-    
 </template>
 
 <script>

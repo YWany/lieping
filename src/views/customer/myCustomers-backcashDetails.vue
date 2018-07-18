@@ -1,5 +1,13 @@
 <template>
     <div class="backcashDetails">
+        <div class='currentNav'>当前位置:
+            <router-link to='/customer/myCustomers'>我的客户</router-link> >
+            <router-link :to="`/customer/myCustomers/records?id=${id}`">
+                {{cname}}
+                <Rate disabled :value='level' style='font-size:14px'></Rate>
+            </router-link>
+            >&nbsp;&nbsp;回款详情
+        </div>
         <div class="returneddetail">
             <div class="detail-header">
                 <p class="p1">SO.20180620001.2</p>
@@ -140,6 +148,8 @@ export default {
     data() {
         return {
             id: this.$route.query.id,
+            level: +(this.$route.query.level),
+            cname: this.$route.query.cname,
             massages:[],
             modal2: false,
             formValidate: {

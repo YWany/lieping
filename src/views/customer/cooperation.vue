@@ -265,14 +265,14 @@ export default {
             });
         },
         searchIn(type) {
-            if (this.selVal == "企业名称")
+            if (this.selVal == "企业名称") {
                 this.form.companyName = this.searchVal
-            else if (this.selVal == "搜索顾问")
-                this.form.companyName = this.searchVal
-            else if (this.selVal == "客户来源")
-                this.form.companyName = this.searchVal
-
-            if (!this.searchVal && !type) {
+                this.form.bdName = ''
+            } else if (this.selVal == "搜索顾问") {
+                this.form.bdName = this.searchVal
+                this.form.companyName = ''
+            }  
+            if (!this.searchVal && type != 'selSearch') {
                 this.$Message.warning("想搜点什么?")
                 return
             }

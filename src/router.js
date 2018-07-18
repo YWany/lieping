@@ -106,10 +106,10 @@ export default new Router({
                 },
                 {
                     meta: { title: '千里马-客户-我的客户-合同详情' },
-                    path: '/customer/myCustomers/contractDetails',
-                    name: 'myCustomersContractDetails',
+                    path: '/customer/contract/details',
+                    name: 'contractDetails',
                     component: () =>
-                        import ("./views/customer/myCustomers-contractDetails.vue")
+                        import ("./views/customer/contract-details.vue")
                 },
                 {
                     meta: { title: '千里马-客户-我的客户-回款详情' },
@@ -131,6 +131,13 @@ export default new Router({
                     name: 'myCustomersbackcashAddInvoice',
                     component: () =>
                         import ("./views/customer/myCustomers-backcash-addInvoice.vue")
+                },
+                {
+                    meta: { title: '千里马-客户-我的客户-发票详情' },
+                    path: '/customer/myCustomers/backcash/invoiceDetails',
+                    name: 'myCustomersbackcashInvoiceDetails',
+                    component: () =>
+                        import ("./views/customer/myCustomers-backcash-invoiceDetails.vue")
                 },
 
                 { // manager 管理 =======================================================

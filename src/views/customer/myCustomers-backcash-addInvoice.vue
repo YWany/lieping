@@ -89,19 +89,19 @@
                 寄送信息
             </div>
             <FormItem label="地址名称" prop="address">
-                <Input v-model="formValidate.address" placeholder="请输入款项金额"></Input>
+                <Input v-model="formValidate.address" placeholder="请输入地址名称"></Input>
             </FormItem>
             <FormItem label="联系人" prop="contact">
-                <Input v-model="formValidate.contact" placeholder="请输入款项金额"></Input>
+                <Input v-model="formValidate.contact" placeholder="请输入联系人"></Input>
             </FormItem>
             <FormItem label="联系电话" prop="phone">
-                <Input v-model="formValidate.phone" placeholder="请输入款项金额"></Input>
+                <Input v-model="formValidate.phone" placeholder="请输入联系电话"></Input>
             </FormItem>
             <FormItem label="详细地址" prop="address">
-                <Input v-model="formValidate.address" placeholder="详细地址"></Input>
+                <Input v-model="formValidate.address" placeholder="请输入详细地址"></Input>
             </FormItem>
             <FormItem label="邮政编码" prop="zipCode">
-                <Input v-model="formValidate.zipCode" placeholder="请输入款项金额"></Input>
+                <Input v-model="formValidate.zipCode" placeholder="请输入邮政编码"></Input>
             </FormItem>
         </Form>
         <div class="footer">

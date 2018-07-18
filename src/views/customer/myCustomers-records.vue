@@ -98,14 +98,14 @@
                     </div>
 
                     <Tabs size='small' :animated=false class="subTabs" value="name1">
-                        <TabPane label="所有合同(3)" name="name1">
+                        <TabPane label="所有合同(3)" name="name1" @on-change="getHetongLists(1,'all')">
                             <div class="searchTable">
                                 <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
-                        <TabPane label="猎头(3)" name="name2">
+                        <TabPane label="猎头(3)" name="name2" @on-change="getHetongLists(1,'lt')">
                             <div class="searchTable">
-                                <Table border ref="selection" :columns="headhunter" :data="headlist"></Table>
+                                <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
                     </Tabs>
@@ -114,7 +114,7 @@
                     </div>
                 </TabPane>
                 <TabPane label="回款" name="huikuan">
-                    <Backcash />
+                    <Backcash :recordsDetails='recordsDetails' />
                 </TabPane>
                 <TabPane label="开票历史" name="invoice">
                     <div class="job-content searchTable">
@@ -414,6 +414,7 @@ export default {
                     key: "cz",
                     align: "center",
                     render: (h, params) => {
+                        const row = params.row
                         return h("div", [
                             h(
                                 "Button",
@@ -445,7 +446,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.info("终止!!!");
+                                            this.$router.push('/customer/contract/details?id='+row.id+'&cname='+row.companyName)
                                         }
                                     }
                                 },
@@ -522,6 +523,25 @@ export default {
                     align: "center",
                     render: (h, params) => {
                         return h('span',params.row.totalAmount || 0)
+                    }
+                },
+                {
+                    title: "操作",
+                    key: "totalAmount",
+                    width: 50,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        '/customer/myCustomers/backcash/invoiceDetails?id='+this.id+'&vid='+row.id+'&level='+this.recordsDetails.importantLevel+'&cname='+this.recordsDetails.companyName
+                                }
+                            },
+                            '详情'
+                        );
                     }
                 },
             ],
@@ -847,9 +867,11 @@ export default {
                     }
                 });
         },
-        getHetongLists(page) {
-            this.$store.state.spinShow = true;
-            this.hetongForm.pageNum = page;
+        getHetongLists(page,tag) {
+            this.$store.state.spinShow = true
+            this.hetongForm.pageNum = page
+
+            // if (tag == 'lt') 猎头
             api
                 .axs("post", "/contract/page", this.hetongForm)
                 .then(({ data }) => {

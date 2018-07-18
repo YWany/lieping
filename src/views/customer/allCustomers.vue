@@ -1,12 +1,12 @@
-{{{{{{{{{{{<template>
+<template>
     <div class="myCustomers">
         <div class='currentNav'>当前位置: 我的客户
             <div class='fr'>
                 <Select v-model='creatVal' placeholder='创建' @on-change='createDo' style="width:70px">
-                                            <Option value='客户'>客户</Option>
-                                            <Option value='联系人'>联系人</Option>
-                                            <Option value='合同'>合同</Option>
-                                        </Select>
+                    <Option value='客户'>客户</Option>
+                    <Option value='联系人'>联系人</Option>
+                    <Option value='合同'>合同</Option>
+                </Select>
                 <span>&nbsp;&nbsp;</span>
                 <Button type="success" class='addNew'>导入</Button>
                 <span>&nbsp;&nbsp;</span>
@@ -21,29 +21,29 @@
             </div>
             <div class="sels">
                 <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
-                                            <Option value="部门归属1">部门归属1</Option>
-                                            <Option value="部门归属2">部门归属2</Option>
-                                        </Select>
+                    <Option value="部门归属1">部门归属1</Option>
+                    <Option value="部门归属2">部门归属2</Option>
+                </Select>
                 <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
-                                            <Option value="客户行业1">客户行业1</Option>
-                                            <Option value="客户行业2">客户行业2</Option>
-                                        </Select>
+                    <Option value="客户行业1">客户行业1</Option>
+                    <Option value="客户行业2">客户行业2</Option>
+                </Select>
                 <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
-                                            <Option value="客户来源1">客户来源1</Option>
-                                            <Option value="客户来源2">客户来源2</Option>
-                                        </Select>
+                    <Option value="客户来源1">客户来源1</Option>
+                    <Option value="客户来源2">客户来源2</Option>
+                </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
-                                            <Option value="客户重要性1">客户重要性1</Option>
-                                            <Option value="客户重要性2">客户重要性2</Option>
-                                        </Select>
+                    <Option value="客户重要性1">客户重要性1</Option>
+                    <Option value="客户重要性2">客户重要性2</Option>
+                </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户状态' style="width:100px">
-                                            <Option value="客户重要性1">客户重要性1</Option>
-                                            <Option value="客户重要性2">客户重要性2</Option>
-                                        </Select>
+                    <Option value="客户重要性1">客户重要性1</Option>
+                    <Option value="客户重要性2">客户重要性2</Option>
+                </Select>
                 <Select v-model="form.sel4" class='sels-item' placeholder='客户等级' style="width:100px">
-                                            <Option value="客户重要性1">客户重要性1</Option>
-                                            <Option value="客户重要性2">客户重要性2</Option>
-                                        </Select>
+                    <Option value="客户重要性1">客户重要性1</Option>
+                    <Option value="客户重要性2">客户重要性2</Option>
+                </Select>
                 <div class="disInB sels-item">
                     创建时间：
                     <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
@@ -65,15 +65,11 @@
         </form>
         <div class="searchTable">
             <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
-            <div class="sendBtns fl">
-                <Button type="warning">发送短信</Button>
-                <Button type="info">发送邮件</Button>
-            </div>
             <div class="tablePage fr">
                 <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
-    
+
         <Modal v-model="recordPop" :closable=false width='400px'>
             <p slot="header">
                 <span>最近更新记录</span>
@@ -91,10 +87,19 @@
             </ul>
             <p slot='footer' style='text-align:center'></p>
         </Modal>
-    
+        <Modal v-model="pickPop" :closable=false width='400px' style='text-align:center'>
+            <p slot="header">
+                <span>提示</span>
+            </p>
+            <p class="content" style='padding:10px 0'>确定要捞取 <strong>奥德赛法师打发是否</strong> 吗?</p>
+            <p slot='footer' style='text-align:center;'>
+                <Button type="primary" size='small' @on-click='surePick'>确定</Button>
+            </p>
+        </Modal>
+
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' :atteCompanyId='atteCompanyId' :atteCompanyName='atteCompanyName' />
-    
+
     </div>
 </template>
 
@@ -110,10 +115,13 @@ export default {
             id: "",
             creatVal: "",
             recordPop: false,
+            pickPop: false,
             cname: "",
             attePop: false, //新增提醒弹窗
             atteCompanyId: "",
             atteCompanyName: "",
+            pickId: '',
+            pickName: '',
             form: {
                 sel1: "",
                 sel2: "",
@@ -129,9 +137,35 @@ export default {
             },
             tableHeader: [
                 {
-                    type: "selection",
-                    width: 45,
-                    align: "center"
+                    title: "操作",
+                    key: "iii",
+                    width: 60,
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.pickId = row.id
+                                            this.pickName = row.companyName
+                                            this.pickPop = true
+                                        }
+                                    }
+                                },
+                                "捞取"
+                            )
+                        ]);
+                    }
                 },
                 {
                     title: "客户状态",
@@ -185,7 +219,6 @@ export default {
                     title: "联系人",
                     key: "contactName",
                     width: 94,
-                    sortable: true,
                     align: "center"
                 },
                 {
@@ -203,7 +236,6 @@ export default {
                 {
                     title: "跟进记录",
                     key: "lastFollowRecord",
-                    ellipsis: true,
                     align: "center",
                     render: (h, params) => {
                         var row = params.row;
@@ -243,34 +275,6 @@ export default {
                     key: "updateTime",
                     width: 80,
                     align: "center"
-                },
-                {
-                    title: "操作",
-                    key: "iii",
-                    align: "center",
-                    render: (h, params) => {
-                        const row = params.row;
-                        return h("div", [
-                            h(
-                                "Button",
-                                {
-                                    props: {
-                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info("捞取!!!");
-                                        }
-                                    }
-                                },
-                                "捞取"
-                            )
-                        ]);
-                    }
                 }
             ],
             tableLists: [],
@@ -288,10 +292,10 @@ export default {
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
-
+            this.form.pageNum = page
             api.axs("post", "/company/freePage", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.tableLists = this.tableLists.concat(data.data.list);
+                    this.tableLists = data.data.list
                     this.form.total = data.data.total;
                     this.$Loading.finish();
                     this.$store.state.spinShow = false;
@@ -332,6 +336,19 @@ export default {
                     "&id=" +
                     this.atteCompanyId
             );
+        },
+        surePick() {
+            api
+                .axs("post", "/company/pickUp", {
+                    id: this.pickId
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.error('打捞成功!')
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         createDo(val) {
             this.$Message.info(val + "1000000000");

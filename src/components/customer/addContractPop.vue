@@ -193,7 +193,7 @@ export default {
                 strartTime: UTC2Date(new Date()),
                 endTime: "",
                 instruction: "",
-                bdName: ""
+                bdName: ls.get('account')
             },
             contractFormError: {
                 contractType: "合同类型",

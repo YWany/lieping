@@ -308,10 +308,10 @@ export default {
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
-
+            this.form.pageNum = page
             api.axs("post", "/company/myPage", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.tableLists = this.tableLists.concat(data.data.list);
+                    this.tableLists = data.data.list
                     this.form.total = data.data.total;
                     this.$Loading.finish();
                     this.$store.state.spinShow = false;

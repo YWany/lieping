@@ -105,7 +105,7 @@ export default {
     },
     computed: {
         selTrees() {
-            return this.$store.state.selTrees
+            return this.$store.state.selTrees;
         }
     },
     data() {
@@ -148,7 +148,7 @@ export default {
     },
     methods: {
         info() {
-            let alllist = this.selTrees
+            let alllist = this.selTrees;
             for (let i = 0; i < alllist.length; i++) {
                 if (alllist[i].code === "companyType") {
                     //公司性质
@@ -170,7 +170,6 @@ export default {
         },
         subSave() {
             if (this.companyMod) {
-
                 if (this.$refs.proCity.cityId === "") {
                     this.companyForm.areaId = this.$refs.proCity.proId;
                 } else {
@@ -186,7 +185,7 @@ export default {
                         return;
                     }
                 }
-                if (this.subFlag) this.subFlag = false
+                if (this.subFlag) this.subFlag = false;
                 else return;
                 api
                     .axs("post", "/company/update", this.changeform)
@@ -194,12 +193,12 @@ export default {
                         if (data.code === "SUCCESS") {
                             this.datas = data;
                             this.$Message.success("新增成功!");
-                            this.$emit('compantMod', false);
-                            this.$parent.loadLists()
-                            this.subFlag = true
+                            this.$emit("compantMod", false);
+                            this.$parent.loadLists();
+                            this.subFlag = true;
                         } else {
-                            this.$Message.error(data.remark)
-                            this.subFlag = true
+                            this.$Message.error(data.remark);
+                            this.subFlag = true;
                         }
                     });
             } else {
@@ -214,8 +213,8 @@ export default {
                     if (!forms[name] && this.companyFormError[name]) {
                         this.$Message.error(
                             this.companyFormError[name] + ": 请填写完整!"
-                        )
-                        return
+                        );
+                        return;
                     }
                 }
                 if (this.subFlag) this.subFlag = false;
@@ -225,31 +224,31 @@ export default {
                     .axs("post", "/company/add", this.companyForm)
                     .then(({ data }) => {
                         if (data.code === "SUCCESS") {
-                            this.datas = data
-                            this.$Message.success("新增成功!")
-                            this.$parent.companyPop = false
-                            this.$parent.loadLists()
-                            this.reset("companyForm")
+                            this.datas = data;
+                            this.$Message.success("新增成功!");
+                            this.$parent.companyPop = false;
+                            this.$parent.loadLists();
+                            this.reset("companyForm");
                         } else {
-                            this.$Message.error(data.remark)
-                            this.subFlag = true
+                            this.$Message.error(data.remark);
+                            this.subFlag = true;
                         }
-                    })
+                    });
             }
         },
         selPro() {
             //选择职位
-            var idName = this.$refs.professionComp.professVal
+            var idName = this.$refs.professionComp.professVal;
             if (!idName) {
-                this.$Message.warning("不选一个职位么?")
-                return
+                this.$Message.warning("不选一个职位么?");
+                return;
             }
-            this.professId = idName.split("&")[0]
-            this.professName = idName.split("&")[1]
-            this.professPop = false
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.professPop = false;
         },
         success(res) {
-            this.professPop = res
+            this.professPop = res;
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -258,13 +257,13 @@ export default {
         }
     },
     mounted() {
-        this.info()
+        this.info();
         if (this.companyMod) {
-            this.companyForm = this.recordsDetails
+            this.companyForm = this.recordsDetails;
         }
     },
     watch: {
-        'recordsDetails': (newData, oldData) => {}
+        recordsDetails: (newData, oldData) => {}
     }
 };
 </script>

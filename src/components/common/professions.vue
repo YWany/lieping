@@ -34,18 +34,18 @@ export default {
     data() {
         return {
             proLists: [],
-            professVal: ''
+            professVal: ""
         };
     },
     props: ["professPop"],
     computed: {
         jobTrees() {
-            return this.$store.state.jobTrees
+            return this.$store.state.jobTrees;
         }
     },
     methods: {
         getProfess() {
-            this.proLists = this.jobTrees
+            this.proLists = this.jobTrees;
             // api.axs("post", "/param/industry/tree").then(({ data }) => {
             //     if (data.code === "SUCCESS") {
             //         this.proLists = data.data;
@@ -56,7 +56,7 @@ export default {
         }
     },
     mounted() {
-        this.getProfess()
+        this.getProfess();
     }
 };
 </script>

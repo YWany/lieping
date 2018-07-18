@@ -109,13 +109,13 @@ export default {
     name: "home",
     data() {
         return {
-            id:'',
+            id: "",
             creatVal: "",
             recordPop: false,
             cname: "",
             attePop: false, //新增提醒弹窗
-            atteCompanyId: '',
-            atteCompanyName: '',
+            atteCompanyId: "",
+            atteCompanyName: "",
             form: {
                 sel1: "",
                 sel2: "",
@@ -141,15 +141,15 @@ export default {
                     width: 50,
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row
+                        const row = params.row;
                         return h(
                             "a",
                             {
                                 on: {
                                     click: () => {
-                                        this.atteCompanyId = row.id
-                                        this.atteCompanyName = row.companyName
-                                        this.attePop = true
+                                        this.atteCompanyId = row.id;
+                                        this.atteCompanyName = row.companyName;
+                                        this.attePop = true;
                                     }
                                 }
                             },
@@ -174,9 +174,18 @@ export default {
                     sortable: true,
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row
-                        if (this.allTrees[12] && this.allTrees[12].children[row.companyStatus] && this.allTrees[12].children[row.companyStatus].codeText) {
-                            return h("span", this.allTrees[12].children[row.companyStatus].codeText)
+                        const row = params.row;
+                        if (
+                            this.allTrees[12] &&
+                            this.allTrees[12].children[row.companyStatus] &&
+                            this.allTrees[12].children[row.companyStatus]
+                                .codeText
+                        ) {
+                            return h(
+                                "span",
+                                this.allTrees[12].children[row.companyStatus]
+                                    .codeText
+                            );
                         }
                     }
                 },
@@ -245,28 +254,24 @@ export default {
                     ellipsis: true,
                     align: "center",
                     render: (h, params) => {
-                        var row = params.row
+                        var row = params.row;
                         if (row.lastFollowRecord) {
                             return h(
                                 "a",
                                 {
                                     on: {
                                         click: () => {
-                                            this.atteCompanyId = row.id
-                                            this.cname = row.companyName
-                                            this.getContactLists(row.id)
+                                            this.atteCompanyId = row.id;
+                                            this.cname = row.companyName;
+                                            this.getContactLists(row.id);
                                         }
                                     }
                                 },
                                 row.lastFollowRecord.substr(0, 5) + "..."
                             );
                         } else {
-                            return h(
-                                "span",
-                                "无记录"
-                            );
+                            return h("span", "无记录");
                         }
-                        
                     }
                 },
                 {
@@ -297,38 +302,36 @@ export default {
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees
+            return this.$store.state.selTrees;
         }
     },
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
 
-            api
-                .axs("post", "/company/myPage", this.form)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.tableLists = this.tableLists.concat(
-                            data.data.list
-                        );
-                        this.form.total = data.data.total;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+            api.axs("post", "/company/myPage", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.tableLists = this.tableLists.concat(data.data.list);
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         getContactLists(id) {
             //记录
             api
-                .axs("post", "/contactRecord/page", { companyId: id })
+                .axs("post", "/contactRecord/page", {
+                    companyId: id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data.list.slice(0,2)
-                        this.recordPop = true
+                        this.contactLists = data.data.list.slice(0, 2);
+                        this.recordPop = true;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -344,7 +347,10 @@ export default {
             //添加记录
             this.$Message.info("添加记录~~");
             this.$router.push(
-                "/customer/myCustomers/records?cname=" + this.cname + '&id=' + this.atteCompanyId 
+                "/customer/myCustomers/records?cname=" +
+                    this.cname +
+                    "&id=" +
+                    this.atteCompanyId
             );
         },
         createDo(val) {
@@ -359,7 +365,7 @@ export default {
     },
 
     mounted() {
-        this.loadLists()
+        this.loadLists();
     }
 };
 </script>
@@ -367,6 +373,7 @@ export default {
 <style lang='less' scoped>
 .myCustomers {
 }
+
 .popContent {
     li {
         border-bottom: 1px solid #eee;

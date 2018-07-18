@@ -24,23 +24,23 @@ export default {
             ],
             data1: [
                 {
-                    title: 'parent 1',
+                    title: "parent 1",
                     expand: true,
                     children: [
                         {
-                            title: 'parent 1-1',
+                            title: "parent 1-1",
                             expand: true,
                             children: [
                                 {
-                                    title: 'leaf 1-1-1'
+                                    title: "leaf 1-1-1"
                                 },
                                 {
-                                    title: 'leaf 1-1-2'
+                                    title: "leaf 1-1-2"
                                 }
                             ]
                         },
                         {
-                            title: 'parent 1-2'
+                            title: "parent 1-2"
                         }
                     ]
                 }
@@ -85,27 +85,27 @@ export default {
             setTimeout(() => {
                 var arrs = [];
                 this.lists.forEach((item, index) => {
-                    arrs[index] = {}
-                    arrs[index].title = item.title
-                    arrs[index].id = item.id
+                    arrs[index] = {};
+                    arrs[index].title = item.title;
+                    arrs[index].id = item.id;
                     if (item.child && item.child.length) {
-                        arrs[index].loading = false
-                        arrs[index].expand = true
+                        arrs[index].loading = false;
+                        arrs[index].expand = true;
 
-                        var childs = item.child
-                        arrs[index].children = []
-                        childs.forEach((item2,index2) => {
-                            arrs[index].children[index2] = {}
-                            arrs[index].children[index2].title = item2.title
-                            arrs[index].children[index2].id = item2.id
-                        })
+                        var childs = item.child;
+                        arrs[index].children = [];
+                        childs.forEach((item2, index2) => {
+                            arrs[index].children[index2] = {};
+                            arrs[index].children[index2].title = item2.title;
+                            arrs[index].children[index2].id = item2.id;
+                        });
                     }
-                })
-                callback(arrs)
-            }, 1000)
+                });
+                callback(arrs);
+            }, 1000);
         },
         selTree(n) {
-            console.log(n[0].id)
+            console.log(n[0].id);
         }
     },
 

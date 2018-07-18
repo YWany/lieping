@@ -22,9 +22,9 @@ export default {
 
     mounted() {
         setTimeout(() => {
-            this.$Loading.finish()
-            this.$store.state.spinShow = false
-        }, 1500)
+            this.$Loading.finish();
+            this.$store.state.spinShow = false;
+        }, 1500);
     },
     data() {
         return {

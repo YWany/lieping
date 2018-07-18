@@ -37,13 +37,13 @@ export default {
     name: "home",
     data() {
         return {
-            id:'',
+            id: "",
             creatVal: "",
             recordPop: false,
             cname: "",
             attePop: false, //新增提醒弹窗
-            atteCompanyId: '',
-            atteCompanyName: '',
+            atteCompanyId: "",
+            atteCompanyName: "",
             form: {
                 total: 120,
                 current: 1,
@@ -57,9 +57,7 @@ export default {
                     ellipsis: true,
                     render: (h, params) => {
                         var row = params.row;
-                        return h(
-                            "span", row.companyName
-                        );
+                        return h("span", row.companyName);
                     }
                 },
                 {
@@ -102,38 +100,36 @@ export default {
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees
+            return this.$store.state.selTrees;
         }
     },
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
 
-            api
-                .axs("post", "/company/allPage", this.form)
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.tableLists = this.tableLists.concat(
-                            data.data.list
-                        );
-                        this.form.total = data.data.total;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+            api.axs("post", "/company/allPage", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.tableLists = this.tableLists.concat(data.data.list);
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         getContactLists(id) {
             //记录
             api
-                .axs("post", "/contactRecord/page", { companyId: id })
+                .axs("post", "/contactRecord/page", {
+                    companyId: id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.contactLists = data.data.list.slice(0,3)
-                        this.recordPop = true
+                        this.contactLists = data.data.list.slice(0, 3);
+                        this.recordPop = true;
                     } else {
-                        this.$Message.error(data.remark)
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -142,14 +138,17 @@ export default {
                 this.$Message.warning("想搜点什么?");
                 return;
             }
-            this.tableLists = []
+            this.tableLists = [];
             // this.loadLists()
         },
         addRecord() {
             //添加记录
             this.$Message.info("添加记录~~");
             this.$router.push(
-                "/customer/myCustomers/records?cname=" + this.cname + '&id=' + this.atteCompanyId 
+                "/customer/myCustomers/records?cname=" +
+                    this.cname +
+                    "&id=" +
+                    this.atteCompanyId
             );
         },
         createDo(val) {
@@ -164,7 +163,7 @@ export default {
     },
 
     mounted() {
-        this.loadLists()
+        this.loadLists();
     }
 };
 </script>
@@ -172,6 +171,7 @@ export default {
 <style lang='less' scoped>
 .myCustomers {
 }
+
 .popContent {
     li {
         border-bottom: 1px solid #eee;

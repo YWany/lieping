@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import api from "@/api"
-import { isWeiXin } from "@/utils"
-import Modal from 'iview/src/components/modal'
+import api from "@/api";
+import { isWeiXin } from "@/utils";
+import Modal from "iview/src/components/modal";
 export default {
     name: "HelloWorld",
     props: {
@@ -21,20 +21,20 @@ export default {
             datas: {},
             modal1: true,
             iswx: isWeiXin()
-        }
+        };
     },
     methods: {
         info() {
-            this.$Message.info("这是一条普通的提醒")
+            this.$Message.info("这是一条普通的提醒");
         },
         success() {
-            this.$Message.success("这是一条成功的提示")
+            this.$Message.success("这是一条成功的提示");
         },
         warning() {
-            this.$Message.warning("这是一条警告的提示")
+            this.$Message.warning("这是一条警告的提示");
         },
         error() {
-            this.$Message.error("对方不想说话，并且向你抛出了一个异常")
+            this.$Message.error("对方不想说话，并且向你抛出了一个异常");
         }
     },
     mounted() {
@@ -44,20 +44,18 @@ export default {
         //         this.datas = data
         //     }
         // })
-
         // this.$Message.info({
         //     content: 'Tips always here ~ ~',
         //     duration: 5,
         //     closable: true
         // })
-    },
-
-}
+    }
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="less">  
+<style scoped lang="less">
 .hello {
-    text-align: center
+    text-align: center;
 }
 </style>

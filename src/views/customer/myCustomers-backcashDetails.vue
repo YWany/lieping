@@ -148,9 +148,9 @@ export default {
     data() {
         return {
             id: this.$route.query.id,
-            level: +(this.$route.query.level),
+            level: +this.$route.query.level,
             cname: this.$route.query.cname,
-            massages:[],
+            massages: [],
             modal2: false,
             formValidate: {
                 password: "",
@@ -164,7 +164,11 @@ export default {
             },
             ruleValidate: {
                 userName: [
-                    { required: true, message: "请输入姓名", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入姓名",
+                        trigger: "blur"
+                    }
                 ],
                 account: [
                     {
@@ -190,15 +194,32 @@ export default {
                 sex: [],
                 isLeader: [],
                 phone: [
-                    { required: true, message: "请输入手机号", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入手机号",
+                        trigger: "blur"
+                    }
                 ],
                 roleId: [
-                    { required: true, message: "未赋予角色", trigger: "change" }
+                    {
+                        required: true,
+                        message: "未赋予角色",
+                        trigger: "change"
+                    }
                 ],
                 deptId: [
-                    { required: true, message: "未赋予部门", trigger: "change" }
+                    {
+                        required: true,
+                        message: "未赋予部门",
+                        trigger: "change"
+                    }
                 ],
-                locked: [{ required: true, trigger: "change" }]
+                locked: [
+                    {
+                        required: true,
+                        trigger: "change"
+                    }
+                ]
             }
         };
     },
@@ -273,12 +294,14 @@ export default {
         this.$store.state.spinShow = false;
         console.log(this.$route.query.id);
         api
-            .axs("post", "/receivePlan/info", { id: this.id })
+            .axs("post", "/receivePlan/info", {
+                id: this.id
+            })
             .then(({ data: { data, code } }) => {
                 if (code === "SUCCESS") {
                     this.$Message.success("Success!");
-                    console.log(data)
-                   this.massages=data;
+                    console.log(data);
+                    this.massages = data;
                 } else if (code === "PHONE_REPEAT") {
                     this.$Message.error(" 操作有误");
                 }
@@ -286,6 +309,7 @@ export default {
     }
 };
 </script>
+
 <style lang='less' scoped>
 .backcashDetails {
     .returneddetail {
@@ -307,7 +331,6 @@ export default {
             justify-content: flex-end;
             align-items: center;
             flex: 1;
-
             button {
                 margin-right: 20px;
             }

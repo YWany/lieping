@@ -193,7 +193,7 @@ export default {
                 strartTime: UTC2Date(new Date()),
                 endTime: "",
                 instruction: "",
-                bdName: ''
+                bdName: ""
             },
             contractFormError: {
                 contractType: "合同类型",
@@ -205,7 +205,7 @@ export default {
                 minCharge: "最低收费",
                 strartTime: "起始时间",
                 endTime: "结束时间",
-                bdName: 'BD顾问'
+                bdName: "BD顾问"
             },
             contractFormBody: {
                 receivePlanList: [
@@ -222,28 +222,33 @@ export default {
     },
     methods: {
         subSave() {
-            var forms = this.contractForm
+            var forms = this.contractForm;
             for (var name in forms) {
                 if (!forms[name] && this.contractFormError[name]) {
                     this.$Message.error(
                         this.contractFormError[name] + ": 请填写完整!"
-                    )
-                    return
+                    );
+                    return;
                 }
             }
             if (this.subFlag) this.subFlag = false;
             else return;
             api
-                .axs("post", "/contract/add", this.contractForm, this.contractFormBody.receivePlanList)
+                .axs(
+                    "post",
+                    "/contract/add",
+                    this.contractForm,
+                    this.contractFormBody.receivePlanList
+                )
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.datas = data
-                        this.$Message.success("新增成功!")
-                        this.$parent.contractPop = false
-                        this.reset("contractForm")
+                        this.datas = data;
+                        this.$Message.success("新增成功!");
+                        this.$parent.contractPop = false;
+                        this.reset("contractForm");
                     } else {
-                        this.$Message.error(data.remark)
-                        this.subFlag = true
+                        this.$Message.error(data.remark);
+                        this.subFlag = true;
                     }
                 });
         },
@@ -256,17 +261,17 @@ export default {
                 .axs("post", "/user/queryLikeForPages", this.userForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$store.state.users = data.data.list
-                        this.userForm.total = data.data.total
-                        this.selUsersPop = true
+                        this.$store.state.users = data.data.list;
+                        this.userForm.total = data.data.total;
+                        this.selUsersPop = true;
                     } else {
                         this.$Message.error(data.remark);
                     }
                 });
         },
         selContactFun() {
-            this.userName = this.recordsForm.contactId.split("&")[1]
-            this.selContactsPop = false
+            this.userName = this.recordsForm.contactId.split("&")[1];
+            this.selContactsPop = false;
         },
         seltime1(date) {
             this.contractForm.strartTime = date;
@@ -292,10 +297,10 @@ export default {
     },
     mounted() {
         if (this.$store.state.selTrees.length) {
-            this.hetongTrees = this.$store.state.selTrees[5].children
-            this.sourceTrees = this.$store.state.selTrees[1].children
-            this.payTrees = this.$store.state.selTrees[8].children
-            this.feeTrees = this.$store.state.selTrees[13].children
+            this.hetongTrees = this.$store.state.selTrees[5].children;
+            this.sourceTrees = this.$store.state.selTrees[1].children;
+            this.payTrees = this.$store.state.selTrees[8].children;
+            this.feeTrees = this.$store.state.selTrees[13].children;
         }
     }
 };

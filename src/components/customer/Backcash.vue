@@ -103,7 +103,7 @@ import ls from "store2";
 import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "backcash",
-    props: ['recordsDetails'],
+    props: ["recordsDetails"],
     components: {},
     data() {
         return {
@@ -253,7 +253,7 @@ export default {
                     width: 60,
                     align: "center",
                     render: (h, params) => {
-                        const row = params.row
+                        const row = params.row;
                         return h("div", [
                             h(
                                 "Button",
@@ -270,11 +270,18 @@ export default {
                                             ls.set(
                                                 "receivePlanID",
                                                 row.contractId
-                                            )
-                                            ls.set("contractID", row.id)
+                                            );
+                                            ls.set("contractID", row.id);
                                             this.$router.push(
-                                                 "/customer/myCustomers/backcashDetails?id="+row.id+'&level='+this.recordsDetails.importantLevel+'&cname='+this.recordsDetails.companyName
-                                            )
+                                                "/customer/myCustomers/backcashDetails?id=" +
+                                                    row.id +
+                                                    "&level=" +
+                                                    this.recordsDetails
+                                                        .importantLevel +
+                                                    "&cname=" +
+                                                    this.recordsDetails
+                                                        .companyName
+                                            );
                                         }
                                     }
                                 },
@@ -368,8 +375,15 @@ export default {
                                             );
                                             ls.set("contractID", row.id);
                                             this.$router.push(
-                                                 "/customer/myCustomers/backcashDetails?id="+row.id+'&level='+this.recordsDetails.importantLevel+'&cname='+this.recordsDetails.companyName
-                                            )
+                                                "/customer/myCustomers/backcashDetails?id=" +
+                                                    row.id +
+                                                    "&level=" +
+                                                    this.recordsDetails
+                                                        .importantLevel +
+                                                    "&cname=" +
+                                                    this.recordsDetails
+                                                        .companyName
+                                            );
                                         }
                                     }
                                 },

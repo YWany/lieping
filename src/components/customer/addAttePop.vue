@@ -1,52 +1,52 @@
 <template>
-	<div class="attePop">
-		<Modal v-model="attePop" :closable='false' :mask-closable='false' style='text-align:center'>
-			<div slot='header' style='font-size:14px;color:#444'>
-				跟进提醒
-				<a href="javascript:;" @click='closePop'>
-					<Icon type="close" class='fr'></Icon>
-				</a>
-			</div>
-			<ul class="atte-content">
-				<li>
-					<p>
-						<span>*</span> 客户名称：</p>
-					<Input :readonly='true' :value='atteCompanyName'></Input>
-				</li>
-				<li>
-					<p>
-						<span>*</span> 标题：</p>
-					<Input v-model='atteForm.title' placeholder=""></Input>
-				</li>
-				<li>
-					<p>
-						<span>*</span> 跟进人：</p>
-					<Select v-model="atteForm.followUserId" placeholder="跟进人" style="width:300px">
-						<Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
-					</Select>
-				</li>
-				<li>
-					<p>
-						<span>*</span> 跟进时间：</p>
-					<DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
-				</li>
-				<li>
-					<p>
-						<span>*</span> 提醒时间：</p>
-					<DatePicker :value='atteForm.remindBefore' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="Select date"></DatePicker>
-				</li>
-				<li>
-					<p>
-						<span>*</span> 提醒：</p>
-					<Input v-model='atteForm.remark' type="textarea" :rows="4" placeholder=""></Input>
-				</li>
+    <div class="attePop">
+        <Modal v-model="attePop" :closable='false' :mask-closable='false' style='text-align:center'>
+            <div slot='header' style='font-size:14px;color:#444'>
+                跟进提醒
+                <a href="javascript:;" @click='closePop'>
+                    <Icon type="close" class='fr'></Icon>
+                </a>
+            </div>
+            <ul class="atte-content">
+                <li>
+                    <p>
+                        <span>*</span> 客户名称：</p>
+                    <Input :readonly='true' :value='atteCompanyName'></Input>
+                </li>
+                <li>
+                    <p>
+                        <span>*</span> 标题：</p>
+                    <Input v-model='atteForm.title' placeholder=""></Input>
+                </li>
+                <li>
+                    <p>
+                        <span>*</span> 跟进人：</p>
+                    <Select v-model="atteForm.followUserId" placeholder="跟进人" style="width:300px">
+                        <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
+                    </Select>
+                </li>
+                <li>
+                    <p>
+                        <span>*</span> 跟进时间：</p>
+                    <DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
+                </li>
+                <li>
+                    <p>
+                        <span>*</span> 提醒时间：</p>
+                    <DatePicker :value='atteForm.remindBefore' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="Select date"></DatePicker>
+                </li>
+                <li>
+                    <p>
+                        <span>*</span> 提醒：</p>
+                    <Input v-model='atteForm.remark' type="textarea" :rows="4" placeholder=""></Input>
+                </li>
 
-			</ul>
-			<div slot='footer' style='text-align:center'>
-				<Button type='info' @click='subSave'>保存</Button>
-			</div>
-		</Modal>
-	</div>
+            </ul>
+            <div slot='footer' style='text-align:center'>
+                <Button type='info' @click='subSave'>保存</Button>
+            </div>
+        </Modal>
+    </div>
 </template>
 
 <script>
@@ -135,7 +135,7 @@ export default {
             } else {
                 this.$Message.error(data.remark);
             }
-        })
+        });
     }
 };
 </script>

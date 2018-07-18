@@ -167,7 +167,7 @@ export default {
     },
     computed: {
         selTrees() {
-            return this.$store.state.selTrees
+            return this.$store.state.selTrees;
         }
     },
     methods: {
@@ -186,12 +186,12 @@ export default {
             console.log(this.addForm);
             api.axs("post", "/contact/add", this.addForm).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.datas = data
-                    this.$Message.success("新增成功!")
-                    this.$parent.contactPop = false
-                    this.reset("addForm")
+                    this.datas = data;
+                    this.$Message.success("新增成功!");
+                    this.$parent.contactPop = false;
+                    this.reset("addForm");
                 } else {
-                    this.$Message.error(data.remark)
+                    this.$Message.error(data.remark);
                 }
                 this.subFlag = true;
             });
@@ -204,28 +204,28 @@ export default {
             if (this.phoneNum == 4) this.addPhone4 = true;
         },
         delPhones() {
-            this.phoneNum -= 1
-            if (this.phoneNum < 4) this.addPhoneBtn = true
+            this.phoneNum -= 1;
+            if (this.phoneNum < 4) this.addPhoneBtn = true;
             if (this.phoneNum == 1) {
-                this.addPhone2 = false
-                this.addForm.phone2 = ''
-            } else if (this.phoneNum == 2){
-                this.addPhone3 = false
-                this.addForm.phone3 = ''
-            } else if (this.phoneNum == 3){
-                this.addPhone4 = false
-                this.addForm.phone4 = ''
+                this.addPhone2 = false;
+                this.addForm.phone2 = "";
+            } else if (this.phoneNum == 2) {
+                this.addPhone3 = false;
+                this.addForm.phone3 = "";
+            } else if (this.phoneNum == 3) {
+                this.addPhone4 = false;
+                this.addForm.phone4 = "";
             }
         },
         closePop() {
             this.$parent.contactPop = false;
             // this.reset(this.addForm)
         },
-        inputPhone(val,tag) {
-            if (tag == 1) this.addForm.phone1 = val.replace(/[^\d]/g,'')
-            else if(tag == 2) this.addForm.phone2 = val.replace(/[^\d]/g,'')
-            else if(tag == 3) this.addForm.phone3 = val.replace(/[^\d]/g,'')
-            else if(tag == 4) this.addForm.phone4 = val.replace(/[^\d]/g,'')
+        inputPhone(val, tag) {
+            if (tag == 1) this.addForm.phone1 = val.replace(/[^\d]/g, "");
+            else if (tag == 2) this.addForm.phone2 = val.replace(/[^\d]/g, "");
+            else if (tag == 3) this.addForm.phone3 = val.replace(/[^\d]/g, "");
+            else if (tag == 4) this.addForm.phone4 = val.replace(/[^\d]/g, "");
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -244,7 +244,7 @@ export default {
             }
         });
 
-        const selTrees = this.$store.state.selTrees
+        const selTrees = this.$store.state.selTrees;
         if (selTrees.length) {
             for (let i = 0; i < selTrees.length; i++) {
                 if (selTrees[i].code === "decisionRelation") {
@@ -253,8 +253,7 @@ export default {
                 }
             }
         } else {
-
-            let alllist = this.selTrees
+            let alllist = this.selTrees;
             for (let i = 0; i < alllist.length; i++) {
                 if (alllist[i].code === "decisionRelation") {
                     //公司性质
@@ -262,7 +261,6 @@ export default {
                 }
             }
         }
-        
     }
 };
 </script>

@@ -1,8 +1,9 @@
 <template>
     <div class="customer">
         <div class='currentNav'>
-            当前位置: <router-link to='/customer/contract'>客户合同</router-link> >
-            合同详情 -- <small>{{cname}}</small>
+            当前位置:
+            <router-link to='/customer/contract'>客户合同</router-link> > 合同详情 --
+            <small>{{cname}}</small>
         </div>
         <h1>合同详情.....</h1>
         <div class="contract-details">
@@ -145,31 +146,32 @@ export default {
             id: this.$route.query.id,
             cname: this.$route.query.cname,
             cdetails: {}
-        }
+        };
     },
     components: {},
     methods: {
         contractDetails() {
             api
-                .axs("post", "/contract/info", {id: this.id})
-                .then(({
-                    data
-                }) => {
-                    if (data.code === "SUCCESS") {
-                        this.cdetails = data.data
-                        this.$Loading.finish()
-                        this.$store.state.spinShow = false
-                    } else {
-                        this.$Message.error(data.remark)
-                    }
+                .axs("post", "/contract/info", {
+                    id: this.id
                 })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.cdetails = data.data;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         }
     },
     mounted() {
-        this.contractDetails()
+        this.contractDetails();
     }
 };
 </script>
+
 <style lang='less' scoped>
 .contract-details {
     width: 100%;
@@ -195,6 +197,7 @@ export default {
         }
     }
 }
+
 .con-detail {
     width: 100%;
     padding: 0.75rem;

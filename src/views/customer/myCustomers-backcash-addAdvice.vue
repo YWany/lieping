@@ -135,7 +135,7 @@
                 </FormItem>
             </Form>
             <div class="footer">
-                <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+                <Button type="primary" @click="handleReset('formValidate')">保存</Button>
                 <Button type="ghost" @click="handleSubmit('formValidate')" style="margin-left: 8px">发票申请</Button>
                 <span style="margin-left: 10px;cursor: pointer;color: #2d8cf0;" @click="getnote">预览</span>
                 <Modal width="620" v-model="modal1" title="付款通知书">
@@ -178,7 +178,7 @@
                         <li>联系人电话：{{ formValidate.sendUserPhone }}</li>
                     </ul>
                     <div slot="footer">
-                        <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+                        <Button type="primary" @click="handleReset('formValidate')">保存</Button>
                         <Button type="primary" @click="handleSubmit('formValidate')" style="margin-left: 8px">发票申请</Button>
                     </div>
                 </Modal>
@@ -217,7 +217,7 @@ export default {
                 contractId: ls.get("contractID"),
                 companyId: ls.get("companyId"),
                 companyName: ls.get("companyName"),
-                receivePlanID: ls.get("receivePlanID"),
+                receivePlanId: ls.get("receivePlanID"),
                 sendCompanyName: "浙江千里马人力资源股份有限公司",
                 sendCompanyId: "",
                 sendUserId: ls.get("accid"),
@@ -351,7 +351,24 @@ export default {
             });
         },
         handleReset(name) {
-            this.$refs[name].resetFields();
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    api
+                        .axs(
+                            "post",
+                            "/receivePlanNotice/add",
+                            this.formValidate
+                        )
+                        .then(({ data: { data, code } }) => {
+                            if (code === "SUCCESS") {
+                                this.$Message.success("Success!");
+                                this.$router.go(-1);
+                            }
+                        });
+                } else {
+                    this.$Message.error("Fail!");
+                }
+            });
         },
         seltime(date) {
             this.formValidate.account = date;
@@ -418,6 +435,19 @@ export default {
                     this.contactlist = data;
                     if (data.length === 0) {
                         this.$Message.error("请先添加该公司联系人");
+                    }
+                }
+            });
+             api
+            .axs("post", "/receivePlanNotice/infoByReceivePlanId", {
+                receivePlanId: ls.get("receivePlanID")
+            })
+            .then(({ data: { data, code } }) => {
+                if (code === "SUCCESS") {
+                    console.log(data);
+                    if(data){
+                     this.modal1=true
+                     this.formValidate=data
                     }
                 }
             });

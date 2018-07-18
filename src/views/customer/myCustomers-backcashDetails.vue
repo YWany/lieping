@@ -15,7 +15,13 @@
             </div>
             <div class="detail-button">
                 <router-link to='/customer/myCustomers/backcash/addAdvice'>
-                    <Button type="primary">新增付款通知书</Button>
+                    <div v-if="check">
+                        <Button type="primary">新增付款通知书</Button>
+                    </div>
+                    <div v-else-if="!check">
+                        <Button type="primary">查看付款通知书</Button>
+                    </div>
+
                 </router-link>
                 <router-link to='/customer/myCustomers/backcash/addInvoice'>
                     <Button type="primary">新增发票</Button>
@@ -151,6 +157,7 @@ export default {
             cid: this.$route.query.cid,
             level: +this.$route.query.level,
             cname: this.$route.query.cname,
+            check: true,
             massages: [],
             modal2: false,
             formValidate: {
@@ -303,6 +310,18 @@ export default {
                     this.massages = data;
                 } else if (code === "PHONE_REPEAT") {
                     this.$Message.error(" 操作有误");
+                }
+            });
+        api
+            .axs("post", "/receivePlanNotice/infoByReceivePlanId", {
+                receivePlanId: ls.get("receivePlanID")
+            })
+            .then(({ data: { data, code } }) => {
+                if (code === "SUCCESS") {
+                    console.log(data);
+                    if (data) {
+                        this.check = false;
+                    }
                 }
             });
     }

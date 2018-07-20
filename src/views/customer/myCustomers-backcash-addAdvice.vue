@@ -340,7 +340,7 @@ export default {
                                         "&level=" +
                                         ls.get("level") +
                                         "&cname=" +
-                                        ls.get("companyName")+
+                                        ls.get("companyName") +
                                         "&tag=fromhk"
                                 );
                             }
@@ -438,16 +438,16 @@ export default {
                     }
                 }
             });
-             api
+        api
             .axs("post", "/receivePlanNotice/infoByReceivePlanId", {
                 receivePlanId: ls.get("receivePlanID")
             })
             .then(({ data: { data, code } }) => {
                 if (code === "SUCCESS") {
                     console.log(data);
-                    if(data){
-                     this.modal1=true
-                     this.formValidate=data
+                    if (data) {
+                        this.modal1 = true;
+                        this.formValidate = data;
                     }
                 }
             });

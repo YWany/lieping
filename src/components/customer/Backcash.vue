@@ -150,13 +150,13 @@ export default {
                 dutyUserName: ls.get("account")
             },
             ruleValidate: {
-                userName: [
-                    { required: true, message: "请输入姓名", trigger: "blur" }
+                instruction: [
+                    { required: true, message: "请输入回款说明", trigger: "blur" }
                 ],
-                receiveTime: [
+                amount: [
                     {
                         required: true,
-                        message: "请输入日期",
+                        message: "请输入汇款金额",
                         trigger: "blur"
                     }
                 ],

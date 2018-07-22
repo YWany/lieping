@@ -1,6 +1,6 @@
 <template>
     <div class="myCustomers">
-        <div class='currentNav'>当前位置: 我的客户
+        <div class='currentNav'>当前位置:  客户 > 我的客户
             <div class='fr'>
                 <Select v-model='creatVal' placeholder='创建' @on-change='createDo' style="width:70px">
                     <Option value='客户'>客户</Option>
@@ -341,7 +341,7 @@ export default {
                 return;
             }
             this.tableLists = [];
-            // this.loadLists()
+            this.loadLists(1)
         },
         addRecord() {
             //添加记录

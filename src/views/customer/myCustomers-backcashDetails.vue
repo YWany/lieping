@@ -1,6 +1,6 @@
 <template>
     <div class="backcashDetails">
-        <div class='currentNav'>当前位置:
+        <div class='currentNav'>当前位置: 客户 > 
             <router-link to='/customer/myCustomers'>我的客户</router-link> >
             <router-link :to="`/customer/myCustomers/records?id=${cid}`">
                 {{cname}}

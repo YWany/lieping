@@ -1,6 +1,6 @@
 <template>
     <div class="personalDetails">
-        <div class='currentNav'>当前位置:
+        <div class='currentNav'>当前位置: 客户 >
             <router-link to='/customer/jobDoing'>职位进展</router-link> >
             <router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
         <div class="detailsWrap">

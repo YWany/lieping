@@ -180,6 +180,61 @@ export default new Router({
                         import ("./views/customer/myCustomers-backcash-invoiceDetails.vue")
                 },
 
+                { // talent 人才 =======================================================
+                    meta: {
+                        title: '千里马-人才-我的人才'
+                    },
+                    path: '/talent/myTalents',
+                    name: 'myTalents',
+                    component: () =>
+                        import ("./views/talent/myTalents.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-人才-所有人才'
+                    },
+                    path: '/talent/allTalents',
+                    name: 'allTalents',
+                    component: () =>
+                        import ("./views/talent/allTalents.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-人才-下载的简历'
+                    },
+                    path: '/talent/downResumes',
+                    name: 'downResumes',
+                    component: () =>
+                        import ("./views/talent/downResumes.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-人才-转发的简历'
+                    },
+                    path: '/talent/zhuanResumes',
+                    name: 'zhuanResumes',
+                    component: () =>
+                        import ("./views/talent/zhuanResumes.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-人才-我的关注'
+                    },
+                    path: '/talent/myAttention',
+                    name: 'myAttention',
+                    component: () =>
+                        import ("./views/talent/myAttention.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-人才-搜索'
+                    },
+                    path: '/talent/searchTalents',
+                    name: 'searchTalents',
+                    component: () =>
+                        import ("./views/talent/searchTalents.vue")
+                },
+
                 { // manager 管理 =======================================================
                     meta: {
                         title: '千里马-管理-新增账号'

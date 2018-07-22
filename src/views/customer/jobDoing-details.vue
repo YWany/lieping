@@ -1,6 +1,6 @@
 <template>
     <div class="jobDoingDetails">
-        <div class='currentNav'>当前位置:
+        <div class='currentNav'>当前位置: 客户 > 
             <router-link to='/customer/jobDoing'>职位进展</router-link> > 职位运作</div>
         <div class="jodDesc">
             <h3>财务总监

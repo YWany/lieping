@@ -910,7 +910,7 @@ export default {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("提交成功!");
                         this.reset("recordsForm");
-                        this.followTime = UTC2Date(new Date(), "y-m-d h:i:s")
+                        this.followTime = UTC2Date(new Date(), "y-m-d h:i:s");
                         this.userName = "";
                         this.$Loading.finish();
                         this.$store.state.spinShow = false;

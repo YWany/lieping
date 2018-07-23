@@ -29,7 +29,90 @@ export default {
                             allTress[i].children;
                     else if (allTress[i].code === "companySource")
                         // 客户来源
-                        this.$store.state.allTrees.statelist =
+                        this.$store.state.allTrees.companysource =
+                            allTress[i].children;
+                    else if (allTress[i].code === "phoneType")
+                        // 电话类型
+                        this.$store.state.allTrees.phonetype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "dateType")
+                        // 日期类型
+                        this.$store.state.allTrees.datetype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "remindBefore")
+                        // 提醒时间
+                        this.$store.state.allTrees.remindbefore =
+                            allTress[i].children;
+                    else if (allTress[i].code === "followType")
+                        // 跟进方式
+                        this.$store.state.allTrees.followtype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "contractType")
+                        // 合同类型
+                        this.$store.state.allTrees.contractype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "preFee")
+                        // 前期费用
+                        this.$store.state.allTrees.prefee =
+                            allTress[i].children;
+                    else if (allTress[i].code === "payType")
+                        // 支付类型
+                        this.$store.state.allTrees.paytype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "ensurePeriod")
+                        // 保证期
+                        this.$store.state.allTrees.ensureperiod =
+                            allTress[i].children;
+                    else if (allTress[i].code === "protectPeriod")
+                        // 员工保护期间
+                        this.$store.state.allTrees.protectperiod =
+                            allTress[i].children;
+                    else if (allTress[i].code === "minCharge")
+                        // 最低收费
+                        this.$store.state.allTrees.mincharge =
+                            allTress[i].children;
+                    else if (allTress[i].code === "importantLevel")
+                        //客户等级
+                        this.$store.state.allTrees.importancelist =
+                            allTress[i].children;
+                    else if (allTress[i].code === "fundType")
+                        // 款项类型
+                        this.$store.state.allTrees.fundtype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "invoiceType")
+                        // 发票类型
+                        this.$store.state.allTrees.invoicetype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "headType")
+                        // 台头类型
+                        this.$store.state.allTrees.headtype =
+                            allTress[i].children;
+                    else if (allTress[i].code === "fundStatus")
+                        // 回款状态
+                        this.$store.state.allTrees.fundstatus =
+                            allTress[i].children;
+                    else if (allTress[i].code === "invoiceStatus")
+                        // 发票状态
+                        this.$store.state.allTrees.invoicestatus =
+                            allTress[i].children;
+                    else if (allTress[i].code === "preFee")
+                        // 前期服务费
+                        this.$store.state.allTrees.prefee =
+                            allTress[i].children;
+                    else if (allTress[i].code === "changeInto")
+                        // 转入客户
+                        this.$store.state.allTrees.changeinto =
+                            allTress[i].children;
+                    else if (allTress[i].code === "sex")
+                        // 性别
+                        this.$store.state.allTrees.sex = allTress[i].children;
+                    else if (allTress[i].code === "decisionRelation")
+                        // 决策关系
+                        this.$store.state.allTrees.decisionrelation =
+                            allTress[i].children;
+                    else if (allTress[i].code === "signRange")
+                        // 签约时间
+                        this.$store.state.allTrees.signrange =
                             allTress[i].children;
                     else if (allTress[i].code === "companyStatus")
                         // 客户状态
@@ -38,10 +121,6 @@ export default {
                     else if (allTress[i].code === "companyScope")
                         //企业规模
                         this.$store.state.allTrees.scalelist =
-                            allTress[i].children;
-                    else if (allTress[i].code === "importantLevel")
-                        //客户等级
-                        this.$store.state.allTrees.importancelist =
                             allTress[i].children;
                 }
             }

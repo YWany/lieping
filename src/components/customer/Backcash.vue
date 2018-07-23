@@ -14,13 +14,13 @@
                 <Button type="info" class='fr sels-item' @click="modal1 = true;">添加回款计划</Button>
                 <Modal v-model="modal1" title="新增回款计划">
                     <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-                        <FormItem label="合同序号" prop="contractId">
+                        <FormItem label="合同编号" prop="contractId">
                             <Select v-model="formValidate.contractId" placeholder="合同编号">
                                 <Option v-for="(pact,index) in pactlist" :value="pact.id" :key='index'>{{pact.num}}</Option>
                             </Select>
                         </FormItem>
                         <FormItem label="款项类型" prop="fundType">
-                            <Select v-model="formValidate.fundType" placeholder="合同编号">
+                            <Select v-model="formValidate.fundType" placeholder="款项类型">
                                 <Option v-for="(tree,index) in trees" :value="tree.code" :key='index'>{{tree.codeText}}</Option>
                             </Select>
                         </FormItem>
@@ -31,7 +31,7 @@
 
                             </Select>
                         </FormItem>
-                        <FormItem label="关联职位">
+                        <FormItem label="关联职位" prop="positionId">
                             <Input v-model="formValidate.positionId" placeholder="请输入关联职位"></Input>
                         </FormItem>
                         <FormItem label="款项金额" prop="amount">
@@ -52,7 +52,7 @@
                             </RadioGroup>
                         </FormItem>
                         <div v-if="this.show==true">
-                            <FormItem label="发票金额">
+                            <FormItem label="发票金额" prop="invoiceAmount">
                                 <Input v-model="formValidate.invoiceAmount" placeholder="请输入款项金额哦"></Input>
                             </FormItem>
 
@@ -75,7 +75,7 @@
             </div>
         </form>
         <Tabs size='small' :animated=false class="subTabs" value="name1">
-            <TabPane label="代收款" name="name1">
+            <TabPane label="待收款" name="name1">
                 <div class="searchTable">
                     <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
 
@@ -113,8 +113,8 @@ export default {
             modal1: false,
             pageNum: "1",
             pageSize: "10",
-            trees: this.$store.state.selTrees[14].children,
-            hkstatus: this.$store.state.selTrees[16].children,
+            trees: this.$store.state.allTrees.fundtype,
+            hkstatus: this.$store.state.allTrees.fundstatus,
             pactlist: [],
             form: {
                 createDate: UTC2Date(new Date(), "y-m-d h:i:s"),
@@ -147,16 +147,21 @@ export default {
                 fundStatus: "unPayed",
                 invoiceStatus: "1",
                 dutyUserId: ls.get("accid"),
-                dutyUserName: ls.get("account")
+                dutyUserName: ls.get("account"),
+                num: ""
             },
             ruleValidate: {
                 instruction: [
-                    { required: true, message: "请输入回款说明", trigger: "blur" }
+                    {
+                        required: true,
+                        message: "请输入回款说明",
+                        trigger: "blur"
+                    }
                 ],
                 amount: [
                     {
                         required: true,
-                        message: "请输入汇款金额",
+                        message: "请输入款项金额",
                         trigger: "blur"
                     }
                 ],
@@ -176,8 +181,12 @@ export default {
 
                 fundType: [],
                 isLeader: [],
-                phone: [
-                    { required: true, message: "请输入手机号", trigger: "blur" }
+                positionId: [
+                    {
+                        required: true,
+                        message: "请输入相关职位",
+                        trigger: "blur"
+                    }
                 ],
                 contractId: [
                     {
@@ -186,8 +195,12 @@ export default {
                         trigger: "change"
                     }
                 ],
-                deptId: [
-                    { required: true, message: "未赋予部门", trigger: "change" }
+                invoiceAmount: [
+                    {
+                        required: true,
+                        message: "请输入回款金额",
+                        trigger: "blur"
+                    }
                 ],
                 locked: [{ required: true, trigger: "change" }]
             },
@@ -196,7 +209,23 @@ export default {
                     title: "状态",
                     key: "fundType",
                     width: 80,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        console.log(row);
+                        var codetxt;
+                        var fundtypelist = this.$store.state.allTrees
+                            .fundstatus;
+                        for (var i = 0; i < fundtypelist.length; i++) {
+                            if (row.fundType == "unPayed") {
+                                codetxt = "待收款";
+                            } else {
+                                codetxt = "已打款";
+                            }
+                        }
+
+                        return h("span", codetxt);
+                    }
                 },
                 {
                     title: "应汇款时间",
@@ -223,7 +252,10 @@ export default {
                     key: "invoiceAmount",
                     width: 65,
                     ellipsis: true,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h("span", params.row.invoiceAmount || "--");
+                    }
                 },
                 {
                     title: "款项内容",
@@ -239,7 +271,10 @@ export default {
                 {
                     title: "对应合同",
                     key: "contractId",
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h("span", params.row.contractNum || "--");
+                    }
                 },
                 {
                     title: "对应职位",
@@ -276,8 +311,7 @@ export default {
                                                 "/customer/myCustomers/backcashDetails?id=" +
                                                     row.id +
                                                     "&cid=" +
-                                                    this.recordsDetails
-                                                        .id +
+                                                    this.recordsDetails.id +
                                                     "&level=" +
                                                     this.recordsDetails
                                                         .importantLevel +
@@ -299,7 +333,23 @@ export default {
                     title: "状态",
                     key: "fundType",
                     width: 140,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        console.log(row);
+                        var codetxt;
+                        var fundtypelist = this.$store.state.allTrees
+                            .fundstatus;
+                        for (var i = 0; i < fundtypelist.length; i++) {
+                            if (row.fundType == "unPayed") {
+                                codetxt = "待收款";
+                            } else {
+                                codetxt = "已打款";
+                            }
+                        }
+
+                        return h("span", codetxt);
+                    }
                 },
                 {
                     title: "应汇款时间",
@@ -345,7 +395,10 @@ export default {
                     title: "对应合同",
                     key: "contractId",
                     width: 94,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        return h("span", params.row.contractNum || "--");
+                    }
                 },
                 {
                     title: "对应职位",

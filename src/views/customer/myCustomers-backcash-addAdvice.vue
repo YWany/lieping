@@ -48,31 +48,31 @@
                     </Select>
                 </FormItem>
                 <FormItem label="合同名称">
-                    <Input disabled :readonly="true" v-model="formValidate.contractName" placeholder="请输入合同名称哦"></Input>
+                    <Input v-model="formValidate.contractName" placeholder="请输入合同名称哦"></Input>
                 </FormItem>
                 <FormItem label="收费比例" prop="payRatio">
                     <Input v-model="formValidate.payRatio" placeholder="请输入收费比例"></Input>
                 </FormItem>
                 <div v-if="five">
-                    <FormItem label="候选人姓名">
+                    <FormItem label="候选人姓名" prop="candidateName">
                         <Input v-model="formValidate.candidateName" placeholder="请输入候选人姓名哦"></Input>
                     </FormItem>
                     <FormItem label="上岗时间">
                         <DatePicker :value='formValidate.startWorkTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
 
                     </FormItem>
-                    <FormItem label="录用职位" prop="">
+                    <FormItem label="录用职位" prop="positionName">
                         <Input v-model="formValidate.positionName" placeholder="请输入录用职位哦"></Input>
                     </FormItem>
-                    <FormItem label="年薪">
-                        <Input v-model="formValidate.annualSalary" placeholder="请输入年薪金额哦"></Input>
+                    <FormItem label="年薪" prop="annualSalary">
+                        <Input @on-change='calculate' v-model="formValidate.annualSalary" placeholder="请输入年薪金额哦"></Input>
                     </FormItem>
-                    <FormItem label="总服务费">
-                        <Input v-model="formValidate.totalFee" placeholder="请输入总服务费金额哦"></Input>
+                    <FormItem label="总服务费" prop="totalFee">
+                        <Input :readonly="true" v-model="formValidate.totalFee" placeholder="请输入总服务费金额哦"></Input>
                     </FormItem>
                 </div>
-                <FormItem label="前期服务费">
-                    <Input v-model="formValidate.preFee" placeholder="请输入前期服务费金额哦"></Input>
+                <FormItem label="前期服务费" prop="preFee">
+                    <Input  v-model="formValidate.preFee" placeholder="请输入前期服务费金额哦"></Input>
                 </FormItem>
                 <FormItem label="付款方式" style="width:100%;">
                     <RadioGroup v-model="formValidate.settleType">
@@ -174,8 +174,6 @@
                         <li>开户银行：杭州银行学院路支行</li>
                         <li>开户账号：74218100011811</li>
                         <li>财务部电话：0571-89301250</li>
-                        <li>指定联系人：{{ formValidate.sendUserName }}</li>
-                        <li>联系人电话：{{ formValidate.sendUserPhone }}</li>
                     </ul>
                     <div slot="footer">
                         <Button type="primary" @click="handleReset('formValidate')">保存</Button>
@@ -252,10 +250,10 @@ export default {
                         trigger: "blur"
                     }
                 ],
-                account: [
+                preFee: [
                     {
                         required: true,
-                        message: "请输入登陆账号",
+                        message: "请输入前期服务费",
                         trigger: "blur"
                     }
                 ],
@@ -289,17 +287,25 @@ export default {
                         trigger: "change"
                     }
                 ],
-                deptId: [
+                candidateName: [
                     {
                         required: true,
-                        message: "未赋予部门",
-                        trigger: "change"
+                        message: "请输入候选人",
+                        trigger: "blur"
                     }
                 ],
-                locked: [
+                positionName: [
                     {
                         required: true,
-                        trigger: "change"
+                        message: "请输入职位",
+                        trigger: "blur"
+                    }
+                ],
+                annualSalary: [
+                    {
+                        required: true,
+                        message: "请输入年薪",
+                        trigger: "blur"
                     }
                 ]
             }
@@ -321,6 +327,12 @@ export default {
                 this.addPhone2 = false;
                 this.formValidate.phone = "";
             }
+        },
+        calculate() {
+            this.formValidate.totalFee =
+                parseFloat(this.formValidate.payRatio) *
+                Number(this.formValidate.annualSalary) /
+                100;
         },
         handleSubmit(name) {
             this.$refs[name].validate(valid => {

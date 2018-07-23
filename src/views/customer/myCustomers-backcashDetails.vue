@@ -90,7 +90,7 @@
         </div>
         <ul class="detail-list">
             <li>
-                <span>回款编号：</span>{{ massages.contractId }}
+                <span>回款编号：</span>{{ massages.contractNum }}
             </li>
             <li>
                 <span>计划回款金额：</span>{{ massages.amount }}
@@ -102,7 +102,7 @@
                 <span>未收金额：</span>--
             </li>
             <li>
-                <span>回款状态：</span>{{ massages.fundStatus }}
+                <span>回款状态：</span>{{ wfundStatus || "--" }}
             </li>
             <li>
                 <span>开票金额：</span>{{ massages.invoiceAmount }}
@@ -111,10 +111,10 @@
                 <span>客户：</span>{{ massages.dutyUserName }}
             </li>
             <li>
-                <span>合同：</span>{{ massages.contractId }}
+                <span>合同：</span>{{ massages.contractNum }}
             </li>
             <li>
-                <span>回款类型：</span>{{ massages.fundType }}
+                <span>回款类型：</span>{{ wfundType }}
             </li>
             <li>
                 <span>负责人：</span>{{ massages.dutyUserName }}
@@ -158,6 +158,8 @@ export default {
             level: +this.$route.query.level,
             cname: this.$route.query.cname,
             check: true,
+            wfundStatus: "",
+            wfundType:"",
             massages: [],
             modal2: false,
             formValidate: {
@@ -308,6 +310,13 @@ export default {
                     this.$Message.success("Success!");
                     console.log(data);
                     this.massages = data;
+                    this.wfundStatus = data.fundStatus;
+                    var fundtype = this.$store.state.allTrees.fundtype;
+                    for (var i = 0; i < fundtype.length; i++) {
+                        if (data.fundType == fundtype[i].code) {
+                            this.wfundType = fundtype[i].codeText;
+                        }
+                    }
                 } else if (code === "PHONE_REPEAT") {
                     this.$Message.error(" 操作有误");
                 }

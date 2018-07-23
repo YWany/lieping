@@ -17,15 +17,15 @@
                     <Input v-model="formValidate.code" placeholder="请输入开票编号"></Input>
                 </FormItem>
                 <FormItem label="申请人" prop="applyUserName">
-                    <Input v-model="formValidate.applyUserName" :readonly='true'></Input>
+                    <Input disabled v-model="formValidate.applyUserName" :readonly='true'></Input>
                 </FormItem>
-                <FormItem label="合同序号" prop="contractId">
+                <FormItem label="合同编号" prop="contractId">
                     <Select v-model="formValidate.contractId" placeholder="请选择合同序号">
                         <Option v-for="(item,index) in hetongLists" :value="item.id" :key='index'>{{item.num}}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="关联客户" prop="companyName">
-                    <Input v-model="formValidate.companyName" :readonly='true' placeholder="请输入客户名字"></Input>
+                    <Input disabled v-model="formValidate.companyName" :readonly='true' placeholder="请输入客户名字"></Input>
                 </FormItem>
                 <FormItem label="款项类型" prop="fundType">
                     <Select v-model="formValidate.fundType" placeholder="款项类型">
@@ -33,16 +33,16 @@
                     </Select>
                 </FormItem>
                 <FormItem label="关联回款">
-                    <Input value='无' :readonly='true' placeholder="无"></Input>
+                    <Input disabled value='无' :readonly='true' placeholder="无"></Input>
                 </FormItem>
                 <FormItem label="开票金额" prop="amount">
                     <Input v-model="formValidate.amount" placeholder="开票金额"></Input>
                 </FormItem>
-                <FormItem label="开票日期" prop='billingTime'>
+                <FormItem label="申请日期" prop='billingTime'>
                     <DatePicker :value='formValidate.billingTime' format="yyyy-MM-dd HH:mm:ss " @on-change='seltime' type="date" placeholder="回款时间" style="width:100%"></DatePicker>
                 </FormItem>
                 <FormItem label="发票类型" prop='invoiceType'>
-                    <Select v-model="formValidate.invoiceType" placeholder="发票类型">
+                    <Select v-model="formValidate.invoiceType" placeholder="发票类型" @on-change='getfuntype'>
                         <Option v-for="(item,index) in invoiceTrees" :value="item.code" :key='index'>{{item.codeText}}</Option>
                     </Select>
                 </FormItem>
@@ -73,18 +73,34 @@
                 <FormItem label="纳税识别号" prop="dutyCode">
                     <Input v-model="formValidate.dutyCode" placeholder="纳税识别号"></Input>
                 </FormItem>
-                <FormItem label="注册电话">
-                    <Input v-model="formValidate.registPhone" placeholder="注册电话"></Input>
-                </FormItem>
-                <FormItem label="开票地址">
-                    <Input v-model="formValidate.registAddress" placeholder="开票地址"></Input>
-                </FormItem>
-                <FormItem label="开户行">
-                    <Input v-model="formValidate.depositBank" placeholder="开户行"></Input>
-                </FormItem>
-                <FormItem label="开户账号">
-                    <Input v-model="formValidate.bankNum" placeholder="开户账号"></Input>
-                </FormItem>
+                <div v-if="four">
+                    <FormItem label="注册电话">
+                        <Input v-model="formValidate.registPhone" placeholder="注册电话"></Input>
+                    </FormItem>
+                    <FormItem label="开票地址">
+                        <Input v-model="formValidate.registAddress" placeholder="开票地址"></Input>
+                    </FormItem>
+                    <FormItem label="开户行">
+                        <Input v-model="formValidate.depositBank" placeholder="开户行"></Input>
+                    </FormItem>
+                    <FormItem label="开户账号">
+                        <Input v-model="formValidate.bankNum" placeholder="开户账号"></Input>
+                    </FormItem>
+                </div>
+                <div v-else-if="!four">
+                    <FormItem label="注册电话" prop="registPhone">
+                        <Input v-model="formValidate.registPhone" placeholder="注册电话"></Input>
+                    </FormItem>
+                    <FormItem label="开票地址" prop="registAddress">
+                        <Input v-model="formValidate.registAddress" placeholder="开票地址"></Input>
+                    </FormItem>
+                    <FormItem label="开户行" prop="depositBank">
+                        <Input v-model="formValidate.depositBank" placeholder="开户行"></Input>
+                    </FormItem>
+                    <FormItem label="开户账号" prop="bankNum">
+                        <Input v-model="formValidate.bankNum" placeholder="开户账号"></Input>
+                    </FormItem>
+                </div>
                 <div class="detail-title" style="float:left;">
                     寄送信息
                 </div>
@@ -92,14 +108,16 @@
                     <Input v-model="formValidate.address" placeholder="请输入地址名称"></Input>
                 </FormItem>
                 <FormItem label="联系人" prop="contact">
-                    <Input v-model="formValidate.contact" placeholder="请输入联系人"></Input>
+                    <Select v-model="formValidate.contact" placeholder="请选择联系人" @on-change='getphone'>
+                        <Option v-for="(item,index) in contactlist" :value="item.id" :key='index'>{{item.name}}</Option>
+                    </Select>
                 </FormItem>
                 <FormItem label="联系电话" prop="phone">
                     <Input v-model="formValidate.phone" placeholder="请输入联系电话"></Input>
                 </FormItem>
-                <FormItem label="详细地址" prop="address">
+                <!-- <FormItem label="详细地址" prop="address">
                     <Input v-model="formValidate.address" placeholder="请输入详细地址"></Input>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="邮政编码" prop="zipCode">
                     <Input v-model="formValidate.zipCode" placeholder="请输入邮政编码"></Input>
                 </FormItem>
@@ -124,11 +142,15 @@ export default {
     },
     data() {
         return {
-            id: this.$route.query.id,
-            level: +this.$route.query.level,
-            cname: this.$route.query.cname,
+            id: this.$route.query.id || ls.get("companyId"),
+            level: +this.$route.query.level || ls.get("level"),
+            cname: this.$route.query.cname || ls.get("companyName"),
             tag: this.$route.query.tag,
+            four: true,
             hetongLists: [],
+            contactId: "",
+            contact_phone: "",
+            contactlist: [],
             fundTrees: [], //款项dic
             invoiceTrees: [], //发票类型dic
             headerTrees: [], //发票抬头dic
@@ -136,16 +158,17 @@ export default {
                 code: "",
                 applyUserId: ls.get("accid"),
                 applyUserName: ls.get("account"),
-                companyId: this.$route.query.id,
+                companyId: ls.get("companyId"),
                 contractId: "",
-                companyName: this.$route.query.cname,
+                companyName: ls.get("companyName"),
                 fundType: "",
                 amount: "",
                 billingTime: UTC2Date(new Date(), "y-m-d h:i:s"),
-                invoiceType: "",
+                invoiceType: "1",
                 instruction: "",
                 headText: "",
-                dutyCode: ""
+                dutyCode: "",
+                phone: ""
             },
             ruleValidate: {
                 code: [
@@ -217,6 +240,34 @@ export default {
                         message: "请输入税号",
                         trigger: "blur"
                     }
+                ],
+                registPhone: [
+                    {
+                        required: true,
+                        message: "请输入注册电话",
+                        trigger: "blur"
+                    }
+                ],
+                registAddress: [
+                    {
+                        required: true,
+                        message: "请输入开票地址",
+                        trigger: "blur"
+                    }
+                ],
+                depositBank: [
+                    {
+                        required: true,
+                        message: "请输入开户行",
+                        trigger: "blur"
+                    }
+                ],
+                bankNum: [
+                    {
+                        required: true,
+                        message: "请输入开户账号",
+                        trigger: "blur"
+                    }
                 ]
             }
         };
@@ -242,6 +293,21 @@ export default {
         seltime(date) {
             this.recordsForm.followTime = date;
         },
+        getphone() {
+            for (var i = 0; i < this.contactlist.length; i++) {
+                if (this.contactlist[i].id === this.formValidate.contact) {
+                    this.formValidate.phone = this.contactlist[i].phone1;
+                }
+            }
+        },
+        getfuntype() {
+            // alert(this.formValidate.invoiceType);
+            if (this.formValidate.invoiceType == "1") {
+                this.four = true;
+            } else if (this.formValidate.invoiceType == "2") {
+                this.four = false;
+            }
+        },
         handleSubmit(name) {
             this.$refs[name].validate(valid => {
                 if (valid) {
@@ -252,7 +318,11 @@ export default {
                             this.$store.state.spinShow = false;
                             if (data.code === "SUCCESS") {
                                 this.$Message.success("新增成功!");
-                                if (tag == 'fromhk') this.$router.push('/customer/myCustomers/records?id='+this.id)
+                                if (tag == "fromhk")
+                                    this.$router.push(
+                                        "/customer/myCustomers/records?id=" +
+                                            this.id
+                                    );
                                 else this.$router.go(-1);
                             } else {
                                 this.$Message.error(data.remark);
@@ -270,7 +340,19 @@ export default {
     mounted() {
         this.$store.state.spinShow = true;
         this.getHetongLists(); //合同列表
-
+        api
+            .axs("post", "/contact/list", {
+                companyId: ls.get("companyId")
+            })
+            .then(({ data: { data, code } }) => {
+                if (code === "SUCCESS") {
+                    console.log(data);
+                    this.contactlist = data;
+                    if (data.length === 0) {
+                        this.$Message.error("请先添加该公司联系人");
+                    }
+                }
+            });
         if (this.$store.state.selTrees.length) {
             this.fundTrees = this.$store.state.selTrees[13].children;
             this.invoiceTrees = this.$store.state.selTrees[14].children;

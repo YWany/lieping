@@ -40,13 +40,26 @@
                 <MenuItem name="2-1">职位11</MenuItem>
                 <MenuItem name="2-2">职位22</MenuItem>
             </Submenu>
-            <Submenu name="3">
+            <Submenu name="talent">
                 <template slot="title">
                     <Icon type="ios-filing"></Icon>
                     人才
                 </template>
-                <MenuItem name="3-1">人才11</MenuItem>
-                <MenuItem name="3-2">人才22</MenuItem>
+                <router-link to='/talent/myTalents'>
+                    <MenuItem name="/talent/myTalents">我的人才</MenuItem>
+                </router-link>
+                <router-link to='/talent/allTalents'>
+                    <MenuItem name="/talent/allTalents">所有人才</MenuItem>
+                </router-link>
+                <router-link to='/talent/zhuanResumes'>
+                    <MenuItem name="/talent/zhuanResumes">转发的简历</MenuItem>
+                </router-link>
+                <router-link to='/talent/downResumes'>
+                    <MenuItem name="/talent/downResumes">下载的简历</MenuItem>
+                </router-link>
+                <router-link to='/talent/myAttention'>
+                    <MenuItem name="/talent/myAttention">我的关注</MenuItem>
+                </router-link>
             </Submenu>
             <Submenu name="4">
                 <template slot="title">

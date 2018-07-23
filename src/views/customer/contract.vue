@@ -1,6 +1,6 @@
 <template>
     <div class="customer">
-        <div class='currentNav'>当前位置: 客户合同
+        <div class='currentNav'>当前位置:  客户 > 客户合同
             <Button type="info" class='addNew fr'>
                 <Icon type="arrow-down-c"></Icon> 下载</Button>
             <span class='fr'>&nbsp;&nbsp;</span>

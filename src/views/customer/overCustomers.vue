@@ -1,6 +1,6 @@
 <template>
     <div class="myCustomers">
-        <div class='currentNav'>当前位置: 我的客户</div>
+        <div class='currentNav'>当前位置:  客户 > 我的客户</div>
         <div class="searchTable">
             <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
             <div class="tablePage fr">

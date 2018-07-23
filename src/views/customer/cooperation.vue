@@ -1,6 +1,6 @@
 <template>
     <div class="cooperation">
-        <div class='currentNav'>当前位置: 合作中客户
+        <div class='currentNav'>当前位置:  客户 > 合作中客户
             <Button type="success" class='addNew fr' @click='companyPop=true'>
                 <Icon type="plus"></Icon> 录入新客户</Button>
         </div>

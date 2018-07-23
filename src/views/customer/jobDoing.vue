@@ -1,6 +1,6 @@
 <template>
     <div class="jobDoing">
-        <div class='currentNav'>当前位置: 职位进展
+        <div class='currentNav'>当前位置:  客户 > 职位进展
             <ul class="nums fr">
                 <li>所有项目
                     <span>(740)</span>

@@ -1,6 +1,6 @@
 <template>
     <div class="myCustomersRecords">
-        <div class='currentNav'>当前位置:
+        <div class='currentNav'>当前位置: 客户 > 
             <router-link to='/customer/myCustomers'>我的客户</router-link> > {{recordsDetails.companyName}}
             <Rate disabled :value='+recordsDetails.importantLevel' style='font-size:14px'></Rate>
             <Button type="info" icon='arrow-right-a' class='toolBtn fr' @click='selUsersFun(1)'></Button>
@@ -97,7 +97,7 @@
                     </div>
 
                     <Tabs size='small' :animated=false class="subTabs" value="name1">
-                        <TabPane label="所有合同(3)" name="name1" @on-change="getHetongLists(1,'all')">
+                        <TabPane :label="`所有合同(${hetongForm.total})`" name="name1" @on-change="getHetongLists(1,'all')">
                             <div class="searchTable">
                                 <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
@@ -137,16 +137,29 @@
                                 </p>
                             </div>
                             <div class="desc">
-                                <span>电话: {{list.phone1}}；{{list.phone2}}；{{list.phone3}}；{{list.phone4}}</span>
+                                <span>电话: 
+                                    <template v-if='list.phone1'>{{list.phone1}}；</template>
+                                    <template v-if='list.phone2'>{{list.phone2}}；</template>
+                                    <template v-if='list.phone3'>{{list.phone3}}；</template>
+                                    <template v-if='list.phone4'>{{list.phone4}}；</template>
+                                </span>
                                 <span v-if='list.email'>邮箱: {{list.email}}</span>
                                 <a href="javascript:;" class='fr'>查看简历</a>
                             </div>
                         </li>
                     </ul>
+                    <ul class="history-records" v-else>
+                        <li class='null-records'>
+                            <h5 style='text-align:center;padding:20px 0;font-size:14px;'>
+                                <Icon type="social-snapchat-outline" style='font-size:22px;vertical-align:middle'></Icon>
+                                <span style='vertical-align:middle;padding-left:5px;'>无联系人记录</span>
+                            </h5>
+                        </li>
+                    </ul>
                 </TabPane>
                 <TabPane label="职位" name="job">
                     <div class="job-content searchTable">
-                        <!-- <Table border ref="selection" :columns="hetongHeader" :data="tableLists"></Table> -->
+                        <Table border ref="selection" :columns="hetongHeader"></Table>
                         <div class="tablePage fr">
                             <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
                         </div>

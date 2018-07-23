@@ -1,7 +1,7 @@
 <template>
     <div class="customer">
         <div class='currentNav'>
-            当前位置:
+            当前位置: 客户 > 
             <router-link to='/customer/contract'>客户合同</router-link> > 合同详情 --
             <small>{{cname}}</small>
         </div>

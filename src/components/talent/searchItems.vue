@@ -2,19 +2,19 @@
     <div class="serachItems">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
             <FormItem label="职位名称" prop="position">
-                <Input v-model="formValidate.position" :readonly='true'></Input>
+                <Input v-model="formValidate.position"></Input>
             </FormItem>
             <FormItem label="所在行业" prop="industryName">
-                <Input v-model="formValidate.industryId" :readonly='true'></Input>
+                <Input v-model="formValidate.industryId"></Input>
             </FormItem>
             <FormItem label="目前工作地区" prop="areaName">
-                <Input v-model="formValidate.areaId" :readonly='true'></Input>
+                <Input v-model="formValidate.areaId"></Input>
             </FormItem>
             <FormItem label="期望工作地区" prop="applyUserName">
-                <Input v-model="formValidate.applyUserName" :readonly='true'></Input>
+                <Input v-model="formValidate.applyUserName"></Input>
             </FormItem>
             <FormItem label="关键词">
-                <Input v-model="formValidate.keyword" :readonly='true'></Input>
+                <Input v-model="formValidate.keyword"></Input>
             </FormItem>
             <FormItem label="公司名称" prop="companyName">
                 <Input v-model="formValidate.companyName" placeholder="请输入公司名称"></Input>
@@ -28,14 +28,14 @@
                 </RadioGroup>
             </FormItem>
             <FormItem label="职能类别" prop="applyUserName">
-                <Input v-model="formValidate.applyUserName" :readonly='true'></Input>
+                <Input v-model="formValidate.applyUserName"></Input>
             </FormItem>
             <FormItem label="学历" prop="applyUserName">
                 <Select value='' placeholder="请选择学历" class='liSel'>
                     <Option value='1'>小学</Option>
                     <Option value='2'>初中</Option>
                     <Option value='3'>高中</Option>
-                </Select> - 
+                </Select> -
                 <Select value='' placeholder="请选择学历" class='liSel'>
                     <Option value='1'>小学</Option>
                     <Option value='2'>初中</Option>
@@ -47,7 +47,7 @@
                     <Option value='1'>1年</Option>
                     <Option value='2'>2年</Option>
                     <Option value='3'>3年</Option>
-                </Select> - 
+                </Select> -
                 <Select value='' placeholder="请选择年限" class='liSel'>
                     <Option value='1'>1年</Option>
                     <Option value='2'>2年</Option>
@@ -59,7 +59,7 @@
                     <Option value='1'>1年</Option>
                     <Option value='2'>2年</Option>
                     <Option value='3'>3年</Option>
-                </Select> - 
+                </Select> -
                 <Select value='' placeholder="请选择年龄" class='liSel'>
                     <Option value='1'>1年</Option>
                     <Option value='2'>2年</Option>
@@ -87,6 +87,53 @@
                 </Select>
             </FormItem> -->
         </Form>
+        <div class="search" style='text-align:center;'>
+            <Button type='info' @click="handleSubmit('formValidate')">搜索人才</Button>
+        </div>
+
+        <!-- 新建分组 -->
+        <div class="addGroupPop">
+            <Modal v-model="addGroupPop" :closable='false' :mask-closable='false' style='text-align:center'>
+                <div slot='header' style='font-size:14px;color:#444'>
+                    新建分组
+                    <a href="javascript:;" @click='addGroupPop=false'>
+                        <Icon type="close" class='fr'></Icon>
+                    </a>
+                </div>
+                <span>分组名称： </span>
+                <Input v-model='addgroupForm.folderName' placeholder='请输入分组名称' style='width:300px;padding:20px 0'></Input>
+                <div slot='footer' style='text-align:center'>
+                    <Button type='info' @click='subGroupSave'>保存</Button>
+                </div>
+            </Modal>
+        </div>
+
+        <!-- 分组列表 -->
+        <div class="listGroupPop">
+            <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
+                <div slot='header' style='font-size:14px;color:#444'>
+                    新建分组
+                    <a href="javascript:;" @click='listGroupPop=false'>
+                        <Icon type="close" class='fr'></Icon>
+                    </a>
+                </div>
+                <Input v-model="addgroupForm.folderName" @on-enter='searchIn' placeholder="请输入分组名称" style='margin:20px auto;width:300px;'>
+                    <Button slot="append" @click='searchIn'>新增</Button>
+                </Input>
+                <div class="sels">
+                    <RadioGroup v-model="selgroupForm.folderId">
+                        <Radio label="金斑蝶"></Radio>
+                        <Radio label="爪哇犀牛"></Radio>
+                        <Radio label="印度黑羚"></Radio>
+                        <Radio label="金斑蝶"></Radio>
+                        <Radio label="爪哇犀牛"></Radio>
+                    </RadioGroup>
+                </div>
+                <div slot='footer' style='text-align:center'>
+                    <Button type='info' @click='subGroupSave'>确定</Button>
+                </div>
+            </Modal>
+        </div>
     </div>
 </template>
 
@@ -98,6 +145,16 @@ export default {
     name: "serachItems",
     data() {
         return {
+            addGroupPop: true,
+            listGroupPop: true,
+            groupLists: [], //分组列表
+            addgroupForm: {
+                userId: ls.get('accid'),
+                folderName: ''
+            },
+            selgroupForm: {
+                folderId: ''
+            },
             formValidate: {
                 position: '',
                 industryId: '',
@@ -135,11 +192,58 @@ export default {
     components: {},
     computed: {},
     methods: {
+        getGroupLists() { //获取分组列表
+            api
+                .axs("post", "/userFolder/folderList")
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.groupLists = data.data
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        subGroupSave() { //选择分组
+            if (!this.selgroupForm.folderId) {
+                this.$Message.warning("请一个分组！")
+                return
+            }
+            api
+                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!")
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleSubmit(name) { //新增分组
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    this.$store.state.spinShow = true;
+                    api
+                        .axs("post", "/resume/search", this.formValidate)
+                        .then(({ data }) => {
+                            this.$store.state.spinShow = false;
+                            if (data.code === "SUCCESS") {
+                                this.$Message.success("新增成功!")
+                            } else {
+                                this.$Message.error(data.remark);
+                            }
+                        });
+                } else {
+                    this.$Message.warning("请填写完整!");
+                }
+            });
+        },
         seltime(date) {
             this.recordsForm.followTime = date;
         },
     },
-    mounted() {}
+    mounted() {
+        this.getGroupLists()
+    }
 };
 </script>
 
@@ -181,5 +285,11 @@ export default {
     .ivu-radio-wrapper {
         line-height: 30px!important;
     }
+}
+
+.ivu-radio-wrapper {
+    margin-right: 34px!important;
+    padding: 5px 0;
+    text-align: left;
 }
 </style>

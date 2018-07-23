@@ -234,6 +234,15 @@ export default new Router({
                     component: () =>
                         import ("./views/talent/searchTalents.vue")
                 },
+                {
+                    meta: {
+                        title: '千里马-人才-简历详情'
+                    },
+                    path: '/talent/talentdetail',
+                    name: 'talentdetail',
+                    component: () =>
+                        import ("./views/talent/talentdetail.vue")
+                },
 
                 { // manager 管理 =======================================================
                     meta: {

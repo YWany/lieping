@@ -1,6 +1,9 @@
 <template>
     <div class="downResumes">
         <div class='currentNav'>当前位置:  人才 > 下载的简历</div>
+        <div class="search-box">
+             
+        </div>
     </div>
 </template>
 
@@ -23,4 +26,10 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.search-box{
+    width: 100%;
+    padding: 10px;
+    background: #dddddd;
+}
+
 </style>

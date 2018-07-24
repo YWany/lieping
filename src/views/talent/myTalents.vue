@@ -10,7 +10,7 @@
             </div>
         </div>
         <div>
-            <Input v-model="value14" placeholder="请输入姓名、公司名、职位等关键词搜索简历、空格分离" clearable style="width: 1000px"></Input>
+            <Input placeholder="请输入姓名、公司名、职位等关键词搜索简历、空格分离" clearable style="width: 1000px"></Input>
             <Button class="serbtn" type="primary">搜素</Button>
         </div>
         <ul class="tab">
@@ -45,14 +45,41 @@
                     <a href="##">搜索同事</a>
                 </div>
                 <div>
-                    <Button type="info" class="addjob">加入职位</Button>
-                    <Button type="success">分组</Button>
+                    <Button type="info" class="addjob" @click='professPop=true'>加入职位</Button>
+                    <Button type="success" @click='listGroupPop=true'>分组</Button>
                 </div>
             </li>
         </ul>
         <div class="tablePage fr">
             <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
         </div>
+        <div class="listGroupPop">
+            <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
+                <div slot='header' style='font-size:14px;color:#444'>
+                    新建分组
+                    <a href="javascript:;" @click='listGroupPop=false'>
+                        <Icon type="close" class='fr'></Icon>
+                    </a>
+                </div>
+                <Input v-model="addgroupForm.folderName" @on-enter='searchIn' placeholder="请输入分组名称" style='margin:20px auto;width:300px;'>
+                <Button slot="append" @click='searchIn'>新增</Button>
+                </Input>
+                <div class="sels">
+                    <RadioGroup v-model="selgroupForm.folderId">
+                        <Radio label="分组1"></Radio>
+                        <Radio label="分组2"></Radio>
+                        <Radio label="分组3"></Radio>
+                        <Radio label="分组4"></Radio>
+                        <Radio label="分组5"></Radio>
+                    </RadioGroup>
+                </div>
+                <div slot='footer' style='text-align:center'>
+                    <Button type='info' @click='subGroupSave'>确定</Button>
+                </div>
+            </Modal>
+        </div>
+
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
     </div>
 </template>
 
@@ -60,10 +87,27 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
+import Professions from "@/components/common/professions.vue";
+
 export default {
     name: "myTalents",
+    components: {
+        Professions
+    },
     data() {
         return {
+            addGroupPop: false,
+            listGroupPop: false,
+            professPop: false, //职位弹窗
+            groupLists: [], //分组列表
+            typelist: [], //类型列表
+            addgroupForm: {
+                userId: ls.get("accid"),
+                folderName: ""
+            },
+            selgroupForm: {
+                folderId: ""
+            },
             tabId: 1,
             lists: [],
             form: {
@@ -78,11 +122,10 @@ export default {
                 signDate: "",
                 total: 100,
                 pageNum: 1,
-                pageSize: 10
+                pageSize: 3
             }
         };
     },
-    components: {},
     computed: {},
     methods: {
         tabb(id) {
@@ -101,9 +144,92 @@ export default {
                     this.$Message.error(data.remark);
                 }
             });
+        },
+        getGroupLists() {
+            //获取分组列表
+            api.axs("post", "/userFolder/folderList").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.groupLists = data.data;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
+        },
+        subGroupSave() {
+            //选择分组
+            if (!this.selgroupForm.folderId) {
+                this.$Message.warning("请一个分组！");
+                return;
+            }
+            api
+                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleSubmit(name) {
+            //新增分组
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    this.$store.state.spinShow = true;
+                    api
+                        .axs("post", "/resume/search", this.formValidate)
+                        .then(({ data }) => {
+                            this.$store.state.spinShow = false;
+                            if (data.code === "SUCCESS") {
+                                this.$Message.success("新增成功!");
+                            } else {
+                                this.$Message.error(data.remark);
+                            }
+                        });
+                } else {
+                    this.$Message.warning("请填写完整!");
+                }
+            });
+        },
+        searchIn() {
+            if (!this.form.companyName) {
+                this.$Message.warning("想搜点什么?");
+                return;
+            }
+            this.tableLists = [];
+            // this.loadLists()
+        },
+        seltime(date) {
+            this.recordsForm.followTime = date;
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.form.industryId = idName.split("&")[0];
+            this.professPop = false;
+
+            const title = "成功提示";
+            const content = "<p>加入职位成功</p>";
+            this.$Modal.success({
+                title: title,
+                content: content
+            });
         }
     },
     mounted() {
+        api.axs("post", "/userFolder/folderList").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.typelist = data.data;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
         this.$store.state.spinShow = false;
     }
 };
@@ -135,6 +261,7 @@ export default {
         border-bottom: 1px solid #2d8cf0;
     }
 }
+
 .talentlist {
     width: 100%;
     border: 1px solid #dddddd;
@@ -186,5 +313,11 @@ export default {
             margin-right: 10px;
         }
     }
+}
+
+.ivu-radio-wrapper {
+    margin-right: 34px !important;
+    padding: 5px 0;
+    text-align: left;
 }
 </style>

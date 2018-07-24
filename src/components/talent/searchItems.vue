@@ -5,7 +5,8 @@
                 <Input v-model="formValidate.position"></Input>
             </FormItem>
             <FormItem label="所在行业" prop="industryName">
-                <Input v-model="formValidate.industryId"></Input>
+                <Input @on-focus='professPop=true' v-model='professName' :readonly='true' placeholder="选择行业" class='selPro' style="width:150px"></Input>
+                <!-- <Input v-model="formValidate.industryId"></Input> -->
             </FormItem>
             <FormItem label="目前工作地区" prop="areaName">
                 <Input v-model="formValidate.areaId"></Input>
@@ -109,7 +110,7 @@
         </div>
 
         <!-- 分组列表 -->
-        <div class="listGroupPop">
+        <!-- <div class="listGroupPop">
             <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
                 <div slot='header' style='font-size:14px;color:#444'>
                     新建分组
@@ -133,7 +134,9 @@
                     <Button type='info' @click='subGroupSave'>确定</Button>
                 </div>
             </Modal>
-        </div>
+        </div> -->
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+
     </div>
 </template>
 
@@ -141,84 +144,90 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
+import Professions from "@/components/common/professions.vue";
 export default {
     name: "serachItems",
+    components: {
+        Professions
+    },
     data() {
         return {
-            addGroupPop: true,
-            listGroupPop: true,
+            addGroupPop: false,
+            listGroupPop: false,
             groupLists: [], //分组列表
+            professPop: false, //职位弹窗
+            professName: "",
             addgroupForm: {
-                userId: ls.get('accid'),
-                folderName: ''
+                userId: ls.get("accid"),
+                folderName: ""
             },
             selgroupForm: {
-                folderId: ''
+                folderId: ""
             },
             formValidate: {
-                position: '',
-                industryId: '',
+                position: "",
+                industryId: "",
                 companyName: "",
-                keyword: '',
-                comtype: '',
+                keyword: "",
+                comtype: "",
                 contractId: "",
                 fundType: ""
             },
             ruleValidate: {
-                position: [
-                    {
-                        required: true,
-                        message: "请输入职位名称",
-                        trigger: "blur"
-                    }
-                ],
-                industryName: [
-                    {
-                        required: true,
-                        message: "请输入行业名称",
-                        trigger: "blur"
-                    }
-                ],
-                areaName: [
-                    {
-                        required: true,
-                        message: "请输入地区",
-                        trigger: "blur"
-                    }
-                ]
+                // position: [
+                //     {
+                //         required: true,
+                //         message: "请输入职位名称",
+                //         trigger: "blur"
+                //     }
+                // ],
+                // industryName: [
+                //     {
+                //         required: true,
+                //         message: "请输入行业名称",
+                //         trigger: "change"
+                //     }
+                // ],
+                // areaName: [
+                //     {
+                //         required: true,
+                //         message: "请输入地区",
+                //         trigger: "blur"
+                //     }
+                // ]
             }
         };
     },
-    components: {},
     computed: {},
     methods: {
-        getGroupLists() { //获取分组列表
-            api
-                .axs("post", "/userFolder/folderList")
-                .then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.groupLists = data.data
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
+        getGroupLists() {
+            //获取分组列表
+            api.axs("post", "/userFolder/folderList").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.groupLists = data.data;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
-        subGroupSave() { //选择分组
+        subGroupSave() {
+            //选择分组
             if (!this.selgroupForm.folderId) {
-                this.$Message.warning("请一个分组！")
-                return
+                this.$Message.warning("请一个分组！");
+                return;
             }
             api
                 .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("新增成功!")
+                        this.$Message.success("新增成功!");
                     } else {
                         this.$Message.error(data.remark);
                     }
                 });
         },
-        handleSubmit(name) { //新增分组
+        handleSubmit(name) {
+            //新增分组
             this.$refs[name].validate(valid => {
                 if (valid) {
                     this.$store.state.spinShow = true;
@@ -227,7 +236,7 @@ export default {
                         .then(({ data }) => {
                             this.$store.state.spinShow = false;
                             if (data.code === "SUCCESS") {
-                                this.$Message.success("新增成功!")
+                                this.$Message.success("新增成功!");
                             } else {
                                 this.$Message.error(data.remark);
                             }
@@ -237,19 +246,31 @@ export default {
                 }
             });
         },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.formValidate.industryId = idName.split("&")[0];
+            this.professPop = false;
+        },
         seltime(date) {
             this.recordsForm.followTime = date;
-        },
+        }
     },
     mounted() {
-        this.getGroupLists()
+        this.getGroupLists();
     }
 };
 </script>
 
 <style lang='less' scoped>
 .serachItems {
-    padding: 20px 0!important;
+    padding: 20px 0 !important;
     form {
         overflow: auto;
         width: 100%;
@@ -283,12 +304,12 @@ export default {
         }
     }
     .ivu-radio-wrapper {
-        line-height: 30px!important;
+        line-height: 30px !important;
     }
 }
 
 .ivu-radio-wrapper {
-    margin-right: 34px!important;
+    margin-right: 34px !important;
     padding: 5px 0;
     text-align: left;
 }

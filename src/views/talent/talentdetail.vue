@@ -1,10 +1,17 @@
 <template>
     <div class="personalDetails">
+
         <div class='currentNav'>当前位置: 客户 >
             <router-link to='/customer/jobDoing'>职位进展</router-link> >
             <router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
+        <div class="resemelist">
+            <Button type="ghost" @click='changeid(reslist.id)' v-for="(reslist, index) in resumelist" :value="reslist.id" :key='index'>{{ reslist.name }}</Button>
+
+        </div>
         <div class="detailsWrap">
+
             <div class="content-left">
+
                 <div class="mass">
                     <div class="mass-title">
                         推荐信息
@@ -35,45 +42,44 @@
                                     最后更新于 2018-06-16 20:12:00
                                 </div>
                                 <div class="header-c">
-                                    <h4>高三吉</h4>
+                                    <h4>{{ resume.name }}</h4>
                                     <div class="header-name">
                                         <span class="education">
-                                            <Icon type="briefcase"></Icon>本科学历</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.education }}学历</span>
                                         <span class="experience">
-                                            <Icon type="briefcase"></Icon>12年经验</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.jobYear }}年经验</span>
                                         <span class="site">
-                                            <Icon type="briefcase"></Icon>杭州</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.address }}</span>
                                         <span class="university">
-                                            <Icon type="briefcase"></Icon>浙江教育学院</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.school }}</span>
                                         <span class="purpose">
-                                            <Icon type="briefcase"></Icon>我怼现在工作表满意，考虑跳槽</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.jobHuntStatus }}</span>
                                     </div>
                                     <div class="header-img">
-                                        <img src="@/assets/images/logo.png" alt="">
+                                        <img :src="resume.headUrl" alt="">
                                     </div>
                                 </div>
                                 <div class="purpose-c">
                                     <h4>求职意向</h4>
                                     <div class="purpose-name">
                                         <span class="education">
-                                            <Icon type="briefcase"></Icon>杭州</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.expectedLocation }}</span>
                                         <span class="experience">
-                                            <Icon type="briefcase"></Icon>10k-20k</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.expectedSalary }}</span>
                                     </div>
                                 </div>
                                 <div class="experience-c">
                                     <h4>工作经历</h4>
                                     <ul class="experience-name">
-                                        <li>
+                                        <li v-for="(work,index) in worklist" :value="work.id" :key='index'>
                                             <div class="ex-c">
-                                                <span class="company">杭州千里马科技有限公司</span>
-                                                <span class="job">UI设计师</span>
-                                                <span class="money">4000-6000/月</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span style="width:200px;" class="company">{{ work.companyName }}</span>
+                                                <span class="job">{{ work.jobTitle }}</span>
+                                                <!-- <span class="money">{{ work.companyName }}</span> -->
+                                                <span class="time">{{ work.startTime }}-{{ work.endTime }}</span>
                                             </div>
                                             <p class="ex-de">
-                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                                {{ work.description }}
                                             </p>
                                         </li>
                                     </ul>
@@ -81,14 +87,13 @@
                                 <div class="project-c">
                                     <h4>项目经历</h4>
                                     <ul class="project-name">
-                                        <li>
+                                        <li v-for="(project,index) in projectlist" :value="project.id" :key='index'>
                                             <div class="pr-c">
-                                                <span class="project">蚂蚁金服</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span style="width:300px" class="project">{{ project.name }}</span>
+                                                <!-- <span class="time">{{ project.startTime }}~{{ project.startTime }}</span> -->
                                             </div>
                                             <p class="pr-de">
-                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                                {{ project.description }}
                                             </p>
                                         </li>
 
@@ -97,12 +102,12 @@
                                 <div class="education-c">
                                     <h4>教育经历</h4>
                                     <ul class="education-name">
-                                        <li>
+                                        <li v-for="(education,index) in educationlist" :value="education.id" :key='index'>
                                             <div class="ed-c">
-                                                <span class="company">武汉生物工程学院</span>
-                                                <span class="job">计算机科学与技术</span>
-                                                <span class="money">本科</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span class="company">{{ education.schoolName }}</span>
+                                                <span class="job">{{ education.majorName }}</span>
+                                                <span class="money">{{ education.level }}</span>
+                                                <span class="time">{{ education.startTime }}~{{ education.endTime }}</span>
                                             </div>
 
                                         </li>
@@ -111,8 +116,7 @@
                                 <div class="personal-c">
                                     <h4>自我评价</h4>
                                     <p class="pe-de">
-                                        圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                        {{ resume.selfEvaluation }}
                                     </p>
                                 </div>
                             </div>
@@ -225,7 +229,14 @@ export default {
     },
     data() {
         return {
+            id: this.$route.query.id,
             modal1: false,
+            showif: true,
+            resume: "",
+            projectlist: [],
+            educationlist: [],
+            worklist: [],
+            resumelist: ls.get("resumeList"),
             lastRouter: ls.session.get("lastRouter")
         };
     },
@@ -235,21 +246,76 @@ export default {
         },
         cancel() {
             this.$Message.info("Clicked cancel");
+        },
+        changeid(id) {
+            api.axs("post", "/resume/info", { id: id }).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    console.log(data);
+                    this.resume = data.data.resume;
+                    this.projectlist = data.data.project;
+                    this.educationlist = data.data.education;
+                    this.worklist = data.data.work;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         }
     },
 
     mounted() {
+        if (this.resumelist.length == 0) {
+            console.log(this.id);
+            api
+                .axs("post", "/resume/info", { id: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.resume = data.data.resume;
+                        this.projectlist = data.data.project;
+                        this.educationlist = data.data.education;
+                        this.worklist = data.data.work;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        } else {
+            this.id = this.resumelist[0].id;
+            api
+                .axs("post", "/resume/info", { id: this.id })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.resume = data.data.resume;
+                        this.projectlist = data.data.project;
+                        this.educationlist = data.data.education;
+                        this.worklist = data.data.work;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        }
+
         setTimeout(() => {
             this.$Loading.finish();
             this.$store.state.spinShow = false;
         }, 1500);
     },
-    beforeDestroy() {}
+    beforeDestroy() {
+        ls.set("resumeList", []);
+    }
 };
 </script>
 
 <style lang='less' scoped>
 .personalDetails {
+    .resemelist {
+        width: 100%;
+        overflow: auto;
+
+        button {
+            float: left;
+        }
+    }
     .detailsWrap {
         padding: 0 0.2rem 0.5rem;
         display: flex;

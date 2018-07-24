@@ -1,6 +1,6 @@
 <template>
     <div class="zhuanResumes">
-        <div class='currentNav'>当前位置:  人才 > 转发的简历</div>
+        <div class='currentNav'>当前位置: 人才 > 转发的简历</div>
     </div>
 </template>
 

@@ -1,134 +1,134 @@
 <template>
-	<div class="customer">
-		<div class='currentNav'>当前位置: 权限管理
-		</div>
-		<ul class="rolelist">
-			<li v-for="(todo, index) in todos" v-on:click="addClass(index)" v-bind:class="{ active:index==current}" :key="index" :value="todo.id"> {{ todo.roleName }}
-			</li>
+    <div class="customer">
+        <div class='currentNav'>当前位置: 权限管理
+        </div>
+        <ul class="rolelist">
+            <li v-for="(todo, index) in todos" v-on:click="addClass(index)" v-bind:class="{ active:index==current}" :key="index" :value="todo.id"> {{ todo.roleName }}
+            </li>
 
-			<Button type="ghost" @click="modal1 = true">
-				<Icon type="plus-circled"></Icon>添加角色</Button>
-			<Button type="ghost" @click="modal4 = true">
-				<Icon type="minus-circled"></Icon>删除角色</Button>
+            <Button type="ghost" @click="modal1 = true">
+                <Icon type="plus-circled"></Icon>添加角色</Button>
+            <Button type="ghost" @click="modal4 = true">
+                <Icon type="minus-circled"></Icon>删除角色</Button>
 
-			<Modal v-model="modal1" title="新增角色" @on-ok="ok" @on-cancel="cancel">
-				<Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
-					<FormItem label="角色名" prop="roleName">
-						<Input v-model="formValidate.roleName" placeholder="请输入角色名"></Input>
-					</FormItem>
-					<FormItem label="系统内角色" prop="roleType">
-						<Select v-model="formValidate.roleType" placeholder="是否对外">
-							<Option value="1">是</Option>
-							<Option value="2">否</Option>
-						</Select>
-					</FormItem>
-				</Form>
-				<div slot="footer">
+            <Modal v-model="modal1" title="新增角色" @on-ok="ok" @on-cancel="cancel">
+                <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+                    <FormItem label="角色名" prop="roleName">
+                        <Input v-model="formValidate.roleName" placeholder="请输入角色名"></Input>
+                    </FormItem>
+                    <FormItem label="系统内角色" prop="roleType">
+                        <Select v-model="formValidate.roleType" placeholder="是否对外">
+                            <Option value="1">是</Option>
+                            <Option value="2">否</Option>
+                        </Select>
+                    </FormItem>
+                </Form>
+                <div slot="footer">
 
-					<Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
-					<Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
+                    <Button type="primary" @click="handleSubmit('formValidate')">保存</Button>
+                    <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">清空表格</Button>
 
-				</div>
-			</Modal>
-			<Modal v-model="modal4" title="删除角色" @on-ok="ok" @on-cancel="cancel">
-				<Form ref="formValidatedel" :model="formValidatedel" :rules="ruleValidatedel" :label-width="80">
+                </div>
+            </Modal>
+            <Modal v-model="modal4" title="删除角色" @on-ok="ok" @on-cancel="cancel">
+                <Form ref="formValidatedel" :model="formValidatedel" :rules="ruleValidatedel" :label-width="80">
 
-					<FormItem label="选择角色" prop="menuId">
-						<Select v-model="formValidatedel.menuId" placeholder="选择权限">
-							<Option v-for="(todo, index) in todos" :value="todo.id" :key='index'>{{ todo.roleName }}</Option>
+                    <FormItem label="选择角色" prop="menuId">
+                        <Select v-model="formValidatedel.menuId" placeholder="选择权限">
+                            <Option v-for="(todo, index) in todos" :value="todo.id" :key='index'>{{ todo.roleName }}</Option>
 
-						</Select>
-					</FormItem>
+                        </Select>
+                    </FormItem>
 
-				</Form>
-				<div slot="footer">
+                </Form>
+                <div slot="footer">
 
-					<Button type="primary" @click="handleSubmit3('formValidatedel')">删除</Button>
-					<Button type="ghost" @click="handleReset3('formValidatedel')" style="margin-left: 8px">清空表格</Button>
+                    <Button type="primary" @click="handleSubmit3('formValidatedel')">删除</Button>
+                    <Button type="ghost" @click="handleReset3('formValidatedel')" style="margin-left: 8px">清空表格</Button>
 
-				</div>
-			</Modal>
-			<Modal v-model="modal2" title="新增权限" @on-ok="ok" @on-cancel="cancel">
-				<Form ref="formValidatepro" :model="formValidatepro" :rules="ruleValidatepro" :label-width="80">
-					<FormItem label="权限名" prop="roleName">
-						<Input v-model="formValidatepro.roleName" placeholder="请输入权限名"></Input>
-					</FormItem>
-					<FormItem label="权限分类" prop="menuId">
-						<Select v-model="formValidatepro.menuId" placeholder="选择权限">
-							<Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
+                </div>
+            </Modal>
+            <Modal v-model="modal2" title="新增权限" @on-ok="ok" @on-cancel="cancel">
+                <Form ref="formValidatepro" :model="formValidatepro" :rules="ruleValidatepro" :label-width="80">
+                    <FormItem label="权限名" prop="roleName">
+                        <Input v-model="formValidatepro.roleName" placeholder="请输入权限名"></Input>
+                    </FormItem>
+                    <FormItem label="权限分类" prop="menuId">
+                        <Select v-model="formValidatepro.menuId" placeholder="选择权限">
+                            <Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
 
-						</Select>
-					</FormItem>
-				</Form>
-				<div slot="footer">
+                        </Select>
+                    </FormItem>
+                </Form>
+                <div slot="footer">
 
-					<Button type="primary" @click="handleSubmit1('formValidatepro')">保存</Button>
-					<Button type="ghost" @click="handleReset1('formValidatepro')" style="margin-left: 8px">清空表格</Button>
+                    <Button type="primary" @click="handleSubmit1('formValidatepro')">保存</Button>
+                    <Button type="ghost" @click="handleReset1('formValidatepro')" style="margin-left: 8px">清空表格</Button>
 
-				</div>
-			</Modal>
-			<Modal v-model="modal3" title="删除权限" @on-ok="ok" @on-cancel="cancel">
-				<Form ref="formValidateprodel" :model="formValidateprodel" :rules="ruleValidateprodel" :label-width="80">
+                </div>
+            </Modal>
+            <Modal v-model="modal3" title="删除权限" @on-ok="ok" @on-cancel="cancel">
+                <Form ref="formValidateprodel" :model="formValidateprodel" :rules="ruleValidateprodel" :label-width="80">
 
-					<FormItem label="权限分类" prop="menuId">
-						<Select v-model="formValidateprodel.menuId" placeholder="选择权限">
-							<Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
+                    <FormItem label="权限分类" prop="menuId">
+                        <Select v-model="formValidateprodel.menuId" placeholder="选择权限">
+                            <Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
 
-						</Select>
-					</FormItem>
-					<FormItem label="权限名" prop="menuId">
-						<Select v-model="formValidateprodel.menuId" placeholder="选择权限">
-							<Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
+                        </Select>
+                    </FormItem>
+                    <FormItem label="权限名" prop="menuId">
+                        <Select v-model="formValidateprodel.menuId" placeholder="选择权限">
+                            <Option v-for="(roles,index) in roles" :value="roles.id" :key='index'>{{roles.name}}</Option>
 
-						</Select>
-					</FormItem>
-				</Form>
-				<div slot="footer">
+                        </Select>
+                    </FormItem>
+                </Form>
+                <div slot="footer">
 
-					<Button type="primary" @click="handleSubmit2('formValidateprodel')">保存</Button>
-					<Button type="ghost" @click="handleReset2('formValidateprodel')" style="margin-left: 8px">清空表格</Button>
+                    <Button type="primary" @click="handleSubmit2('formValidateprodel')">保存</Button>
+                    <Button type="ghost" @click="handleReset2('formValidateprodel')" style="margin-left: 8px">清空表格</Button>
 
-				</div>
-			</Modal>
+                </div>
+            </Modal>
 
-		</ul>
-		<div class="bomt">
-			<ul class="aulist">
-				<li v-for="(roles, index) in roles" v-on:click="addroleClass(index)" v-bind:class="{ active1:index==roleclass}" :key="index" :value="roles.id"> {{ roles.name }}</li>
-				<Button class="aubut" type="ghost" @click="modal2 = true">
-					<Icon type="plus-circled"></Icon>添加权限</Button>
-				<!-- <Button class="aubut" type="ghost" @click="modal3 = true"><Icon type="minus-circled"></Icon>删除权限</Button> -->
+        </ul>
+        <div class="bomt">
+            <ul class="aulist">
+                <li v-for="(roles, index) in roles" v-on:click="addroleClass(index)" v-bind:class="{ active1:index==roleclass}" :key="index" :value="roles.id"> {{ roles.name }}</li>
+                <Button class="aubut" type="ghost" @click="modal2 = true">
+                    <Icon type="plus-circled"></Icon>添加权限</Button>
+                <!-- <Button class="aubut" type="ghost" @click="modal3 = true"><Icon type="minus-circled"></Icon>删除权限</Button> -->
 
-			</ul>
-			<div class="radol">
-				<div class="radiolist1" v-show="clickId==0">
-					<CheckboxGroup v-model="fruit1">
-						<Checkbox label="香蕉"></Checkbox>
-						<Checkbox label="苹果"></Checkbox>
-						<Checkbox label="西瓜"></Checkbox>
-					</CheckboxGroup>
+            </ul>
+            <div class="radol">
+                <div class="radiolist1" v-show="clickId==0">
+                    <CheckboxGroup v-model="fruit1">
+                        <Checkbox label="香蕉"></Checkbox>
+                        <Checkbox label="苹果"></Checkbox>
+                        <Checkbox label="西瓜"></Checkbox>
+                    </CheckboxGroup>
 
-				</div>
-				<div class="radiolist2" v-show="clickId==1">
-					<CheckboxGroup v-model="fruit2">
-						<Checkbox label="sdsd"></Checkbox>
-						<Checkbox label="sdsdsd"></Checkbox>
-						<Checkbox label="sdsvsd"></Checkbox>
-					</CheckboxGroup>
+                </div>
+                <div class="radiolist2" v-show="clickId==1">
+                    <CheckboxGroup v-model="fruit2">
+                        <Checkbox label="sdsd"></Checkbox>
+                        <Checkbox label="sdsdsd"></Checkbox>
+                        <Checkbox label="sdsvsd"></Checkbox>
+                    </CheckboxGroup>
 
-				</div>
-				<div class="radiolist3" v-show="clickId==2">
-					<CheckboxGroup v-model="fruit3">
-						<Checkbox label="111"></Checkbox>
-						<Checkbox label="232"></Checkbox>
-						<Checkbox label="333"></Checkbox>
-					</CheckboxGroup>
+                </div>
+                <div class="radiolist3" v-show="clickId==2">
+                    <CheckboxGroup v-model="fruit3">
+                        <Checkbox label="111"></Checkbox>
+                        <Checkbox label="232"></Checkbox>
+                        <Checkbox label="333"></Checkbox>
+                    </CheckboxGroup>
 
-				</div>
-				<Button class="save" type="primary">保存</Button>
-			</div>
-		</div>
-	</div>
+                </div>
+                <Button class="save" type="primary">保存</Button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>

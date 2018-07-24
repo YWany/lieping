@@ -6,24 +6,39 @@
                 <span>关键词：</span>
                 <Input v-model="value14" placeholder="请输入搜索关键词" clearable style="width: 200px"></Input>
                 <Button class="serbtn" type="primary">搜素</Button>
-                <a class="showup" href="javascript:void(0)">
+                <a class="showup" href="javascript:void(0)" v-if='!serachitemsShow' @click='serachitemsShow=true'>
                     展开搜索条件
+                    <Icon type="arrow-down-b"></Icon>
+                </a>
+                <a class="showup" href="javascript:void(0)" v-else @click='serachitemsShow=false'>
+                    收起搜索条件
                     <Icon type="arrow-down-b"></Icon>
                 </a>
             </div>
         </div>
+        <SerachItems v-if='serachitemsShow' />
         <div class="alltalentlist">
             <div class="fristsear">
-                <Button class="serbtn" type="primary">批量查看</Button>
+                <Button @click='gotalentdetail()' class="serbtn" type="primary">批量查看</Button>
                 <span>共5000+人选</span>
+                <!-- <Form style="float:right;" ref="formValidate" :model="formValidate"  :label-width="80">
+                    <FormItem style="width:120px" label="每页显示：">
+                       <Select v-model="formValidate.page" placeholder="回款状态">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                        </Select>
+                    </FormItem>
+                </Form> -->
             </div>
-            <Table border ref="selection" :columns="columns4" :data="data1" @on-current-change="handleRowChange"></Table>
+            <Table border ref="selection" :columns="columns4" :data="data1" @on-selection-change="handleRowChange"></Table>
             <div class="tablePage fr">
                 <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
             </div>
         </div>
 
         <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+
     </div>
 </template>
 
@@ -31,16 +46,23 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
+import { UTC2Date } from "@/assets/js/utils.js";
 import Professions from "@/components/common/professions.vue";
+import SerachItems from "@/components/talent/searchItems.vue";
 export default {
     name: "allTalents",
     components: {
-        Professions
+        Professions,
+        SerachItems
     },
     data() {
         return {
+            serachitemsShow: false,
             value14: "Hello World",
             professPop: false, //职位弹窗
+            formValidate: {
+                page: "10"
+            },
             form: {
                 deptId: "",
                 industryId: "",
@@ -97,13 +119,15 @@ export default {
                 {
                     title: "性别",
                     key: "sex",
-                    width: 70,
+                    sortable: true,
+                    width: 80,
                     align: "center"
                 },
                 {
                     title: "年龄",
                     key: "birthday",
-                    width: 80,
+                    sortable: true,
+                    width: 90,
                     align: "center"
                 },
                 {
@@ -115,7 +139,8 @@ export default {
                 {
                     title: "工作年限",
                     key: "jobYear",
-                    width: 90,
+                    sortable: true,
+                    width: 100,
                     align: "center"
                 },
 
@@ -134,13 +159,14 @@ export default {
                 {
                     title: "目前公司",
                     key: "age",
-                    width: 150,
+                    width: 120,
                     align: "center"
                 },
                 {
                     title: "加入时间",
                     key: "createTime",
                     width: 150,
+                    sortable: true,
                     align: "center"
                 },
                 {
@@ -173,7 +199,8 @@ export default {
                     }
                 }
             ],
-            data1: []
+            data1: [],
+            resumelist: []
         };
     },
     methods: {
@@ -211,8 +238,15 @@ export default {
             });
         },
         handleRowChange(currentRow, oldCurrentRow) {
-            console.log("1");
-            //console.log(oldCurrentRow)
+            this.resumelist = currentRow;
+        },
+        gotalentdetail() {
+            if (this.resumelist.length == 0) {
+                this.$Message.warning("您还未选择简历哦");
+            } else {
+                ls.set("resumeList", this.resumelist);
+                this.$router.push("/talent/talentdetail");
+            }
         }
     },
     mounted() {
@@ -235,6 +269,7 @@ export default {
         margin-top: 7px;
     }
 }
+
 .alltalentlist {
     width: 100%;
     border: 1px solid #dddddd;

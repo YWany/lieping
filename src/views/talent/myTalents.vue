@@ -14,13 +14,8 @@
             <Button class="serbtn" type="primary">搜素</Button>
         </div>
         <ul class="tab">
-            <li @click="tabb(1)" :class="tabId === 1 ? 'clickli' : ''">全部人才</li>
-            <li @click="tabb(2)" :class="tabId === 2 ? 'clickli' : ''">上传的私有人才</li>
-            <li @click="tabb(3)" :class="tabId === 3 ? 'clickli' : ''">推荐的人才</li>
-            <li @click="tabb(4)" :class="tabId === 4 ? 'clickli' : ''">面试的人才</li>
-            <li @click="tabb(5)" :class="tabId === 5 ? 'clickli' : ''">录用的人才</li>
-            <li @click="tabb(6)" :class="tabId === 6 ? 'clickli' : ''">上岗的人才</li>
-            <li @click="tabb(7)" :class="tabId === 7 ? 'clickli' : ''">过保的人才</li>
+            <li v-for="(type, index) in typelist" v-on:click="addClass(index)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
+            </li>
         </ul>
         <ul class="talentlist">
             <li>
@@ -101,6 +96,8 @@ export default {
             professPop: false, //职位弹窗
             groupLists: [], //分组列表
             typelist: [], //类型列表
+            resumelist:[],//简历列表
+            current: 0,
             addgroupForm: {
                 userId: ls.get("accid"),
                 folderName: ""
@@ -130,6 +127,9 @@ export default {
     methods: {
         tabb(id) {
             this.tabId = id;
+        },
+        addClass: function(index) {
+            this.current = index;
         },
         loadLists(page) {
             this.$store.state.spinShow = true;
@@ -223,7 +223,14 @@ export default {
         }
     },
     mounted() {
-        api.axs("post", "/userFolder/folderList").then(({ data }) => {
+        api.axs("post", "/resume/queryResumeType").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.typelist = data.data;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
+        api.axs("post", "/resume/resumeList").then(({ data }) => {
             if (data.code === "SUCCESS") {
                 this.typelist = data.data;
             } else {

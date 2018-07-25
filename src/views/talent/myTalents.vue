@@ -14,30 +14,37 @@
             <Button class="serbtn" type="primary">搜素</Button>
         </div>
         <ul class="tab">
-            <li v-for="(type, index) in typelist" v-on:click="addClass(index)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
+            <li v-for="(type, index) in typelist" v-on:click="addClass(type.code)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
             </li>
         </ul>
         <ul class="talentlist">
-            <li>
+            <li v-for="(resume, index) in resumelist" :key="index">
                 <div class="pheader">
-                    <div class="header-left"><img src="@/assets/images/logo.png" alt=""></div>
+                    <div class="header-left"><img :src="resume.headUrl" alt=""></div>
                     <div class="header-right">
                         <p class="p-name">
-                            <span class="name">徐毅 - 某钛业有限公司</span>
-                            <span class="time">上传时间:2018-02-05</span>
+                             <router-link :to="'/talent/talentdetail?id='+resume.id">
+                            <span class="name">{{ resume.name }} - {{ resume.expectedLocation }}</span>
+                             </router-link>
+                            <span class="time">上传时间:{{ resume.updateTime }}</span>
                         </p>
-                        <p class="exprice">男 | 36 | 西安 | 本科 | 17年经验 | 财务总监兼董秘</p>
+                        <p class="exprice">{{ resume.sex }} | {{ resume.birthday }} | {{ resume.education }} | {{ resume.jobYear }}年经验 | {{ resume.sex }} | {{ resume.position }} </p>
                     </div>
                 </div>
-                <div class="pastcom">
-                    浙江生烟草公司丽水市公司 | 财务总监兼董秘 |
-                    <span>2010.01-2015.01(3年5个月)</span>
-                    <a href="##">搜索同事</a>
-                </div>
-                <div class="pastcom">
-                    浙江生烟草公司丽水市公司 | 财务总监兼董秘 |
-                    <span>2010.01-2015.01(3年5个月)</span>
-                    <a href="##">搜索同事</a>
+                <div class="pastcom" v-for="(res, index) in resume.busWorkExperienceList" :key="index">
+                    {{ res.companyName }} | {{ res.jobTitle }} |
+                                
+                    <span>
+                        <template v-if='res.startTime'>{{ res.startTime.substr(0, 10) }}</template>
+                        <template v-else>无</template>
+                        -
+                        <template v-if='res.endTime'>{{ res.endTime.substr(0, 10) }}</template>
+                        <template v-else>无</template>
+                    </span>
+
+                    <router-link :to="'/talent/allTalents?companyname='+res.companyName">
+                        <a href="javascript:void(0)">搜索同事</a>
+                    </router-link>
                 </div>
                 <div>
                     <Button type="info" class="addjob" @click='professPop=true'>加入职位</Button>
@@ -46,7 +53,7 @@
             </li>
         </ul>
         <div class="tablePage fr">
-            <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
+            <Page :total='sumecan.total' :page-size='sumecan.pageSize' :current='sumecan.pageNum' show-total @on-change='loadLists'></Page>
         </div>
         <div class="listGroupPop">
             <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
@@ -96,7 +103,7 @@ export default {
             professPop: false, //职位弹窗
             groupLists: [], //分组列表
             typelist: [], //类型列表
-            resumelist:[],//简历列表
+            resumelist: [], //简历列表
             current: 0,
             addgroupForm: {
                 userId: ls.get("accid"),
@@ -107,17 +114,9 @@ export default {
             },
             tabId: 1,
             lists: [],
-            form: {
-                deptId: "",
-                industryId: "",
-                sel2: "",
-                companySource: "",
-                importantLevel: "",
-                preFee: "",
-                changeInto: "",
-                createTimeStart: "",
-                signDate: "",
-                total: 100,
+            sumecan: {
+                type: "",
+                // total: 100,
                 pageNum: 1,
                 pageSize: 3
             }
@@ -125,25 +124,40 @@ export default {
     },
     computed: {},
     methods: {
-        tabb(id) {
-            this.tabId = id;
-        },
         addClass: function(index) {
+            this.$store.state.spinShow = true;
             this.current = index;
+            this.sumecan.type = index;
+            this.sumecan.pageNum = 1;
+            api
+                .axs("post", "/resume/resumeList", this.sumecan)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.resumelist = data.data.list;
+                        this.sumecan.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                        console.log(data);
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         loadLists(page) {
             this.$store.state.spinShow = true;
-            this.form.pageNum = page;
-            api.axs("post", "/resume/page", this.form).then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.lists = data.data.list;
-                    this.form.total = data.data.total;
-                    this.$Loading.finish();
-                    this.$store.state.spinShow = false;
-                } else {
-                    this.$Message.error(data.remark);
-                }
-            });
+            this.sumecan.pageNum = page;
+            api
+                .axs("post", "/resume/resumeList", this.sumecan)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.resumelist = data.data.list;
+                        this.sumecan.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         getGroupLists() {
             //获取分组列表
@@ -230,9 +244,12 @@ export default {
                 this.$Message.error(data.remark);
             }
         });
-        api.axs("post", "/resume/resumeList").then(({ data }) => {
+        api.axs("post", "/resume/resumeList", this.sumecan).then(({ data }) => {
             if (data.code === "SUCCESS") {
-                this.typelist = data.data;
+                this.resumelist = data.data.list;
+                this.sumecan.total = data.data.total;
+                this.$Loading.finish();
+                this.$store.state.spinShow = false;
             } else {
                 this.$Message.error(data.remark);
             }

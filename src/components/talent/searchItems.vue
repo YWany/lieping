@@ -9,10 +9,10 @@
                 <!-- <Input v-model="formValidate.industryId"></Input> -->
             </FormItem>
             <FormItem label="目前工作地区" prop="areaName">
-                <Input v-model="formValidate.areaId"></Input>
+                 <Citysels ref='proCity' />
             </FormItem>
             <FormItem label="期望工作地区" prop="applyUserName">
-                <Input v-model="formValidate.applyUserName"></Input>
+                <Citysels ref='proCity' />
             </FormItem>
             <FormItem label="关键词">
                 <Input v-model="formValidate.keyword"></Input>
@@ -93,7 +93,7 @@
         </div>
 
         <!-- 新建分组 -->
-        <div class="addGroupPop">
+        <!-- <div class="addGroupPop">
             <Modal v-model="addGroupPop" :closable='false' :mask-closable='false' style='text-align:center'>
                 <div slot='header' style='font-size:14px;color:#444'>
                     新建分组
@@ -107,7 +107,7 @@
                     <Button type='info' @click='subGroupSave'>保存</Button>
                 </div>
             </Modal>
-        </div>
+        </div> -->
 
         <!-- 分组列表 -->
         <!-- <div class="listGroupPop">
@@ -144,10 +144,12 @@
 // @ is an alias to /src
 import api from "@/api";
 import ls from "store2";
+import Citysels from "@/components/common/citysels.vue";
 import Professions from "@/components/common/professions.vue";
 export default {
     name: "serachItems",
     components: {
+         Citysels,
         Professions
     },
     data() {
@@ -228,6 +230,11 @@ export default {
         },
         handleSubmit(name) {
             //新增分组
+             if (this.$refs.proCity.cityId === "") {
+                    this.companyForm.areaId = this.$refs.proCity.proId;
+                } else {
+                    this.companyForm.areaId = this.$refs.proCity.cityId;
+                }
             this.$refs[name].validate(valid => {
                 if (valid) {
                     this.$store.state.spinShow = true;

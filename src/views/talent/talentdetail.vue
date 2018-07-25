@@ -76,7 +76,13 @@
                                                 <span style="width:200px;" class="company">{{ work.companyName }}</span>
                                                 <span class="job">{{ work.jobTitle }}</span>
                                                 <!-- <span class="money">{{ work.companyName }}</span> -->
-                                                <span class="time">{{ work.startTime }}-{{ work.endTime }}</span>
+                                                <span class="time">
+                                                    <template v-if='work.startTime'>{{ work.startTime.substr(0, 10) }}</template>
+                                                    <template v-else>无</template>
+                                                    -
+                                                    <template v-if='work.endTime'>{{ work.endTime.substr(0, 10) }}</template>
+                                                    <template v-else>无</template>
+                                                </span>
                                             </div>
                                             <p class="ex-de">
                                                 {{ work.description }}
@@ -107,7 +113,13 @@
                                                 <span class="company">{{ education.schoolName }}</span>
                                                 <span class="job">{{ education.majorName }}</span>
                                                 <span class="money">{{ education.level }}</span>
-                                                <span class="time">{{ education.startTime }}~{{ education.endTime }}</span>
+                                                <span class="time">
+                                                    <template v-if='education.startTime'>{{ education.startTime.substr(0, 10) }}</template>
+                                                    <template v-else>无</template>
+                                                    ~
+                                                    <template v-if='education.endTime'>{{ education.endTime.substr(0, 10) }}</template>
+                                                    <template v-else>无</template>
+                                                </span>
                                             </div>
 
                                         </li>

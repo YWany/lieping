@@ -15,6 +15,10 @@
                     <Icon type="arrow-down-b"></Icon>
                 </a>
             </div>
+            <div class="searchif" v-show="showif">
+                当前搜索条件：
+                <Tag type="dot" closable color="green">公司：{{ companyname }}</Tag>
+            </div>
         </div>
         <SerachItems v-if='serachitemsShow' />
         <div class="alltalentlist">
@@ -57,6 +61,8 @@ export default {
     },
     data() {
         return {
+            companyname: this.$route.query.companyname,
+            showif: false,
             serachitemsShow: false,
             value14: "Hello World",
             professPop: false, //职位弹窗
@@ -64,6 +70,7 @@ export default {
                 page: "10"
             },
             form: {
+                companyname: "",
                 deptId: "",
                 industryId: "",
                 sel2: "",
@@ -207,16 +214,31 @@ export default {
         loadLists(page) {
             this.$store.state.spinShow = true;
             this.form.pageNum = page;
-            api.axs("post", "/resume/page", this.form).then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.data1 = data.data.list;
-                    this.form.total = data.data.total;
-                    this.$Loading.finish();
-                    this.$store.state.spinShow = false;
-                } else {
-                    this.$Message.error(data.remark);
-                }
-            });
+            if (this.companyname) {
+                this.form.companyname = this.companyname;
+                this.showif = true;
+                api.axs("post", "/resume/page", this.form).then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.data1 = data.data.list;
+                        this.form.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+            } else {
+                api.axs("post", "/resume/page", this.form).then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.data1 = data.data.list;
+                        this.form.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+            }
         },
         selPro() {
             //选择职位
@@ -251,6 +273,7 @@ export default {
     },
     mounted() {
         this.loadLists();
+        console.log(this.companyname);
         this.$store.state.spinShow = false;
     }
 };
@@ -267,6 +290,12 @@ export default {
     .showup {
         float: right;
         margin-top: 7px;
+    }
+    .searchif {
+        width: 100%;
+        height: 25px;
+        line-height: 25px;
+        margin: 10px 0;
     }
 }
 

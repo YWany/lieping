@@ -20,7 +20,7 @@
                 <Tag type="dot" closable color="green">公司：{{ companyname }}</Tag>
             </div>
         </div>
-        <SerachItems v-if='serachitemsShow' />
+        <SerachItems ref='searchItemsName' v-if='serachitemsShow' />
         <div class="alltalentlist">
             <div class="fristsear">
                 <Button @click='gotalentdetail()' class="serbtn" type="primary">批量查看</Button>
@@ -36,7 +36,10 @@
                 </Form> -->
             </div>
             <Table border ref="selection" :columns="columns4" :data="data1" @on-selection-change="handleRowChange"></Table>
-            <div class="tablePage fr">
+            <div class="tablePage fr" v-if='serachitemsShow && $refs.searchItemsName && $refs.searchItemsName.formValidate.companyName'>
+                <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='$parent.search2Lits'></Page>
+            </div>
+            <div class="tablePage fr" v-else>
                 <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
             </div>
         </div>

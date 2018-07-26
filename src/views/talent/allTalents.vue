@@ -2,10 +2,13 @@
     <div class="allTalents">
         <div class='currentNav'>当前位置: 人才 > 所有人才</div>
         <div class="search-box">
-            <div class="crux">
-                <span>关键词：</span>
-                <Input v-model="value14" placeholder="请输入搜索关键词" clearable style="width: 200px"></Input>
-                <Button class="serbtn" type="primary">搜素</Button>
+            <div class="crux clearfix ">
+                <template v-if='!serachitemsShow'>
+                    <span>关键词：</span>
+                    <Input v-model="keyword" placeholder="请输入搜索关键词" clearable style="width: 200px"></Input>
+                    <Button class="serbtn" type="primary" @click='searchKeyLists(1)'>搜索</Button>
+                </template>
+                <template v-else><span style='line-height:32px'>高级搜索</span></template>
                 <a class="showup" href="javascript:void(0)" v-if='!serachitemsShow' @click='serachitemsShow=true'>
                     展开搜索条件
                     <Icon type="arrow-down-b"></Icon>
@@ -15,12 +18,12 @@
                     <Icon type="arrow-down-b"></Icon>
                 </a>
             </div>
-            <div class="searchif" v-show="showif">
+            <div class="searchif" v-show="showif && !serachitemsShow">
                 当前搜索条件：
-                <Tag type="dot" closable color="green">公司：{{ companyname }}</Tag>
+                <Tag type="dot" closable color="green">公司：{{ companyname }} | {{job}}</Tag>
             </div>
         </div>
-        <SerachItems ref='searchItemsName' v-if='serachitemsShow' />
+        <SerachItems ref='searchItemsName' :companyname='companyname' :job='job' v-if='serachitemsShow' />
         <div class="alltalentlist">
             <div class="fristsear">
                 <Button @click='gotalentdetail()' class="serbtn" type="primary">批量查看</Button>
@@ -35,9 +38,9 @@
                     </FormItem>
                 </Form> -->
             </div>
-            <Table border ref="selection" :columns="columns4" :data="data1" @on-selection-change="handleRowChange"></Table>
+            <Table border ref="selection" :columns="columns4" :data="searchLists" @on-selection-change="handleRowChange"></Table>
             <div class="tablePage fr" v-if='serachitemsShow && $refs.searchItemsName && $refs.searchItemsName.formValidate.companyName'>
-                <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='$parent.search2Lits'></Page>
+                <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='$refs.searchItemsName.search2Lits'></Page>
             </div>
             <div class="tablePage fr" v-else>
                 <Page :total='form.total' :page-size='form.pageSize' :current='form.pageNum' show-total @on-change='loadLists'></Page>
@@ -64,17 +67,19 @@ export default {
     },
     data() {
         return {
-            companyname: this.$route.query.companyname,
+            companyname: this.$route.query.companyname || '',
+            job: this.$route.query.job || '',
             pageTag: 1, //内网
             showif: false,
             serachitemsShow: false,
-            value14: "请输入关键词",
+            keyword: "",
             professPop: false, //职位弹窗
             formValidate: {
                 page: "10"
             },
             form: {
-                companyname: "",
+                companyname: this.$route.query.companyname,
+                position: this.$route.query.job,
                 deptId: "",
                 industryId: "",
                 sel2: "",
@@ -97,7 +102,7 @@ export default {
                 {
                     title: "姓名",
                     key: "name",
-                    width: 150,
+                    width: 140,
                     align: "center",
                     render: (h, params) => {
                         return h("div", [
@@ -151,7 +156,7 @@ export default {
                     title: "工作年限",
                     key: "jobYear",
                     sortable: true,
-                    width: 100,
+                    width: 105,
                     align: "center"
                 },
 
@@ -170,19 +175,20 @@ export default {
                 {
                     title: "目前公司",
                     key: "age",
-                    width: 120,
+                    ellipsis: true,
                     align: "center"
                 },
                 {
                     title: "加入时间",
                     key: "createTime",
-                    width: 150,
+                    width: 105,
                     sortable: true,
                     align: "center"
                 },
                 {
                     title: "操作",
                     key: "cz",
+                    width: 100,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -210,7 +216,7 @@ export default {
                     }
                 }
             ],
-            data1: [],
+            searchLists: [],
             resumelist: []
         };
     },
@@ -225,7 +231,7 @@ export default {
             }
             api.axs("post", "/resume/page", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    this.data1 = data.data.list;
+                    this.searchLists = data.data.list;
                     this.form.total = data.data.total;
                     this.$Loading.finish();
                     this.$store.state.spinShow = false;
@@ -233,6 +239,23 @@ export default {
                     this.$Message.error(data.remark);
                 }
             });
+        },
+        searchKeyLists(page) {
+            this.form.pageNum = page
+            if (this.companyname) {
+                api
+                    .axs("post", "/resume/getResumeList", this.form)
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            console.log(data);
+                            this.loading = false;
+                            this.searchLists = data.data.list;
+                            this.form.total = data.data.total;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
         },
         selPro() {
             //选择职位

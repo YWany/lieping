@@ -1,22 +1,6 @@
 <template>
     <div class="serachItems">
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
-            <FormItem label="职位名称" prop="position">
-                <Input v-model="formValidate.position"></Input>
-            </FormItem>
-            <FormItem label="所在行业" prop="industryName">
-                <Input @on-focus='professPop=true' v-model='professName' :readonly='true' placeholder="选择行业" class='selPro' style="width:150px"></Input>
-                <!-- <Input v-model="formValidate.industryId"></Input> -->
-            </FormItem>
-            <FormItem label="目前工作地区" prop="areaName">
-                <Citysels ref='proCity' />
-            </FormItem>
-            <!-- <FormItem label="期望工作地区" prop="applyUserName">
-                <Citysels ref='proCity' />
-            </FormItem> -->
-            <FormItem label="关键词">
-                <Input v-model="formValidate.keyword"></Input>
-            </FormItem>
             <FormItem label="公司名称" prop="companyName">
                 <Input v-model="formValidate.companyName" placeholder="请输入公司名称"></Input>
                 <!-- <RadioGroup v-model="formValidate.comtype" style='margin-left:10px;'>
@@ -27,6 +11,28 @@
                         <span>全部经历</span>
                     </Radio>
                 </RadioGroup> -->
+            </FormItem>
+            <FormItem label="职位名称" prop="position">
+                <Input v-model="formValidate.position"></Input>
+            </FormItem>
+            <FormItem label="所在行业" prop="industryName">
+                <Input @on-focus='professPop=true' v-model='professName' :readonly='true' placeholder="选择行业" class='selPro' style="width:148px"></Input>
+                <!-- <Input v-model="formValidate.industryId"></Input> -->
+            </FormItem>
+            <FormItem label="求职状态" prop="applyUserName">
+                <Select value='' placeholder="请选择求职状态">
+                    <Option value='1'>在职</Option>
+                    <Option value='2'>离职</Option>
+                </Select>
+            </FormItem>
+            <FormItem label="目前工作地区" prop="areaName">
+                <Citysels ref='proCity' />
+            </FormItem>
+            <FormItem label="期望工作地区" prop="applyUserName">
+                <Citysels ref='proCity' />
+            </FormItem>
+            <FormItem label="关键词">
+                <Input v-model="formValidate.keyword"></Input>
             </FormItem>
             <FormItem label="职能类别" prop="applyUserName">
                 <Input v-model="formValidate.applyUserName"></Input>
@@ -77,12 +83,6 @@
                 <Select v-model="formValidate.dateModified" placeholder="请选择性别">
                     <Option value='male'>男</Option>
                     <Option value='female'>女</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="求职状态" prop="applyUserName">
-                <Select value='' placeholder="请选择求职状态">
-                    <Option value='1'>在职</Option>
-                    <Option value='2'>离职</Option>
                 </Select>
             </FormItem>
             <!-- <FormItem label="合同序号" prop="contractId">
@@ -159,6 +159,7 @@ export default {
         Citysels,
         Professions
     },
+    props: ['companyname','job'],
     data() {
         return {
             addGroupPop: false,
@@ -180,7 +181,7 @@ export default {
                 pageSize: 10
             },
             formValidate: {
-                position: "前端工程师", //岗位
+                position: this.job || "", //岗位
                 keyword: "", //关键词
                 ageFrom: "", //年龄下限(不能小于18)
                 ageTo: "", //年龄上限(不能大于60)
@@ -193,7 +194,7 @@ export default {
                 resumeGender: "", //性别
                 areaId: "", //区域id
                 industryId: "2002", //行业id
-                companyName: "千里马" //公司名称
+                companyName: this.companyname || "" //公司名称
             },
             ruleValidate: {
                 // position: [
@@ -251,7 +252,6 @@ export default {
         //         });
         // },
         handleSubmit(page) {
-            console.log(page)
             //搜素人才
             // if (this.$refs.proCity.cityId === "") {
             //     this.companyForm.areaId = this.$refs.proCity.proId;
@@ -265,15 +265,17 @@ export default {
                 .then(({ data }) => {
                     this.$store.state.spinShow = false;
                     if (data.code === "SUCCESS") {
-                        this.createpop();
+                        this.createpop(1);
                     } else {
                         this.$Message.error(data.remark);
                     }
                 });
         },
-        createpop() {
+        createpop(page) {
             //创建任务
             var vm = this;
+            this.formdata.pageNum = page
+            this.$parent.form.pageNum = page
             window.timer = setInterval(function() {
                 api
                     .axs("post", "/resume/pollingTaskSchedule")
@@ -302,16 +304,17 @@ export default {
         },
         search2Lits(page) {
             this.formdata.pageNum = page
+            this.$parent.form.pageNum = page
             api
-                .axs("post", "/resume/getResumeList", vm.formdata)
+                .axs("post", "/resume/getResumeList", this.formdata)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         console.log(data);
-                        vm.loading = false;
-                        vm.$parent.data1 = data.data.list;
-                        vm.$parent.form.total = data.data.total;
+                        this.loading = false;
+                        this.$parent.data1 = data.data.list;
+                        this.$parent.form.total = data.data.total;
                     } else {
-                        vm.$Message.error(data.remark);
+                        this.$Message.error(data.remark);
                     }
                 });
         },
@@ -333,6 +336,7 @@ export default {
     },
     mounted() {
         // this.getGroupLists();
+        console.log(this.job)
     }
 };
 </script>
@@ -358,6 +362,8 @@ export default {
         }
         .ivu-form-item {
             width: 50%;
+            height: 40px;
+            margin-bottom: 18px;
             float: left;
             .ivu-input-wrapper {
                 width: 60% !important;
@@ -368,7 +374,7 @@ export default {
                 width: 60% !important;
             }
             .liSel {
-                width: 28.8% !important;
+                width: 143px !important;
             }
         }
     }

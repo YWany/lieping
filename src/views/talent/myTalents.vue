@@ -19,7 +19,7 @@
             <!-- <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type)" v-bind:class="{ clickli:index==current}" :key="index" :value="group.id"> {{ group.folderName }} -->
             </li>
         </ul>
-        <ul class="talentlist">
+        <ul class="talentlist" v-if='resumelist.length'>
             <li v-for="(resume, index) in resumelist" :key="index">
                 <div class="pheader">
                     <div class="header-left"><img :src="resume.headUrl" alt=""></div>
@@ -54,7 +54,10 @@
                 </div>
             </li>
         </ul>
-        <div class="tablePage fr">
+        <ul v-else>
+            <li class='nodatas'>暂无数据</li>
+        </ul>
+        <div class="tablePage fr" v-if='resumelist.length'>
             <Page :total='sumecan.total' :page-size='sumecan.pageSize' :current='sumecan.pageNum' show-total @on-change='loadLists'></Page>
         </div>
         <div class="listGroupPop">
@@ -266,7 +269,6 @@ export default {
                 this.$Message.error(data.remark);
             }
         });
-        this.$store.state.spinShow = false;
     }
 };
 </script>
@@ -355,5 +357,11 @@ export default {
     margin-right: 34px !important;
     padding: 5px 0;
     text-align: left;
+}
+.nodatas {
+    color:#666;
+    font-size:14px;
+    text-align:center;
+    padding:30px 0;
 }
 </style>

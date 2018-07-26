@@ -1,12 +1,11 @@
 <template>
     <div class="personalDetails">
 
-        <div class='currentNav'>当前位置: 客户 >
-            <router-link to='/customer/jobDoing'>职位进展</router-link> >
-            <router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
+        <div class='currentNav'>当前位置: 人才 >
+            <a src='javascript:;' @click='$router.go(-1)'>所有人才</a> > 简历
+        </div>
         <div class="resemelist">
             <Button type="ghost" @click='changeid(reslist.id)' v-for="(reslist, index) in resumelist" :value="reslist.id" :key='index'>{{ reslist.name }}</Button>
-
         </div>
         <div class="detailsWrap">
 
@@ -77,11 +76,20 @@
                                                 <span class="job">{{ work.jobTitle }}</span>
                                                 <!-- <span class="money">{{ work.companyName }}</span> -->
                                                 <span class="time">
-                                                    <template v-if='work.startTime'>{{ work.startTime.substr(0, 10) }}</template>
-                                                    <template v-else>无</template>
+                                                    <template v-if='work.startTime'>{{ work.startTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
                                                     -
-                                                    <template v-if='work.endTime'>{{ work.endTime.substr(0, 10) }}</template>
-                                                    <template v-else>无</template>
+                                                    <template v-if='work.endTime'>
+                                                        {{ work.endTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
                                                 </span>
                                             </div>
                                             <p class="ex-de">
@@ -114,11 +122,21 @@
                                                 <span class="job">{{ education.majorName }}</span>
                                                 <span class="money">{{ education.level }}</span>
                                                 <span class="time">
-                                                    <template v-if='education.startTime'>{{ education.startTime.substr(0, 10) }}</template>
-                                                    <template v-else>无</template>
+                                                    <template v-if='education.startTime'>
+                                                        {{ education.startTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
                                                     ~
-                                                    <template v-if='education.endTime'>{{ education.endTime.substr(0, 10) }}</template>
-                                                    <template v-else>无</template>
+                                                    <template v-if='education.endTime'>
+                                                        {{ education.endTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
                                                 </span>
                                             </div>
 
@@ -248,8 +266,7 @@ export default {
             projectlist: [],
             educationlist: [],
             worklist: [],
-            resumelist: ls.get("resumeList"),
-            lastRouter: ls.session.get("lastRouter")
+            resumelist: ls.get("resumeList")
         };
     },
     methods: {
@@ -260,9 +277,10 @@ export default {
             this.$Message.info("Clicked cancel");
         },
         changeid(id) {
+            this.$store.state.spinShow = true;
             api.axs("post", "/resume/info", { id: id }).then(({ data }) => {
                 if (data.code === "SUCCESS") {
-                    console.log(data);
+                    this.$store.state.spinShow = false;
                     this.resume = data.data.resume;
                     this.projectlist = data.data.project;
                     this.educationlist = data.data.education;
@@ -281,7 +299,7 @@ export default {
                 .axs("post", "/resume/info", { id: this.id })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data);
+                        this.$store.state.spinShow = false;
                         this.resume = data.data.resume;
                         this.projectlist = data.data.project;
                         this.educationlist = data.data.education;
@@ -293,10 +311,12 @@ export default {
         } else {
             this.id = this.resumelist[0].id;
             api
-                .axs("post", "/resume/info", { id: this.id })
+                .axs("post", "/resume/info", {
+                    id: this.id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data);
+                        this.$store.state.spinShow = false;
                         this.resume = data.data.resume;
                         this.projectlist = data.data.project;
                         this.educationlist = data.data.education;
@@ -306,11 +326,6 @@ export default {
                     }
                 });
         }
-
-        setTimeout(() => {
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-        }, 1500);
     },
     beforeDestroy() {
         ls.set("resumeList", []);
@@ -323,7 +338,6 @@ export default {
     .resemelist {
         width: 100%;
         overflow: auto;
-
         button {
             float: left;
         }

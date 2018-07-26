@@ -62,9 +62,10 @@ export default {
     data() {
         return {
             companyname: this.$route.query.companyname,
+            pageTag: 1, //内网
             showif: false,
             serachitemsShow: false,
-            value14: "Hello World",
+            value14: "请输入关键词",
             professPop: false, //职位弹窗
             formValidate: {
                 page: "10"
@@ -214,31 +215,21 @@ export default {
         loadLists(page) {
             this.$store.state.spinShow = true;
             this.form.pageNum = page;
+
             if (this.companyname) {
                 this.form.companyname = this.companyname;
                 this.showif = true;
-                api.axs("post", "/resume/page", this.form).then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.data1 = data.data.list;
-                        this.form.total = data.data.total;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
-            } else {
-                api.axs("post", "/resume/page", this.form).then(({ data }) => {
-                    if (data.code === "SUCCESS") {
-                        this.data1 = data.data.list;
-                        this.form.total = data.data.total;
-                        this.$Loading.finish();
-                        this.$store.state.spinShow = false;
-                    } else {
-                        this.$Message.error(data.remark);
-                    }
-                });
             }
+            api.axs("post", "/resume/page", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.data1 = data.data.list;
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         selPro() {
             //选择职位
@@ -272,9 +263,7 @@ export default {
         }
     },
     mounted() {
-        this.loadLists();
-        console.log(this.companyname);
-        this.$store.state.spinShow = false;
+        this.loadLists()
     }
 };
 </script>

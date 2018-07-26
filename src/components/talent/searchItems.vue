@@ -31,40 +31,56 @@
             <FormItem label="职能类别" prop="applyUserName">
                 <Input v-model="formValidate.applyUserName"></Input>
             </FormItem>
-            <FormItem label="学历" prop="applyUserName">
-                <Select value='' placeholder="请选择学历" class='liSel'>
-                    <Option value='1'>小学</Option>
-                    <Option value='2'>初中</Option>
-                    <Option value='3'>高中</Option>
+            <FormItem label="学历" prop="eduForm">
+                <Select value='' v-model="formValidate.eduForm" placeholder="请选择学历" class='liSel'>
+                    <Option v-for="(edu,index) in resumeEduLevel" :key="index" :value="edu.name">{{ edu.value }}</Option>
+
                 </Select> -
-                <Select value='' placeholder="请选择学历" class='liSel'>
-                    <Option value='1'>小学</Option>
-                    <Option value='2'>初中</Option>
-                    <Option value='3'>高中</Option>
+                <Select v-model="formValidate.eduTo" value='' placeholder="请选择学历" class='liSel'>
+                    <Option v-for="(edu,index) in resumeEduLevel" :key="index" :value="edu.name">{{ edu.value }}</Option>
+
                 </Select>
             </FormItem>
             <FormItem label="工作年限" prop="applyUserName">
-                <Select value='' placeholder="请选择年限" class='liSel'>
-                    <Option value='1'>1年</Option>
-                    <Option value='2'>2年</Option>
-                    <Option value='3'>3年</Option>
+                <Select v-model="formValidate.workYearFrom" value='' placeholder="请选择年限" class='liSel'>
+                    <Option v-for="(workdata,index) in resumeWorkYear" :key="index" :value="workdata.name">{{ workdata.value }}</Option>
+
                 </Select> -
-                <Select value='' placeholder="请选择年限" class='liSel'>
-                    <Option value='1'>1年</Option>
-                    <Option value='2'>2年</Option>
-                    <Option value='3'>3年</Option>
+                <Select v-model="formValidate.workYearTo" value='' placeholder="请选择年限" class='liSel'>
+                    <Option v-for="(workdata,index) in resumeWorkYear" :key="index" :value="workdata.name">{{ workdata.value }}</Option>
+
                 </Select>
             </FormItem>
             <FormItem label="年龄" prop="applyUserName">
-                <Select value='' placeholder="请选择年龄" class='liSel'>
-                    <Option value='1'>18年</Option>
-                    <Option value='2'>19年</Option>
-                    <Option value='3'>3年</Option>
+                <Select v-model="formValidate.ageFrom" value='' placeholder="请选择年龄" class='liSel'>
+                    <Option value='18'>18</Option>
+                    <Option value='19'>19</Option>
+                    <Option value='20'>20</Option>
+                     <Option value='21'>21</Option>
+                    <Option value='22'>22</Option>
+                    <Option value='23'>23</Option>
+                     <Option value='24'>24</Option>
+                    <Option value='25'>25</Option>
+                    <Option value='26'>26</Option>
+                     <Option value=27>27</Option>
+                    <Option value='28'>28</Option>
+                    <Option value='29'>29</Option>
+                     <Option value='30'>30</Option>
                 </Select> -
-                <Select value='' placeholder="请选择年龄" class='liSel'>
-                    <Option value='1'>1年</Option>
-                    <Option value='2'>2年</Option>
-                    <Option value='3'>3年</Option>
+                <Select v-model="formValidate.ageTo" value='' placeholder="请选择年龄" class='liSel'>
+                   <Option value='18'>18</Option>
+                    <Option value='19'>19</Option>
+                    <Option value='20'>20</Option>
+                     <Option value='21'>21</Option>
+                    <Option value='22'>22</Option>
+                    <Option value='23'>23</Option>
+                     <Option value='24'>24</Option>
+                    <Option value='25'>25</Option>
+                    <Option value='26'>26</Option>
+                     <Option value=27>27</Option>
+                    <Option value='28'>28</Option>
+                    <Option value='29'>29</Option>
+                     <Option value='30'>30</Option>
                 </Select>
             </FormItem>
             <FormItem label="性别">
@@ -74,9 +90,10 @@
                 </Select>
             </FormItem>
             <FormItem label="更新时间" prop="dateModified">
-                <Select v-model="formValidate.dateModified" placeholder="请选择性别">
-                    <Option value='male'>男</Option>
-                    <Option value='female'>女</Option>
+                <Select v-model="formValidate.dateModified" placeholder="请选择更新时间">
+
+                    <Option v-for="(mod,index) in resumeModifiedDate" :key="index" :value="mod.name">{{ mod.value }}</Option>
+
                 </Select>
             </FormItem>
             <FormItem label="求职状态" prop="applyUserName">
@@ -166,6 +183,10 @@ export default {
             groupLists: [], //分组列表
             professPop: false, //职位弹窗
             loading: false,
+            resumeEduLevel: [],
+            resumeGender: [],
+            resumeModifiedDate: [],
+            resumeWorkYear: [],
             professName: "",
             addgroupForm: {
                 userId: ls.get("accid"),
@@ -180,7 +201,7 @@ export default {
                 pageSize: 10
             },
             formValidate: {
-                position: "前端工程师", //岗位
+                position: "", //岗位
                 keyword: "", //关键词
                 ageFrom: "", //年龄下限(不能小于18)
                 ageTo: "", //年龄上限(不能大于60)
@@ -192,17 +213,17 @@ export default {
                 schoolName: "", //学校名
                 resumeGender: "", //性别
                 areaId: "", //区域id
-                industryId: "2002", //行业id
-                companyName: "千里马" //公司名称
+                industryId: "", //行业id
+                companyName: "" //公司名称
             },
             ruleValidate: {
-                // position: [
-                //     {
-                //         required: true,
-                //         message: "请输入职位名称",
-                //         trigger: "blur"
-                //     }
-                // ],
+                companyName: [
+                    {
+                        required: true,
+                        message: "请输入公司名称",
+                        trigger: "blur"
+                    }
+                ]
                 // industryName: [
                 //     {
                 //         required: true,
@@ -251,13 +272,18 @@ export default {
         //         });
         // },
         handleSubmit(page) {
-            console.log(page)
+            console.log(page);
             //搜素人才
-            // if (this.$refs.proCity.cityId === "") {
-            //     this.companyForm.areaId = this.$refs.proCity.proId;
-            // } else {
-            //     this.companyForm.areaId = this.$refs.proCity.cityId;
-            // }
+            if (this.$refs.proCity.cityId === "") {
+                this.formValidate.areaId = this.$refs.proCity.proId;
+            } else {
+                this.formValidate.areaId = this.$refs.proCity.cityId;
+            }
+            if(this.formValidate.companyName==""){
+                 this.$Message.error("请选择公司名");
+                return;
+            }
+            console.log(this.formValidate)
             this.loading = true;
             this.$store.state.spinShow = true;
             api
@@ -282,7 +308,11 @@ export default {
                             console.log(data);
                             window.clearInterval(window.timer);
                             api
-                                .axs("post", "/resume/getResumeList", vm.formdata)
+                                .axs(
+                                    "post",
+                                    "/resume/getResumeList",
+                                    vm.formdata
+                                )
                                 .then(({ data }) => {
                                     if (data.code === "SUCCESS") {
                                         console.log(data);
@@ -301,7 +331,7 @@ export default {
             }, 1000);
         },
         search2Lits(page) {
-            this.formdata.pageNum = page
+            this.formdata.pageNum = page;
             api
                 .axs("post", "/resume/getResumeList", vm.formdata)
                 .then(({ data }) => {
@@ -333,6 +363,16 @@ export default {
     },
     mounted() {
         // this.getGroupLists();
+        api.axs("post", "/resume/queryResumeEnums").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.resumeEduLevel = data.data.resumeEduLevel;
+                this.resumeGender = data.data.resumeGender;
+                this.resumeModifiedDate = data.data.resumeModifiedDate;
+                this.resumeWorkYear = data.data.resumeWorkYear;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
     }
 };
 </script>

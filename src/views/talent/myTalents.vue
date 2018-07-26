@@ -15,6 +15,8 @@
         </div>
         <ul class="tab">
             <li v-for="(type, index) in typelist" v-on:click="addClass(type.code)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
+
+            <!-- <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type)" v-bind:class="{ clickli:index==current}" :key="index" :value="group.id"> {{ group.folderName }} -->
             </li>
         </ul>
         <ul class="talentlist">
@@ -23,9 +25,9 @@
                     <div class="header-left"><img :src="resume.headUrl" alt=""></div>
                     <div class="header-right">
                         <p class="p-name">
-                             <router-link :to="'/talent/talentdetail?id='+resume.id">
-                            <span class="name">{{ resume.name }} - {{ resume.expectedLocation }}</span>
-                             </router-link>
+                            <router-link :to="'/talent/talentdetail?id='+resume.id">
+                                <span class="name">{{ resume.name }} - {{ resume.expectedLocation }}</span>
+                            </router-link>
                             <span class="time">上传时间:{{ resume.updateTime }}</span>
                         </p>
                         <p class="exprice">{{ resume.sex }} | {{ resume.birthday }} | {{ resume.education }} | {{ resume.jobYear }}年经验 | {{ resume.sex }} | {{ resume.position }} </p>
@@ -33,7 +35,7 @@
                 </div>
                 <div class="pastcom" v-for="(res, index) in resume.busWorkExperienceList" :key="index">
                     {{ res.companyName }} | {{ res.jobTitle }} |
-                                
+
                     <span>
                         <template v-if='res.startTime'>{{ res.startTime.substr(0, 10) }}</template>
                         <template v-else>无</template>
@@ -48,7 +50,7 @@
                 </div>
                 <div>
                     <Button type="info" class="addjob" @click='professPop=true'>加入职位</Button>
-                    <Button type="success" @click='listGroupPop=true'>分组</Button>
+                    <Button type="success" @click='savesume(resume.id)'>分组</Button>
                 </div>
             </li>
         </ul>
@@ -68,11 +70,7 @@
                 </Input>
                 <div class="sels">
                     <RadioGroup v-model="selgroupForm.folderId">
-                        <Radio label="分组1"></Radio>
-                        <Radio label="分组2"></Radio>
-                        <Radio label="分组3"></Radio>
-                        <Radio label="分组4"></Radio>
-                        <Radio label="分组5"></Radio>
+                        <Radio v-for="(group,index) in groupLists" :key="index" :label="group.id">{{ group.folderName }}</Radio>
                     </RadioGroup>
                 </div>
                 <div slot='footer' style='text-align:center'>
@@ -110,7 +108,8 @@ export default {
                 folderName: ""
             },
             selgroupForm: {
-                folderId: ""
+                folderId: "",
+                userFolderResumeId: ls.get("resumeid")
             },
             tabId: 1,
             lists: [],
@@ -124,6 +123,10 @@ export default {
     },
     computed: {},
     methods: {
+        savesume(id) {
+            this.listGroupPop = true;
+            ls.set("resumeid", id);
+        },
         addClass: function(index) {
             this.$store.state.spinShow = true;
             this.current = index;
@@ -176,10 +179,11 @@ export default {
                 return;
             }
             api
-                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .axs("post", "/userFolder/transferFolder", this.addgroupForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("新增成功!");
+                        this.loadLists(page) 
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -206,12 +210,19 @@ export default {
             });
         },
         searchIn() {
-            if (!this.form.companyName) {
-                this.$Message.warning("想搜点什么?");
+            if (!this.addgroupForm.folderName) {
+                this.$Message.warning("是否输入新的文件夹名?");
                 return;
             }
-            this.tableLists = [];
-            // this.loadLists()
+            api
+                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         seltime(date) {
             this.recordsForm.followTime = date;
@@ -237,6 +248,7 @@ export default {
         }
     },
     mounted() {
+        this.getGroupLists();
         api.axs("post", "/resume/queryResumeType").then(({ data }) => {
             if (data.code === "SUCCESS") {
                 this.typelist = data.data;

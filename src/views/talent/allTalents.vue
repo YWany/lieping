@@ -5,7 +5,7 @@
             <div class="crux">
                 <span>关键词：</span>
                 <Input v-model="value14" placeholder="请输入搜索关键词" clearable style="width: 200px"></Input>
-                <Button class="serbtn" type="primary">搜素</Button>
+                <Button class="serbtn" type="primary" @click='nativesearch'>搜素</Button>
                 <a class="showup" href="javascript:void(0)" v-if='!serachitemsShow' @click='serachitemsShow=true'>
                     展开搜索条件
                     <Icon type="arrow-down-b"></Icon>
@@ -68,7 +68,7 @@ export default {
             pageTag: 1, //内网
             showif: false,
             serachitemsShow: false,
-            value14: "请输入关键词",
+            value14: "",
             professPop: false, //职位弹窗
             formValidate: {
                 page: "10"
@@ -233,6 +233,22 @@ export default {
                     this.$Message.error(data.remark);
                 }
             });
+        },
+        nativesearch(){
+             if (!this.value14) {
+                this.$Message.warning("请输入关键词");
+                return;
+            }
+            api
+                .axs("post", "/resume/page", {keyword:this.value14})
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("搜索成功!");
+                        this.loadLists(page) 
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         selPro() {
             //选择职位

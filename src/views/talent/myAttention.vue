@@ -14,9 +14,9 @@
             <Button class="serbtn" type="primary">搜素</Button>
         </div>
         <ul class="tab">
-            <li v-for="(type, index) in typelist" v-on:click="addClass(type.code)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
-
-            <!-- <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type)" v-bind:class="{ clickli:index==current}" :key="index" :value="group.id"> {{ group.folderName }} -->
+            <!-- <li v-for="(type, index) in typelist" v-on:click="addClass(type.code)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }} -->
+            <li @click='allList' :class="current==9999 ? 'clickli' : ''">我关注的</li>
+            <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type,group.id)" :class="current==group.id ? 'clickli' : ''" :key="index" :value="group.id"> {{ group.folderName }}
             </li>
         </ul>
         <ul class="talentlist" v-if='resumelist.length'>
@@ -105,14 +105,14 @@ export default {
             groupLists: [], //分组列表
             typelist: [], //类型列表
             resumelist: [], //简历列表
-            current: 0,
+            current: 9999,
             addgroupForm: {
                 userId: ls.get("accid"),
                 folderName: ""
             },
             selgroupForm: {
                 folderId: "",
-                userFolderResumeId: ls.get("resumeid")
+                id: ls.get("resumeid")
             },
             tabId: 1,
             lists: [],
@@ -130,9 +130,9 @@ export default {
             this.listGroupPop = true;
             ls.set("resumeid", id);
         },
-        addClass: function(index) {
+        addClass(index, tag) {
             this.$store.state.spinShow = true;
-            this.current = index;
+            this.current = tag;
             this.sumecan.type = index;
             this.sumecan.pageNum = 1;
             api
@@ -165,7 +165,7 @@ export default {
                     }
                 });
         },
-        getGroupLists() {
+        init() {
             //获取分组列表
             api.axs("post", "/userFolder/folderList").then(({ data }) => {
                 if (data.code === "SUCCESS") {
@@ -174,19 +174,54 @@ export default {
                     this.$Message.error(data.remark);
                 }
             });
+             api.axs("post", "/resume/queryResumeType").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.typelist = data.data;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
+        api.axs("post", "/resume/resumeList", this.sumecan).then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.resumelist = data.data.list;
+                this.sumecan.total = data.data.total;
+                this.$Loading.finish();
+                this.$store.state.spinShow = false;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
         },
         subGroupSave() {
             //选择分组
             if (!this.selgroupForm.folderId) {
-                this.$Message.warning("请一个分组！");
+                this.$Message.warning("请选择一个分组！");
                 return;
             }
             api
-                .axs("post", "/userFolder/transferFolder", this.addgroupForm)
+                .axs("post", "/userFolder/concern", this.selgroupForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("新增成功!");
-                        this.loadLists(page) 
+                        
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        allList() {
+             this.$store.state.spinShow = true;
+            this.current=9999;
+            this.sumecan.type = "";
+            this.sumecan.pageNum = 1;
+            api
+                .axs("post", "/resume/resumeList", this.sumecan)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.resumelist = data.data.list;
+                        this.sumecan.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -222,6 +257,7 @@ export default {
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("新增成功!");
+                        this.listGroupPop=false;
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -251,24 +287,8 @@ export default {
         }
     },
     mounted() {
-        this.getGroupLists();
-        api.axs("post", "/resume/queryResumeType").then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                this.typelist = data.data;
-            } else {
-                this.$Message.error(data.remark);
-            }
-        });
-        api.axs("post", "/resume/resumeList", this.sumecan).then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                this.resumelist = data.data.list;
-                this.sumecan.total = data.data.total;
-                this.$Loading.finish();
-                this.$store.state.spinShow = false;
-            } else {
-                this.$Message.error(data.remark);
-            }
-        });
+        this.init();
+       
     }
 };
 </script>
@@ -359,9 +379,9 @@ export default {
     text-align: left;
 }
 .nodatas {
-    color:#666;
-    font-size:14px;
-    text-align:center;
-    padding:30px 0;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 30px 0;
 }
 </style>

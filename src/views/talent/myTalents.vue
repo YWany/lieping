@@ -44,7 +44,7 @@
                         <template v-else>无</template>
                     </span>
 
-                    <router-link :to="'/talent/allTalents?companyname='+res.companyName">
+                    <router-link :to="'/talent/allTalents?companyname='+res.companyName+'&job='+res.jobTitle">
                         <a href="javascript:void(0)">搜索同事</a>
                     </router-link>
                 </div>
@@ -176,7 +176,7 @@ export default {
             });
         },
         subGroupSave() {
-            //选择分组
+            //转移关注
             if (!this.selgroupForm.folderId) {
                 this.$Message.warning("请一个分组！");
                 return;

@@ -156,9 +156,9 @@
                         <TabPane label="其他简历" name="name4">其他简历</TabPane>
                     </Tabs>
                     <div class="buts">
-                        <Button type="primary">和他聊聊</Button>
-                        <Button type="primary">分组</Button>
-                        <Button type="primary">加关注</Button>
+                        <Button v-if="ifattention" type="primary" @click='savesume()'>加关注</Button>
+                        <Button v-else type="primary" @click='cancelresume'>取消关注</Button>
+
                     </div>
                 </div>
 
@@ -241,6 +241,27 @@
                 </div>
             </div>
         </div>
+        <div class="listGroupPop">
+            <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
+                <div slot='header' style='font-size:14px;color:#444'>
+                    新建分组
+                    <a href="javascript:;" @click='listGroupPop=false'>
+                        <Icon type="close" class='fr'></Icon>
+                    </a>
+                </div>
+                <Input v-model="addgroupForm.folderName" @on-enter='searchIn' placeholder="请输入分组名称" style='margin:20px auto;width:300px;'>
+                <Button slot="append" @click='searchIn'>新增</Button>
+                </Input>
+                <div class="sels">
+                    <RadioGroup v-model="selgroupForm.folderId">
+                        <Radio v-for="(group,index) in groupLists" :key="index" :label="group.id">{{ group.folderName }}</Radio>
+                    </RadioGroup>
+                </div>
+                <div slot='footer' style='text-align:center'>
+                    <Button type='info' @click='subGroupSave'>确定</Button>
+                </div>
+            </Modal>
+        </div>
     </div>
 </template>
 
@@ -259,10 +280,21 @@ export default {
     },
     data() {
         return {
+            listGroupPop: false,
+            ifattention: true,
+            groupLists: [], //分组列表
             id: this.$route.query.id,
             modal1: false,
             showif: true,
             resume: "",
+            addgroupForm: {
+                userId: ls.get("accid"),
+                folderName: ""
+            },
+            selgroupForm: {
+                folderId: "",
+                id: ls.get("addfoldid")
+            },
             projectlist: [],
             educationlist: [],
             worklist: [],
@@ -276,43 +308,66 @@ export default {
         cancel() {
             this.$Message.info("Clicked cancel");
         },
-        changeid(id) {
+        savesume() {
+            this.listGroupPop = true;
+            ls.set("resumeid", this.id);
+        },
+        cancelresume() {
             this.$store.state.spinShow = true;
-            api.axs("post", "/resume/info", { id: id }).then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    this.$store.state.spinShow = false;
-                    this.resume = data.data.resume;
-                    this.projectlist = data.data.project;
-                    this.educationlist = data.data.education;
-                    this.worklist = data.data.work;
-                } else {
-                    this.$Message.error(data.remark);
-                }
-            });
-        }
-    },
-
-    mounted() {
-        if (this.resumelist.length == 0) {
-            console.log(this.id);
+            if (this.resumelist.length == 0) {
+                api
+                    .axs("post", "/userFolder/cancelConcern", {
+                        resumeId: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.ifattention = true;
+                            this.$store.state.spinShow = false;
+                            this.$Message.success("取消成功");
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.id = this.resumelist[0].id;
+                api
+                    .axs("post", "/userFolder/cancelConcern", {
+                        resumeId: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.ifattention = true;
+                            this.$store.state.spinShow = false;
+                            this.$Message.success("取消成功");
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+        ifaddresume(id) {
             api
-                .axs("post", "/resume/info", { id: this.id })
+                .axs("post", "/userFolder/isConcern", {
+                    resumeId: id
+                })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$store.state.spinShow = false;
-                        this.resume = data.data.resume;
-                        this.projectlist = data.data.project;
-                        this.educationlist = data.data.education;
-                        this.worklist = data.data.work;
+                        if (data.data == 1) {
+                            this.ifattention = false;
+                        }
                     } else {
                         this.$Message.error(data.remark);
                     }
                 });
-        } else {
-            this.id = this.resumelist[0].id;
+        },
+        changeid(id) {
+            //切换简历
+            this.$store.state.spinShow = true;
+            ls.set("addfoldid", id);
+            this.ifaddresume(id);
             api
                 .axs("post", "/resume/info", {
-                    id: this.id
+                    id: id
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
@@ -325,10 +380,147 @@ export default {
                         this.$Message.error(data.remark);
                     }
                 });
+        },
+        init() {
+            //初始化
+
+            //获取分组列表
+            api.axs("post", "/userFolder/folderList").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.groupLists = data.data;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
+            //获取简历详情
+            if (this.resumelist.length == 0) {
+                //判断是否为单个简历
+                console.log(this.id);
+                this.ifaddresume(this.id);
+                api
+                    .axs("post", "/resume/info", {
+                        id: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.$store.state.spinShow = false;
+                            this.resume = data.data.resume;
+                            this.projectlist = data.data.project;
+                            this.educationlist = data.data.education;
+                            this.worklist = data.data.work;
+                            ls.set("addfoldid", this.id);
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.id = this.resumelist[0].id;
+                this.ifaddresume(this.id);
+                api
+                    .axs("post", "/resume/info", {
+                        id: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.$store.state.spinShow = false;
+                            this.resume = data.data.resume;
+                            this.projectlist = data.data.project;
+                            this.educationlist = data.data.education;
+                            this.worklist = data.data.work;
+                            ls.set("addfoldid", this.id);
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+        subGroupSave() {
+            //加入分组
+            this.selgroupForm.id = ls.get("addfoldid");
+            if (!this.selgroupForm.folderId) {
+                this.$Message.warning("请选择一个分组！");
+                return;
+            }
+            api
+                .axs("post", "/userFolder/concern", this.selgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                        this.listGroupPop = false;
+                        this.ifattention = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleSubmit(name) {
+            //
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    this.$store.state.spinShow = true;
+                    api
+                        .axs("post", "/resume/search", this.formValidate)
+                        .then(({ data }) => {
+                            this.$store.state.spinShow = false;
+                            if (data.code === "SUCCESS") {
+                                this.$Message.success("新增成功!");
+                            } else {
+                                this.$Message.error(data.remark);
+                            }
+                        });
+                } else {
+                    this.$Message.warning("请填写完整!");
+                }
+            });
+        },
+        searchIn() {
+            //新增文件夹
+            if (!this.addgroupForm.folderName) {
+                this.$Message.warning("是否输入新的文件夹名?");
+                return;
+            }
+            api
+                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                        this.listGroupPop = false;
+                        this.ifattention = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        seltime(date) {
+            this.recordsForm.followTime = date;
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            // this.professId = idName.split("&")[0];
+            // this.professName = idName.split("&")[1];
+            // this.form.industryId = idName.split("&")[0];
+            // this.professPop = false;
+
+            const title = "成功提示";
+            const content = "<p>加入职位成功</p>";
+            this.$Modal.success({
+                title: title,
+                content: content
+            });
         }
+    },
+
+    mounted() {
+        this.init();
     },
     beforeDestroy() {
         ls.set("resumeList", []);
+        ls.set("addfoldid", "");
     }
 };
 </script>
@@ -808,5 +1000,18 @@ export default {
             }
         }
     }
+}
+
+.ivu-radio-wrapper {
+    margin-right: 34px !important;
+    padding: 5px 0;
+    text-align: left;
+}
+
+.nodatas {
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 30px 0;
 }
 </style>

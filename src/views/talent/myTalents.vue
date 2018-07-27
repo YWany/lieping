@@ -63,7 +63,7 @@
         <div class="listGroupPop">
             <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
                 <div slot='header' style='font-size:14px;color:#444'>
-                    新建分组
+                    转移分组
                     <a href="javascript:;" @click='listGroupPop=false'>
                         <Icon type="close" class='fr'></Icon>
                     </a>

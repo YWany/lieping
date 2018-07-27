@@ -13,7 +13,7 @@
                 </RadioGroup> -->
             </FormItem>
             <FormItem label="职位名称" prop="position">
-                <Input v-model="formValidate.position"></Input>
+                <Input v-model="formValidate.position" placeholder="请输入职位名称"></Input>
             </FormItem>
             <FormItem label="所在行业" prop="industryName">
                 <Input @on-focus='professPop=true' v-model='professName' :readonly='true' placeholder="选择行业" class='selPro' style="width:148px"></Input>
@@ -32,10 +32,10 @@
                 <Citysels ref='proCity' />
             </FormItem>
             <FormItem label="关键词">
-                <Input v-model="formValidate.keyword"></Input>
+                <Input v-model="formValidate.keyword" placeholder="请输入关键词"></Input>
             </FormItem>
             <FormItem label="职能类别" prop="applyUserName">
-                <Input v-model="formValidate.applyUserName"></Input>
+                <Input v-model="formValidate.applyUserName" placeholder="请输入职能类别"></Input>
             </FormItem>
             <FormItem label="学历" prop="eduForm">
                 <Select value='' v-model="formValidate.eduForm" placeholder="请选择学历" class='liSel'>
@@ -62,31 +62,31 @@
                     <Option value='18'>18</Option>
                     <Option value='19'>19</Option>
                     <Option value='20'>20</Option>
-                     <Option value='21'>21</Option>
+                    <Option value='21'>21</Option>
                     <Option value='22'>22</Option>
                     <Option value='23'>23</Option>
-                     <Option value='24'>24</Option>
+                    <Option value='24'>24</Option>
                     <Option value='25'>25</Option>
                     <Option value='26'>26</Option>
-                     <Option value=27>27</Option>
+                    <Option value='27'>27</Option>
                     <Option value='28'>28</Option>
                     <Option value='29'>29</Option>
-                     <Option value='30'>30</Option>
+                    <Option value='30'>30</Option>
                 </Select> -
                 <Select v-model="formValidate.ageTo" value='' placeholder="请选择年龄" class='liSel'>
-                   <Option value='18'>18</Option>
+                    <Option value='18'>18</Option>
                     <Option value='19'>19</Option>
                     <Option value='20'>20</Option>
-                     <Option value='21'>21</Option>
+                    <Option value='21'>21</Option>
                     <Option value='22'>22</Option>
                     <Option value='23'>23</Option>
-                     <Option value='24'>24</Option>
+                    <Option value='24'>24</Option>
                     <Option value='25'>25</Option>
                     <Option value='26'>26</Option>
-                     <Option value=27>27</Option>
+                    <Option value='27'>27</Option>
                     <Option value='28'>28</Option>
                     <Option value='29'>29</Option>
-                     <Option value='30'>30</Option>
+                    <Option value='30'>30</Option>
                 </Select>
             </FormItem>
             <FormItem label="性别">
@@ -176,7 +176,7 @@ export default {
         Citysels,
         Professions
     },
-    props: ['companyname','job'],
+    props: ["companyname", "job"],
     data() {
         return {
             addGroupPop: false,
@@ -224,14 +224,14 @@ export default {
                         message: "请输入公司名称",
                         trigger: "blur"
                     }
-                ]
-                // industryName: [
-                //     {
-                //         required: true,
-                //         message: "请输入行业名称",
-                //         trigger: "change"
-                //     }
-                // ],
+                ],
+                position: [
+                    {
+                        required: true,
+                        message: "请输入职位名称",
+                        trigger: "blur"
+                    }
+                ],
                 // areaName: [
                 //     {
                 //         required: true,
@@ -279,11 +279,15 @@ export default {
             } else {
                 this.formValidate.areaId = this.$refs.proCity.cityId;
             }
-            if(this.formValidate.companyName==""){
-                 this.$Message.error("请选择公司名");
+            if (this.formValidate.companyName == "") {
+                this.$Message.error("请选择公司名");
                 return;
             }
-            console.log(this.formValidate)
+             if (this.formValidate.position == "") {
+                this.$Message.error("请输入职位名称");
+                return;
+            }
+            console.log(this.formValidate);
             this.loading = true;
             this.$store.state.spinShow = true;
             api
@@ -299,8 +303,8 @@ export default {
         createpop(page) {
             //创建任务
             var vm = this;
-            this.formdata.pageNum = page
-            this.$parent.form.pageNum = page
+            this.formdata.pageNum = page;
+            this.$parent.form.pageNum = page;
             window.timer = setInterval(function() {
                 api
                     .axs("post", "/resume/pollingTaskSchedule")
@@ -332,8 +336,8 @@ export default {
             }, 1000);
         },
         search2Lits(page) {
-            this.formdata.pageNum = page
-            this.$parent.form.pageNum = page
+            this.formdata.pageNum = page;
+            this.$parent.form.pageNum = page;
             api
                 .axs("post", "/resume/getResumeList", this.formdata)
                 .then(({ data }) => {

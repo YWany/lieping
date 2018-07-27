@@ -253,6 +253,15 @@ export default new Router({
                     component: () =>
                         import ("./views/position/addNewPosition.vue")
                 },
+                {
+                    meta: {
+                        title: '千里马-职位-新增职位'
+                    },
+                    path: '/position/recommend',
+                    name: 'position/recommend',
+                    component: () =>
+                        import ("./views/position/recommend.vue")
+                },
 
                 { // manager 管理 =======================================================
                     meta: {

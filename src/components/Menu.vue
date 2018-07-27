@@ -40,6 +40,9 @@
                 <router-link to='/position/addNewPosition'>
                     <MenuItem name="/position/addNewPosition">新增职位</MenuItem>
                 </router-link>
+                <router-link to='/position/recommend'>
+                    <MenuItem name="/position/recommend">职位推荐</MenuItem>
+                </router-link>
             </Submenu>
             <Submenu name="talent">
                 <template slot="title">

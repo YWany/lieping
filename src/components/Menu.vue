@@ -32,13 +32,14 @@
                     <MenuItem name="/customer/overCustomers">终止合作客户</MenuItem>
                 </router-link>
             </Submenu>
-            <Submenu name="2">
+            <Submenu name="position">
                 <template slot="title">
                     <Icon type="ios-filing"></Icon>
                     职位
                 </template>
-                <MenuItem name="2-1">职位11</MenuItem>
-                <MenuItem name="2-2">职位22</MenuItem>
+                <router-link to='/position/addNewPosition'>
+                    <MenuItem name="/position/addNewPosition">新增职位</MenuItem>
+                </router-link>
             </Submenu>
             <Submenu name="talent">
                 <template slot="title">

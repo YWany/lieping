@@ -244,6 +244,16 @@ export default new Router({
                         import ("./views/talent/talentdetail.vue")
                 },
 
+                { // postion 职位 =======================================================
+                    meta: {
+                        title: '千里马-职位-新增职位'
+                    },
+                    path: '/position/addNewPosition',
+                    name: 'positionAddNewPosition',
+                    component: () =>
+                        import ("./views/position/addNewPosition.vue")
+                },
+
                 { // manager 管理 =======================================================
                     meta: {
                         title: '千里马-管理-新增账号'

@@ -224,14 +224,14 @@ export default {
                         message: "请输入公司名称",
                         trigger: "blur"
                     }
-                ],
-                position: [
-                    {
-                        required: true,
-                        message: "请输入职位名称",
-                        trigger: "blur"
-                    }
-                ],
+                ]
+                // position: [
+                //     {
+                //         required: true,
+                //         message: "请输入职位名称",
+                //         trigger: "blur"
+                //     }
+                // ],
                 // areaName: [
                 //     {
                 //         required: true,
@@ -283,10 +283,10 @@ export default {
                 this.$Message.error("请选择公司名");
                 return;
             }
-             if (this.formValidate.position == "") {
-                this.$Message.error("请输入职位名称");
-                return;
-            }
+            //  if (this.formValidate.position == "") {
+            //     this.$Message.error("请输入职位名称");
+            //     return;
+            // }
             console.log(this.formValidate);
             this.loading = true;
             this.$store.state.spinShow = true;
@@ -295,6 +295,7 @@ export default {
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.createpop(1);
+
                     } else {
                         this.$Message.error(data.remark);
                     }

@@ -16,7 +16,7 @@
         <ul class="tab">
             <li v-for="(type, index) in typelist" v-on:click="addClass(type.code)" v-bind:class="{ clickli:index==current}" :key="index" :value="type.id"> {{ type.value }}
 
-            <!-- <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type)" v-bind:class="{ clickli:index==current}" :key="index" :value="group.id"> {{ group.folderName }} -->
+                <!-- <li v-for="(group,index) in groupLists" v-on:click="addClass(group.type)" v-bind:class="{ clickli:index==current}" :key="index" :value="group.id"> {{ group.folderName }} -->
             </li>
         </ul>
         <ul class="talentlist" v-if='resumelist.length'>
@@ -26,7 +26,11 @@
                     <div class="header-right">
                         <p class="p-name">
                             <router-link :to="'/talent/talentdetail?id='+resume.id">
-                                <span class="name">{{ resume.name }} - {{ resume.expectedLocation }}</span>
+                                <span class="name">
+                                    {{ resume.name }} -
+                                    <template v-if='resume.expectedLocation'>{{ resume.expectedLocation }}</template>
+                                    <template v-else>无</template>
+                                </span>
                             </router-link>
                             <span class="time">上传时间:{{ resume.updateTime }}</span>
                         </p>
@@ -186,7 +190,7 @@ export default {
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("新增成功!");
-                        this.loadLists(page) 
+                        this.loadLists(page);
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -359,9 +363,9 @@ export default {
     text-align: left;
 }
 .nodatas {
-    color:#666;
-    font-size:14px;
-    text-align:center;
-    padding:30px 0;
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding: 30px 0;
 }
 </style>

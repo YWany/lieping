@@ -32,18 +32,6 @@
                     <MenuItem name="/customer/overCustomers">终止合作客户</MenuItem>
                 </router-link>
             </Submenu>
-            <Submenu name="position">
-                <template slot="title">
-                    <Icon type="ios-filing"></Icon>
-                    职位
-                </template>
-                <router-link to='/position/addNewPosition'>
-                    <MenuItem name="/position/addNewPosition">新增职位</MenuItem>
-                </router-link>
-                <router-link to='/position/recommend'>
-                    <MenuItem name="/position/recommend">职位推荐</MenuItem>
-                </router-link>
-            </Submenu>
             <Submenu name="talent">
                 <template slot="title">
                     <Icon type="ios-filing"></Icon>
@@ -63,6 +51,24 @@
                 </router-link>
                 <router-link to='/talent/myAttention'>
                     <MenuItem name="/talent/myAttention">我的关注</MenuItem>
+                </router-link>
+            </Submenu>
+            <Submenu name="position">
+                <template slot="title">
+                    <Icon type="ios-filing"></Icon>
+                    职位
+                </template>
+                <router-link to='/position/addNewPosition'>
+                    <MenuItem name="/position/addNewPosition">新增职位</MenuItem>
+                </router-link>
+                <router-link to='/position/myPositions'>
+                    <MenuItem name="/position/myPositions">我的职位</MenuItem>
+                </router-link>
+                <router-link to='/position/recommend'>
+                    <MenuItem name="/position/recommend">职位推荐</MenuItem>
+                </router-link>
+                <router-link to='/position/allPositions'>
+                    <MenuItem name="/position/allPositions">职位公海池</MenuItem>
                 </router-link>
             </Submenu>
             <Submenu name="4">

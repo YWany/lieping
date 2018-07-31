@@ -255,12 +255,30 @@ export default new Router({
                 },
                 {
                     meta: {
-                        title: '千里马-职位-新增职位'
+                        title: '千里马-职位-我的职位'
+                    },
+                    path: '/position/myPositions',
+                    name: 'position/myPositions',
+                    component: () =>
+                        import ("./views/position/myPositions.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-职位-职位推荐'
                     },
                     path: '/position/recommend',
                     name: 'position/recommend',
                     component: () =>
                         import ("./views/position/recommend.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-职位-职位公海池'
+                    },
+                    path: '/position/allPositions',
+                    name: 'position/allPositions',
+                    component: () =>
+                        import ("./views/position/allPositions.vue")
                 },
 
                 { // manager 管理 =======================================================

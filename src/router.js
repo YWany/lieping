@@ -273,6 +273,15 @@ export default new Router({
                 },
                 {
                     meta: {
+                        title: '千里马-职位-我的职位-运作'
+                    },
+                    path: '/position/myPositions/doing',
+                    name: 'position/myPositions/doing',
+                    component: () =>
+                        import ("./views/position/myPositions-doing.vue")
+                },
+                {
+                    meta: {
                         title: '千里马-职位-职位推荐'
                     },
                     path: '/position/recommend',

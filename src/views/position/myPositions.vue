@@ -1,6 +1,58 @@
 <template>
     <div class="recommend">
         我的职位
+        <ul class="tab">
+            <li class="active">我的职位</li>
+            <li>所有职位</li>
+            <li>进行中</li>
+            <li>录用待入职</li>
+            <li>入职未过保</li>
+            <li>以过保</li>
+            <li>离职补人</li>
+            <li>暂缓</li>
+            <li>以终止</li>
+        </ul>
+        <form class="searches">
+            <div class="search">
+                <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
+                <Select v-model="form.selVal" slot="prepend" class='search-sels' style="width:80px">
+                    <Option value="职位名称">职位名称</Option>
+                    <Option value="公司名称">公司名称</Option>
+                </Select>
+                <Button slot="append" icon="ios-search"></Button>
+                </Input>
+            </div>
+            <div class="sels">
+                <Select v-model="form.sel1" class='sels-item' placeholder='BD负责人' style="width:100px">
+                    <Option value="部门归属1">部门归属1</Option>
+                    <Option value="部门归属2">部门归属2</Option>
+                </Select>
+                <Select v-model="form.sel2" class='sels-item' placeholder='职位状态' style="width:100px">
+                    <Option value="客户行业1">客户行业1</Option>
+                    <Option value="客户行业2">客户行业2</Option>
+                </Select>
+                <Select v-model="form.sel3" class='sels-item' placeholder='项目经理' style="width:100px">
+                    <Option value="客户来源1">客户来源1</Option>
+                    <Option value="客户来源2">客户来源2</Option>
+                </Select>
+                <div class="disInB sels-item">
+                    创建时间:
+                    <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                </div>
+                <div class="disInB sels-item">
+                    更新时间:
+                    <DatePicker type="date" v-model='form.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                </div>
+                <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
+                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
+            </div>
+        </form>
+        <div class="searchTable">
+            <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
+            <div class="tablePage fr">
+                <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -11,15 +63,238 @@ export default {
     name: "recommend",
     components: {},
     data() {
-        return {};
+        return {
+            form: {
+                searchVal: "",
+                selVal: "职位名称",
+                sel1: "",
+                sel2: "",
+                sel3: "",
+                sel4: "",
+                sel5: "",
+                sel6: "",
+                createDate: "",
+                signDate: ""
+            },
+            formPage: {
+                total: 120,
+                current: 1,
+                pageSize: 20
+            },
+             tableHeader: [
+                {
+                    title: "职位名称",
+                    key: "name",
+                    width: 140,
+                    align: "center",
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h(
+                            "router-link",
+                            {
+                                attrs: {
+                                    to:
+                                        "/customer/jobDoing/details?jodId=" +
+                                        row.id
+                                }
+                            },
+                            row.name
+                        );
+                    }
+                },
+                {
+                    title: "公司名称",
+                    key: "kehu",
+                    width: 140,
+                    sortable: true,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "加入职位",
+                    key: "phone",
+                    width: 94,
+                    align: "center"
+                },
+                {
+                    title: "推荐",
+                    key: "bbb",
+                    sortable: true,
+                    width: 94,
+                    align: "center"
+                },
+                {
+                    title: "面试",
+                    key: "ccc",
+                    width: 65,
+                    align: "center"
+                },
+                {
+                    title: "录用",
+                    key: "ddd",
+                    width: 65,
+                    ellipsis: true,
+                    align: "center"
+                },
+                {
+                    title: "入职",
+                    key: "eee",
+                    width: 65,
+                    align: "center"
+                },
+                {
+                    title: "过保",
+                    key: "fff",
+                    width: 65,
+                    align: "center"
+                },
+                {
+                    title: "更新时间",
+                    key: "ggg",
+                    width: 65,
+                    align: "center"
+                },
+                {
+                    title: "更新内容",
+                    key: "hhh",
+                    width: 85,
+                    align: "center"
+                },
+                {
+                    title: "职位运作时长",
+                    key: "hhh",
+                    width: 85,
+                    align: "center"
+                },     
+                 {
+                    title: "主要顾问",
+                    key: "hhh",
+                    width: 85,
+                    align: "center"
+                },
+                {
+                    title: "操作",
+                    key: "iii",
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("div", [
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "暂缓!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "编辑"
+                            ),
+                            h(
+                                "Button",
+                                {
+                                    props: {
+                                        type: "warning",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "终止!!!" + row.name
+                                            );
+                                        }
+                                    }
+                                },
+                                "共享发布"
+                            ),
+                            
+                        ]);
+                    }
+                }
+            ],
+            tableLists: [
+                {
+                    id: 96,
+                    name: "财务总监",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                },
+                {
+                    id: 97,
+                    name: "招商CEO招商CEO",
+                    kehu: "浙江千里马股份有限公司",
+                    phone: "Yuxinhua",
+                    bbb: "进行中",
+                    ccc: "1",
+                    ddd: "23",
+                    eee: "10",
+                    fff: "00",
+                    ggg: "00",
+                    hhh: "2018-10-10 12:30:40",
+                    hhh: "2018-10-10 12:30:40"
+                }
+            ]
+        };
     },
-    methods: {},
+    methods: {
+        loadLists(page) {
+            this.$store.state.spinShow = true;
+            setTimeout(() => {
+                this.$store.state.spinShow = false;
+            }, 1500);
+        },
+        reset(key) {
+            Object.keys(this[key]).forEach(item => {
+                this[key][item] = "";
+            });
+            this.form.selVal = "企业名称";
+        }
+    },
     mounted() {
-        this.$store.state.spinShow = false
+        this.$store.state.spinShow = false;
     }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+.tab {
+    width: 100%;
+    //  clear: both;
+    //   content: "";
+    // visibility: hidden;
+    // height: 0;
+    li {
+        float: left;
+        margin-right: 10px;
+        font-size: 14px;
+        padding: 5px 0;
+        margin-bottom: 10px;
+        cursor: pointer;
+    }
+    .active {
+        color: #0066ff;
+        border-bottom: 1px solid #0066ff;
+    }
+}
 </style>

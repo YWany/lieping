@@ -1,5 +1,5 @@
 <template>
-    <div class="recommend">
+    <div class="myPositions">
         我的职位
         <ul class="tab">
             <li class="active">我的职位</li>
@@ -60,7 +60,7 @@
 import api from "@/api";
 import ls from "store2";
 export default {
-    name: "recommend",
+    name: "myPositions",
     components: {},
     data() {
         return {

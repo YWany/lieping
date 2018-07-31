@@ -1,5 +1,5 @@
 <template>
-    <div class="allPositions">
+    <div class="myPositionsDetails">
         职位公海
     </div>
 </template>
@@ -8,7 +8,7 @@
 import api from "@/api";
 import ls from "store2";
 export default {
-    name: "allPositions",
+    name: "myPositionsDetails",
     components: {},
     data() {
         return {};

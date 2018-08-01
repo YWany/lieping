@@ -3,19 +3,27 @@
         <div class='currentNav'>当前位置: 客户 >
             <router-link to='/customer/jobDoing'>职位进展</router-link> > 职位运作</div>
         <div class="jodDesc">
-            <h3>财务总监
-                <span class='code'> (职位编号: 123435555)</span>
-                <Tag type="border" color="blue">进行中</Tag>
-                <Tag type="border" color="green">一般</Tag>
-                <Tag type="border" color="yellow">啊哈哈</Tag>
+            <h3>
+                <span class='name'>财务总监</span>
+                <Tag type="border" color="green">进行中</Tag>
+                <Tag type="border" color="yellow">共享发布</Tag>
                 <span class="update fr">更新时间: 2018-02-22</span>
+                <span class='fr'>&nbsp;&nbsp;&nbsp;</span>
+                <span class="update fr">创建时间: 2018-02-22</span>
             </h3>
             <p class="company clearfix">
-                <span class='fl'>委托企业: 浙江千里马人力资源有股份有线公司</span>
-                <span class="tip fr">投递: 100</span>
-                <span class="tip fr">浏览: 235</span>
+                <router-link :to="'/customer/myCustomers/records?id='+id" class='fl'>浙江千里马人力资源有股份有线公司</router-link>
+                <!-- <span class="tip fr">投递: 100</span> -->
+                <!-- <span class="tip fr">浏览: 235</span> -->
             </p>
             <div class="tags">
+                <span>Business Development：<a href="javascript:;">张浩(离职)</a></span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>Consultant：<a href="javascript:;">浪潮群</a></span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>Assistant Consultant：<a href="javascript:;">郎超群</a></span>
+            </div>  
+            <div class="tags disNone">
                 <Tag color="blue">内部共享</Tag>
                 <Tag color="green">悬赏发布</Tag>
                 <Tag color="yellow">赏金500</Tag>
@@ -24,17 +32,57 @@
         <div class="searchTable">
             <div class="tabsTable">
                 <Tabs value="jianli" :animated=false>
-                    <TabPane label="简历" name="jianli">
+                    <TabPane label="候选人" name="jianli">
+                        <form class="searches">
+                            <div class="search">
+                                <Input v-model="hxForm.searchVal" @on-enter='searchIn' placeholder="请输入要搜索的内容...">
+                                <Select v-model="hxForm.selVal" slot="prepend" class='search-sels' style="width:80px">
+                                    <Option value="候选人">候选人</Option>
+                                    <Option value="联系方式">联系方式</Option>
+                                    <Option value="名称搜索">名称搜索</Option>
+                                </Select>
+                                <Button slot="append" icon="ios-search" @click='searchIn'></Button>
+                                </Input>
+                            </div>
+                            <div class="sels">
+                                <Select v-model="hxForm.sel1" class='sels-item' placeholder='前期服务费' style="width:100px">
+                                    <Option value="部门归属1">部门归属1</Option>
+                                    <Option value="部门归属2">部门归属2</Option>
+                                </Select>
+                                <Select v-model="hxForm.sel2" class='sels-item' placeholder='付款方式' style="width:100px">
+                                    <Option value="客户行业1">客户行业1</Option>
+                                    <Option value="客户行业2">客户行业2</Option>
+                                </Select>
+                                <Select v-model="hxForm.sel3" class='sels-item' placeholder='保证期' style="width:100px">
+                                    <Option value="客户来源1">客户来源1</Option>
+                                    <Option value="客户来源2">客户来源2</Option>
+                                </Select>
+                                <Select v-model="hxForm.sel4" class='sels-item' placeholder='合同状态' style="width:100px">
+                                    <Option value="客户重要性1">客户重要性1</Option>
+                                    <Option value="客户重要性2">客户重要性2</Option>
+                                </Select>
+                                <div class="disInB sels-item">
+                                    签约时间:
+                                    <DatePicker type="date" v-model='hxForm.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                                </div>
+                                <div class="disInB sels-item">
+                                    合同到期日:
+                                    <DatePicker type="date" v-model='hxForm.signDate' placeholder="选择日期" style="width: 110px"></DatePicker>
+                                </div>
+                                <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
+                                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search " @click="searchIn('selSearch')">搜索</Button>
+                            </div>
+                        </form>
                         <div class="searchItem">
-                            <Button type="ghost">自主寻访</Button>
-                            <Button type="ghost">他人推荐</Button>
-                            <Button type="ghost">智能匹配</Button>
-                            <Button type="text" disabled>CallList(1)</Button>
-                            <Button type="text" disabled>推荐简历(25)</Button>
-                            <Button type="text" disabled>面试(25)</Button>
-                            <Button type="text" disabled>Offer(25)</Button>
-                            <Button type="text" disabled>过保(25)</Button>
-                            <Button type="text" disabled>淘汰人选(25)</Button>
+                            <Button type="ghost">他人推荐 (2)</Button>
+                            <Button type="ghost">智能匹配 (18)</Button>
+                            <div class="disInb fr">
+                                <Button type="text" disabled>推荐企业(1)</Button>
+                                <Button type="text" disabled>企业面试(25)</Button>
+                                <Button type="text" disabled>Offer(25)</Button>
+                                <Button type="text" disabled>上岗(25)</Button>
+                                <Button type="text" disabled>过保(25)</Button>
+                            </div>
                         </div>
                         <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                         <div class="tablePage fr">
@@ -234,11 +282,24 @@ export default {
     name: "home",
     data() {
         return {
+            id: 1,
             loading: false,
             formPage: {
                 total: 120,
                 current: 1,
                 pageSize: 20
+            },
+            hxForm: {
+                searchVal: "",
+                selVal: "候选人",
+                sel1: "",
+                sel2: "",
+                sel3: "",
+                sel4: "",
+                sel5: "",
+                sel6: "",
+                createDate: "",
+                signDate: ""
             },
             tableHeader: [
                 {
@@ -262,25 +323,9 @@ export default {
                     }
                 },
                 {
-                    title: "运行状态",
-                    key: "kehu",
-                    width: 100,
-                    sortable: true,
-                    ellipsis: true,
-                    align: "center"
-                },
-                {
                     title: "性别",
                     key: "phone",
-                    sortable: true,
-                    width: 70,
-                    align: "center"
-                },
-                {
-                    title: "工作年限",
-                    key: "bbb",
-                    sortable: true,
-                    width: 90,
+                    width: 45,
                     align: "center"
                 },
                 {
@@ -298,10 +343,40 @@ export default {
                     align: "center"
                 },
                 {
+                    title: "手机",
+                    key: "bbb",
+                    width: 90,
+                    align: "center"
+                },
+                {
+                    title: "邮箱",
+                    key: "bbb",
+                    width: 90,
+                    align: "center"
+                },
+                {
+                    title: "流程阶段",
+                    key: "bbb",
+                    width: 90,
+                    align: "center"
+                },
+                {
+                    title: "状态",
+                    key: "bbb",
+                    sortable: true,
+                    width: 90,
+                    align: "center"
+                },
+                {
                     title: "加入时间",
                     key: "eee",
-                    sortable: true,
-                    width: 100,
+                    width: 80,
+                    align: "center"
+                },
+                {
+                    title: "更新时间",
+                    key: "eee",
+                    width: 80,
                     align: "center"
                 },
                 {
@@ -324,12 +399,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "联系ta!!!" + row.name
+                                                "推荐企业!!!" + row.name
                                             );
                                         }
                                     }
                                 },
-                                "联系ta"
+                                "推荐企业"
                             ),
                             h(
                                 "Button",
@@ -344,12 +419,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "加入CallList!!!" + row.name
+                                                "转发简历!!!" + row.name
                                             );
                                         }
                                     }
                                 },
-                                "加入CallList"
+                                "转发简历"
                             ),
                             h(
                                 "Button",
@@ -364,52 +439,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "待定!!!" + row.name
+                                                "人才备注!!!" + row.name
                                             );
                                         }
                                     }
                                 },
-                                "待定"
-                            ),
-                            h(
-                                "Button",
-                                {
-                                    props: {
-                                        type: "warning",
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "关注候选人!!!" + row.name
-                                            );
-                                        }
-                                    }
-                                },
-                                "关注候选人"
-                            ),
-                            h(
-                                "Button",
-                                {
-                                    props: {
-                                        type: "error",
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "不合适!!!" + row.name
-                                            );
-                                        }
-                                    }
-                                },
-                                "不合适"
+                                "人才备注"
                             )
                         ]);
                     }
@@ -453,6 +488,23 @@ export default {
                 this.$store.state.spinShow = false;
             }, 1500);
         },
+        searchIn(type) {
+            if (this.form.selVal == "候选人姓名") {
+                this.form.companyName = this.form.searchVal;
+                this.form.bdName = "";
+            } else if (this.form.selVal == "联系方式") {
+                this.form.bdName = this.form.searchVals;
+                this.form.companyName = "";
+            }
+
+            if (!this.form.searchVal && type != "selSearch") {
+                this.$Message.warning("想搜点什么?");
+                return;
+            }
+            this.hetongForm.pageNum = 1;
+            this.hetongLists = [];
+            this.loadLists();
+        },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = "";
@@ -478,6 +530,10 @@ export default {
     .jodDesc {
         border: 1px solid #eee;
         padding: 10px 15px;
+        .name {
+            vertical-align: text-top;
+            margin-right: 5px;
+        }
         h3 {
             font-size: 20px;
             .code,
@@ -488,6 +544,8 @@ export default {
             }
         }
         .company {
+            margin: 4px 0;
+            font-size: 14px;
             .tip {
                 margin: 0 10px;
             }
@@ -498,6 +556,9 @@ export default {
                 height: 28px;
                 line-height: 28px;
                 padding: 0 15px;
+            }
+            a {
+                color: #000;
             }
         }
     }

@@ -189,7 +189,8 @@ export default {
                 .axs("post", "/userFolder/transferFolder", this.addgroupForm)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.success("新增成功!");
+                        this.$Message.success("转移成功!");
+                        this.listGroupPop = false
                         this.loadLists(page);
                     } else {
                         this.$Message.error(data.remark);
@@ -226,6 +227,7 @@ export default {
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success("新增成功!");
+                        this.getGroupLists()
                     } else {
                         this.$Message.error(data.remark);
                     }
@@ -356,9 +358,12 @@ export default {
         }
     }
 }
-
+.sels {
+    max-height: 210px;
+    overflow-y: auto;
+}
 .ivu-radio-wrapper {
-    margin-right: 34px !important;
+    width: 86%;
     padding: 5px 0;
     text-align: left;
 }

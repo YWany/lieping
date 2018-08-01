@@ -1,7 +1,7 @@
 <template>
     <div class="myPositions">
         我的职位
-        <ul class="tab">
+        <!-- <ul class="tab">
             <li class="active">我的职位</li>
             <li>所有职位</li>
             <li>进行中</li>
@@ -11,7 +11,7 @@
             <li>离职补人</li>
             <li>暂缓</li>
             <li>以终止</li>
-        </ul>
+        </ul> -->
         <form class="searches">
             <div class="search">
                 <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
@@ -28,6 +28,10 @@
                     <Option value="部门归属2">部门归属2</Option>
                 </Select>
                 <Select v-model="form.sel2" class='sels-item' placeholder='职位状态' style="width:100px">
+                    <Option value="未开始">未开始</Option>
+                    <Option value="进行中">进行中</Option>
+                    <Option value="录用待入职">录用待入职</Option>
+                    <Option value="客户行业2">客户行业2</Option>
                     <Option value="客户行业1">客户行业1</Option>
                     <Option value="客户行业2">客户行业2</Option>
                 </Select>
@@ -94,7 +98,7 @@ export default {
                             {
                                 attrs: {
                                     to:
-                                        "/customer/jobDoing/details?jodId=" +
+                                        "/position/myPositions/doing?jodId=" +
                                         row.id
                                 }
                             },

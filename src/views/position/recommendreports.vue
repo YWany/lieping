@@ -529,9 +529,9 @@ export default {
 .report1 {
     width: 100%;
     .zoom {
-        width: 100%;
-        padding: 10px 50px;
-        background: rgba(249, 249, 249, 1);
+        width: 100%;    
+        padding: 20px 50px;
+        background: #f5fbff;
         overflow: auto;
         li {
             width: 170px;
@@ -550,7 +550,7 @@ export default {
                 float: left;
             }
             .active {
-                background: #0066ff;
+                background: #4ca6fa;
                 width: 50px;
                 height: 50px;
                 border-radius: 50%;
@@ -585,7 +585,7 @@ export default {
     width: 100%;
     padding: 10px 0;
     margin-top: 10px;
-    background: rgba(249, 249, 249, 1);
+    background: #f5fbff;
     .save {
         width: 100%;
         padding: 30px 450px;
@@ -598,6 +598,7 @@ export default {
         margin: 0 auto;
         padding: 10px;
         background: white;
+        box-shadow: 0 0 5px #eee;
         h1 {
             text-align: center;
         }

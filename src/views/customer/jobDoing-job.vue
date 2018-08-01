@@ -23,6 +23,14 @@
                 <span>Consultant：<a href="javascript:;">浪潮群</a></span>
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span>Assistant Consultant：<a href="javascript:;">郎超群</a></span>
+                <span class="tip fr">
+                    <Icon type="share"></Icon>
+                    <Icon type="compose"></Icon>
+                    <!-- <Icon type="ios-eye-outline"></Icon>
+                    <Icon type="ios-loop-strong"></Icon>
+                    <Icon type="android-arrow-dropright-circle"></Icon>
+                    <Icon type="android-warning"></Icon> -->
+                </span>
             </div>  
             <div class="tags disNone">
                 <Tag color="blue">内部共享</Tag>
@@ -213,7 +221,7 @@ export default {
                                 "Button",
                                 {
                                     props: {
-                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        type: "success", //primary、ghost、dashed、text、info、success、warning、error
                                         size: "small"
                                     },
                                     style: {

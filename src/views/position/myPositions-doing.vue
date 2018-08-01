@@ -3,7 +3,8 @@
         <div class='currentNav'>当前位置: 职位 >
             <router-link to='/position/myPositions'>职位进展</router-link> > 职位运作</div>
         <div class="jodDesc">
-            <h3> <router-link to='/position/myPositions/details'>财务总监</router-link>
+            <h3>
+                <router-link to='/position/myPositions/details'>财务总监</router-link>
                 <Tag style="margin-left:10px;" type="border" color="blue">进行中</Tag>
                 <Tag type="border" color="green">一般</Tag>
                 <Tag type="border" color="yellow">啊哈哈</Tag>
@@ -213,7 +214,7 @@ export default {
                         const row = params.row;
                         return h("div", [
                             h(
-                                "Button",
+                                "router-link",
                                 {
                                     props: {
                                         type: "info", //primary、ghost、dashed、text、info、success、warning、error
@@ -222,12 +223,10 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "联系ta!!!" + row.name
-                                            );
-                                        }
+                                    attrs: {
+                                        to:
+                                            "/position/myPositions/recommendreports?id=" +
+                                            row.id
                                     }
                                 },
                                 "推荐企业"
@@ -245,7 +244,7 @@ export default {
                                     on: {
                                         click: () => {
                                             this.$Message.info(
-                                                "加入CallList!!!" + row.name
+                                                "转发简历!!!" + row.name
                                             );
                                         }
                                     }
@@ -271,7 +270,7 @@ export default {
                                     }
                                 },
                                 "人才备注"
-                            ),
+                            )
                         ]);
                     }
                 }

@@ -12,6 +12,7 @@
                         <Option value="shanghai">London</Option>
                         <Option value="shenzhen">Sydney</Option>
                     </Select>
+                    <!-- <Input slot="append" @on-focus="getContactLists('select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input> -->
                 </FormItem>
                 <FormItem label="所属合同：" prop="contractId" class="half">
                     <Select v-model="formValidate.contractId" placeholder="Select your city">

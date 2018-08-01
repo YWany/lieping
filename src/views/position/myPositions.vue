@@ -54,7 +54,7 @@
         <div class="searchTable">
             <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
             <div class="tablePage fr">
-                <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
             </div>
         </div>
     </div>
@@ -80,15 +80,15 @@ export default {
                 createDate: "",
                 signDate: ""
             },
-            formPage: {
-                total: 120,
-                current: 1,
-                pageSize: 20
+            form: {
+                total: 100,
+                pageNum: 1,
+                pageSize: 10
             },
              tableHeader: [
                 {
                     title: "职位名称",
-                    key: "name",
+                    key: "jobName",
                     width: 140,
                     align: "center",
                     render: (h, params) => {
@@ -102,13 +102,13 @@ export default {
                                         row.id
                                 }
                             },
-                            row.name
+                            row.jobName
                         );
                     }
                 },
                 {
                     title: "公司名称",
-                    key: "kehu",
+                    key: "companyName",
                     width: 140,
                     sortable: true,
                     ellipsis: true,
@@ -229,43 +229,24 @@ export default {
                 }
             ],
             tableLists: [
-                {
-                    id: 96,
-                    name: "财务总监",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                },
-                {
-                    id: 97,
-                    name: "招商CEO招商CEO",
-                    kehu: "浙江千里马股份有限公司",
-                    phone: "Yuxinhua",
-                    bbb: "进行中",
-                    ccc: "1",
-                    ddd: "23",
-                    eee: "10",
-                    fff: "00",
-                    ggg: "00",
-                    hhh: "2018-10-10 12:30:40",
-                    hhh: "2018-10-10 12:30:40"
-                }
+              //我的职位list
             ]
         };
     },
     methods: {
         loadLists(page) {
             this.$store.state.spinShow = true;
-            setTimeout(() => {
-                this.$store.state.spinShow = false;
-            }, 1500);
+            this.form.pageNum = page;
+            api.axs("post", "/job/myJobPages", this.form).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.tableLists = data.data.list;
+                    this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -275,7 +256,15 @@ export default {
         }
     },
     mounted() {
+         this.loadLists();
         this.$store.state.spinShow = false;
+        // api.axs("post", "/job/myJobPages").then(({ data }) => {
+        //     if (data.code === "SUCCESS") {
+        //       this.tableLists=data.data.list
+        //     } else {
+        //         this.$Message.error(data.remark);
+        //     }
+        // });
     }
 };
 </script>

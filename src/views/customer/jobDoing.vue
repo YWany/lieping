@@ -116,7 +116,7 @@ export default {
                             {
                                 attrs: {
                                     to:
-                                        "/customer/jobDoing/details?jodId=" +
+                                        "/customer/jobDoing/job?jodId=" +
                                         row.id
                                 }
                             },

@@ -73,12 +73,30 @@ export default new Router({
                 },
                 {
                     meta: {
+                        title: '千里马-客户-职位进展-职位运作'
+                    },
+                    path: '/customer/jobDoing/job',
+                    name: 'jobDoingJob',
+                    component: () =>
+                        import ("./views/customer/jobDoing-job.vue")
+                },
+                {
+                    meta: {
                         title: '千里马-客户-职位进展-职位详情'
                     },
                     path: '/customer/jobDoing/details',
                     name: 'jobDoingDetails',
                     component: () =>
                         import ("./views/customer/jobDoing-details.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-客户-职位进展-推荐人选'
+                    },
+                    path: '/customer/jobDoing/recommend',
+                    name: 'jobDoingRecommend',
+                    component: () =>
+                        import ("./views/customer/jobDoing-recommend.vue")
                 },
                 {
                     meta: {

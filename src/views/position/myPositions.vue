@@ -1,17 +1,6 @@
 <template>
     <div class="myPositions">
-        我的职位
-        <!-- <ul class="tab">
-            <li class="active">我的职位</li>
-            <li>所有职位</li>
-            <li>进行中</li>
-            <li>录用待入职</li>
-            <li>入职未过保</li>
-            <li>以过保</li>
-            <li>离职补人</li>
-            <li>暂缓</li>
-            <li>以终止</li>
-        </ul> -->
+        <div class='currentNav'>当前位置: 我的职位</div>
         <form class="searches">
             <div class="search">
                 <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">

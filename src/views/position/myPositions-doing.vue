@@ -1,13 +1,15 @@
 <template>
     <div class="jobDoingDetails">
-        <div class='currentNav'>当前位置: 职位 >
-            <router-link to='/position/myPositions'>职位进展</router-link> > 职位运作</div>
+        <div class='currentNav'>当前位置:
+            <router-link to='/position/myPositions'>我的职位</router-link> > 职位运作</div>
         <div class="jodDesc">
             <h3>
                 <router-link :to="'/position/myPositions/details?jodId='+this.jodId+'&&jobName='+this.jobName+'&&companyName='+this.companyName+'&&companyid='+this.companyid">{{ jobName }}</router-link>
                 <Tag style="margin-left:10px;" type="border" color="blue">进行中</Tag>
                 <Tag type="border" color="green">职位发布中</Tag>
                 <span class="update fr">更新时间: 2018-02-22</span>
+                <span class='fr'>&nbsp;&nbsp;&nbsp;</span>
+                <span class="update fr">创建时间: 2018-02-22</span>
             </h3>
             <p class="company clearfix">
                 <router-link class='fl' :to="'/customer/myCustomers/records?id=' + this.companyid">委托企业:{{ companyName }}</router-link>
@@ -16,17 +18,24 @@
                 <span class="tip fr">浏览: 235</span>
             </p>
             <div class="tags">
-                Business Development：
-                <span>张浩（离职）</span> Consultant：
-                <span>郎超群</span> Assistant Consultant：
-                <span>郎超群</span>
+                <span>Business Development：
+                    <a href="javascript:;">张浩(离职)</a>
+                </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>Consultant：
+                    <a href="javascript:;">浪潮群</a>
+                </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span>Assistant Consultant：
+                    <a href="javascript:;">郎超群</a>
+                </span>
                 <span class="tip fr">
                     <Icon type="share"></Icon>
                     <Icon type="compose"></Icon>
-                    <Icon type="ios-eye-outline"></Icon>
+                    <!-- <Icon type="ios-eye-outline"></Icon>
                     <Icon type="ios-loop-strong"></Icon>
                     <Icon type="android-arrow-dropright-circle"></Icon>
-                    <Icon type="android-warning"></Icon>
+                    <Icon type="android-warning"></Icon> -->
                 </span>
             </div>
         </div>
@@ -34,7 +43,7 @@
             <div class="tabsTable">
                 <Tabs value="jianli" :animated=false>
                     <TabPane label="简历" name="jianli">
-                        <form class="searches">
+                        <form class="searches" style='margin-bottom: 15px;'>
                             <div class="search">
                                 <Input v-model="form.searchVal" placeholder="请输入要搜索的内容...">
                                 <Select v-model="form.selVal" slot="prepend" class='search-sels' style="width:80px">
@@ -112,6 +121,7 @@ export default {
     name: "home",
     data() {
         return {
+            jodId: this.$route.query.jodId,
             form: {
                 searchVal: "",
                 selVal: "候选人名",
@@ -127,7 +137,7 @@ export default {
                 current: 1,
                 pageSize: 20
             },
-            jodId:this.$route.query.jodId,
+            jodId: this.$route.query.jodId,
             companyName: this.$route.query.companyName,
             companyid: this.$route.query.companyid,
             jobName: this.$route.query.jobName,
@@ -145,7 +155,7 @@ export default {
                             {
                                 attrs: {
                                     to:
-                                        "/position/myPositions/details?id=" +
+                                        "/customer/jobDoing/personalDetails?id=" +
                                         row.id
                                 }
                             },
@@ -155,9 +165,8 @@ export default {
                 },
                 {
                     title: "性别",
-                    key: "sex",
-                    sortable: true,
-                    width: 70,
+                    key: "phone",
+                    width: 45,
                     align: "center"
                 },
                 {
@@ -173,15 +182,14 @@ export default {
                 },
                 {
                     title: "目前职位",
-                    key: "position",
-                    width: 120,
+                    key: "ddd",
+                    width: 100,
                     ellipsis: true,
                     align: "center"
                 },
                 {
                     title: "手机",
-                    key: "mobile",
-                    sortable: true,
+                    key: "bbb",
                     width: 100,
                     align: "center",
                     render: (h, params) => {
@@ -204,15 +212,25 @@ export default {
                     title: "候选人状态",
                     key: "jobHuntStatus",
                     width: 100,
+                    align: "center"
+                },
+                {
+                    title: "状态",
+                    key: "bbb",
                     sortable: true,
-                    ellipsis: true,
+                    width: 100,
                     align: "center"
                 },
                 {
                     title: "加入时间",
-                    key: "createTime",
-                    sortable: true,
-                    width: 100,
+                    key: "eee",
+                    width: 80,
+                    align: "center"
+                },
+                {
+                    title: "更新时间",
+                    key: "eee",
+                    width: 80,
                     align: "center"
                 },
                 {
@@ -223,10 +241,10 @@ export default {
                         const row = params.row;
                         return h("div", [
                             h(
-                                "router-link",
+                                "Button",
                                 {
                                     props: {
-                                        type: "info", //primary、ghost、dashed、text、info、success、warning、error
+                                        type: "success", //primary、ghost、dashed、text、info、success、warning、error
                                         size: "small"
                                     },
                                     style: {
@@ -254,8 +272,10 @@ export default {
                                     },
                                     attrs: {
                                         to:
-                                            "/position/myPositions/recommendreports?id=" +
-                                            row.id
+                                           "/position/myPositions/recommendreports?srcId=" +
+                                            row.srcId +
+                                            "&&resumeId=" +
+                                            row.resumeId
                                     }
                                 },
                                 "推荐职位"
@@ -320,7 +340,7 @@ export default {
                 .axs("post", "/jobCandidate/myJoinJobs", this.form)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data)
+                        console.log(data);
                         this.tableLists = data.data.list;
                         this.form.total = data.data.total;
                         this.$Loading.finish();
@@ -356,6 +376,10 @@ export default {
     .jodDesc {
         border: 1px solid #eee;
         padding: 10px 15px;
+        .name {
+            vertical-align: text-top;
+            margin-right: 5px;
+        }
         h3 {
             font-size: 20px;
             .code,
@@ -366,12 +390,19 @@ export default {
             }
         }
         .company {
+            margin: 4px 0;
+            font-size: 14px;
             .tip {
                 margin: 0 10px;
             }
         }
         .tags {
             margin: 10px 0 0;
+            .ivu-tag {
+                height: 28px;
+                line-height: 28px;
+                padding: 0 15px;
+            }
             span {
                 padding: 0 5px;
                 i {
@@ -379,6 +410,9 @@ export default {
                     margin: 0 5px;
                     padding: 5px;
                 }
+            }
+            a {
+                color: #000;
             }
         }
     }
@@ -626,8 +660,6 @@ export default {
                 .lv {
                     text-align: center;
                     padding: 0.4rem 0;
-                    i {
-                    }
                 }
             }
             .matching {

@@ -1,9 +1,11 @@
 <template>
     <div class='selProAndCity'>
-        <Select v-model="proId" @on-change='getCities' :class="proId && cities.length ? 'selw150':'selw300'">
+        <Select v-model="proId" @on-change='getCities' :class="proId && cityId || proId && cities.length ? 'selw150':'selw300'">
+            <Option value='653'>浙江</Option>
             <Option v-for="pro in provinces" :value="pro.id" :key="pro.id">{{ pro.name }}</Option>
         </Select>
-        <Select v-model="cityId" v-if='proId && cities.length' class='selw150'>
+        <Select v-model="cityId" v-if='proId && cityId || proId && cities.length' class='selw150'>
+            <Option value='540' v-if='proId==653'>杭州</Option>
             <Option v-for="city in cities" :value="city.id" :key="city.id">{{ city.name }}</Option>
         </Select>
     </div>
@@ -17,8 +19,8 @@ export default {
         return {
             provinces: [],
             cities: [],
-            proId: "",
-            cityId: ""
+            proId: "653",
+            cityId: "540"
         };
     },
     props: ["professPop"],
@@ -33,6 +35,7 @@ export default {
             });
         },
         getCities() {
+            this.cityId = ''
             api
                 .axs("post", "/param/area/childList", { parentId: this.proId })
                 .then(({ data }) => {

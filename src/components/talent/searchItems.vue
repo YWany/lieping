@@ -1,6 +1,6 @@
 <template>
     <div class="serachItems">
-        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+        <Form ref="formValidate" :model="formValidate" :label-width="100">
             <FormItem label="公司名称" prop="companyName">
                 <Input v-model="formValidate.companyName" placeholder="请输入公司名称"></Input>
                 <!-- <RadioGroup v-model="formValidate.comtype" style='margin-left:10px;'>
@@ -406,7 +406,7 @@ export default {
         .ivu-form-item {
             width: 50%;
             height: 40px;
-            margin-bottom: 18px;
+            margin-bottom: 2px;
             float: left;
             .ivu-input-wrapper {
                 width: 60% !important;

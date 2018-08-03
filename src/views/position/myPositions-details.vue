@@ -4,15 +4,15 @@
             <router-link to='/position/myPositions'>职位进展</router-link> >
             <router-link to='/position/myPositions/doing'>职位运作</router-link> > 职位详情</div>
         <div class="jodDesc">
-            <h3>财务总监
-                <span class='code'> (职位编号: 123435555)</span>
-                <Tag type="border" color="blue">进行中</Tag>
-                <Tag type="border" color="green">一般</Tag>
-                <Tag type="border" color="yellow">啊哈哈</Tag>
+           <h3>
+                <router-link :to="'/position/myPositions/details?jodId='+this.jodId+'&&jobName='+this.jobName+'&&companyName='+this.companyName+'&&companyid='+this.companyid">{{ jobName }}</router-link>
+                <Tag style="margin-left:10px;" type="border" color="blue">进行中</Tag>
+                <Tag type="border" color="green">职位发布中</Tag>
                 <span class="update fr">更新时间: 2018-02-22</span>
             </h3>
             <p class="company clearfix">
-                <span class='fl'>委托企业: 浙江千里马人力资源有股份有线公司</span>
+                <router-link class='fl' :to="'/customer/myCustomers/records?id=' + this.companyid">委托企业:{{ companyName }}</router-link>
+                <!-- <span class='fl'>委托企业: 浙江千里马人力资源有股份有线公司</span> -->
                 <span class="tip fr">投递: 100</span>
                 <span class="tip fr">浏览: 235</span>
             </p>
@@ -215,7 +215,11 @@ export default {
     components: {},
     data() {
         return {
-            loading: false
+            loading: false,
+             jodId:this.$route.query.jodId,
+            companyName: this.$route.query.companyName,
+            companyid: this.$route.query.companyid,
+            jobName: this.$route.query.jobName,
         };
     },
     methods: {

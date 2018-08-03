@@ -1,27 +1,34 @@
 <template>
     <div class="jobDoingDetails">
-        <div class='currentNav'>当前位置: 
+        <div class='currentNav'>当前位置:
             <router-link to='/position/myPositions'>我的职位</router-link> > 职位运作</div>
         <div class="jodDesc">
             <h3>
-                <router-link to='/customer/jobDoing/details?jodId=96'><span class='name'>财务总监</span></router-link>
-                <Tag type="border" color="green">进行中</Tag>
-                <Tag type="border" color="yellow">共享发布</Tag>
+                <router-link :to="'/position/myPositions/details?jodId='+this.jodId+'&&jobName='+this.jobName+'&&companyName='+this.companyName+'&&companyid='+this.companyid">{{ jobName }}</router-link>
+                <Tag style="margin-left:10px;" type="border" color="blue">进行中</Tag>
+                <Tag type="border" color="green">职位发布中</Tag>
                 <span class="update fr">更新时间: 2018-02-22</span>
                 <span class='fr'>&nbsp;&nbsp;&nbsp;</span>
                 <span class="update fr">创建时间: 2018-02-22</span>
             </h3>
             <p class="company clearfix">
-                <router-link :to="'/customer/myCustomers/records?id='+jodId" class='fl'>浙江千里马人力资源有股份有线公司</router-link>
-                <!-- <span class="tip fr">投递: 100</span> -->
-                <!-- <span class="tip fr">浏览: 235</span> -->
+                <router-link class='fl' :to="'/customer/myCustomers/records?id=' + this.companyid">委托企业:{{ companyName }}</router-link>
+                <!-- <span class='fl'>委托企业: 浙江千里马人力资源有股份有线公司</span> -->
+                <span class="tip fr">投递: 100</span>
+                <span class="tip fr">浏览: 235</span>
             </p>
             <div class="tags">
-                <span>Business Development：<a href="javascript:;">张浩(离职)</a></span>
+                <span>Business Development：
+                    <a href="javascript:;">张浩(离职)</a>
+                </span>
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span>Consultant：<a href="javascript:;">浪潮群</a></span>
+                <span>Consultant：
+                    <a href="javascript:;">浪潮群</a>
+                </span>
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span>Assistant Consultant：<a href="javascript:;">郎超群</a></span>
+                <span>Assistant Consultant：
+                    <a href="javascript:;">郎超群</a>
+                </span>
                 <span class="tip fr">
                     <Icon type="share"></Icon>
                     <Icon type="compose"></Icon>
@@ -30,7 +37,7 @@
                     <Icon type="android-arrow-dropright-circle"></Icon>
                     <Icon type="android-warning"></Icon> -->
                 </span>
-            </div> 
+            </div>
         </div>
         <div class="searchTable">
             <div class="tabsTable">
@@ -82,7 +89,7 @@
                         </div>
                         <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                         <div class="tablePage fr">
-                            <Page :total='formPage.total' :page-size='formPage.pageSize' show-total @on-change='loadLists'></Page>
+                            <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
                         </div>
                     </TabPane>
                     <TabPane label="职位日志" name="xiangqing">
@@ -125,19 +132,16 @@ export default {
                 sel5: "",
                 sel6: "",
                 createDate: "",
-                signDate: ""
-            },
-            formPage: {
+                signDate: "",
                 total: 120,
                 current: 1,
                 pageSize: 20
             },
+            jodId: this.$route.query.jodId,
+            companyName: this.$route.query.companyName,
+            companyid: this.$route.query.companyid,
+            jobName: this.$route.query.jobName,
             loading: false,
-            formPage: {
-                total: 120,
-                current: 1,
-                pageSize: 20
-            },
             tableHeader: [
                 {
                     title: "姓名",
@@ -167,10 +171,14 @@ export default {
                 },
                 {
                     title: "目前公司",
-                    key: "ccc",
+                    key: "currentCompanyName",
                     ellipsis: true,
                     width: 140,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("span", row.currentCompanyName || "--");
+                    }
                 },
                 {
                     title: "目前职位",
@@ -183,17 +191,26 @@ export default {
                     title: "手机",
                     key: "bbb",
                     width: 100,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("span", row.mobile || "--");
+                    }
                 },
                 {
                     title: "邮箱",
-                    key: "bbb",
-                    width: 100,
-                    align: "center"
+                    key: "email",
+                    sortable: true,
+                    width: 150,
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+                        return h("span", row.email || "--");
+                    }
                 },
                 {
-                    title: "流程阶段",
-                    key: "bbb",
+                    title: "候选人状态",
+                    key: "jobHuntStatus",
                     width: 100,
                     align: "center"
                 },
@@ -233,16 +250,18 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    on: {
-                                        click: () => {
-                                            this.$router.push("/position/myPositions/recommendreports?id=" + row.id)
-                                        }
+                                    attrs: {
+                                        to:
+                                            "/position/myPositions/recommendreports?srcId=" +
+                                            row.srcId +
+                                            "&&resumeId=" +
+                                            row.resumeId
                                     }
                                 },
                                 "推荐企业"
                             ),
                             h(
-                                "Button",
+                                "router-link",
                                 {
                                     props: {
                                         type: "info",
@@ -251,18 +270,36 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "转发简历!!!" + row.name
-                                            );
-                                        }
+                                    attrs: {
+                                        to:
+                                           "/position/myPositions/recommendreports?srcId=" +
+                                            row.srcId +
+                                            "&&resumeId=" +
+                                            row.resumeId
+                                    }
+                                },
+                                "推荐职位"
+                            ),
+                            h(
+                                "router-link",
+                                {
+                                    props: {
+                                        type: "info",
+                                        size: "small"
+                                    },
+                                    style: {
+                                        marginRight: "6px"
+                                    },
+                                    attrs: {
+                                        to:
+                                            "/position/myPositions/recommendreports?id=" +
+                                            row.id
                                     }
                                 },
                                 "转发简历"
                             ),
                             h(
-                                "Button",
+                                "router-link",
                                 {
                                     props: {
                                         type: "warning",
@@ -271,12 +308,10 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "人才备注!!!" + row.name
-                                            );
-                                        }
+                                    attrs: {
+                                        to:
+                                            "/position/myPositions/recommendreports?id=" +
+                                            row.id
                                     }
                                 },
                                 "人才备注"
@@ -286,28 +321,7 @@ export default {
                 }
             ],
             tableLists: [
-                {
-                    id: 96,
-                    name: "陈先生",
-                    kehu: "这是状态",
-                    phone: "男",
-                    bbb: "15057653698",
-                    fff: "1159589192@qq.com",
-                    ccc: "浙江千里马股份有限公司",
-                    ddd: "财务总监",
-                    eee: "2018-10-10"
-                },
-                {
-                    id: 99,
-                    name: "陈先生",
-                    kehu: "这是状态",
-                    phone: "男",
-                    bbb: "15057653698",
-                    fff: "1159589192@qq.com",
-                    ccc: "浙江千里马股份有限公司",
-                    ddd: "财务总监",
-                    eee: "2015-12-25"
-                }
+                //职位下的人员列表
             ]
         };
     },
@@ -321,9 +335,20 @@ export default {
         },
         loadLists(page) {
             this.$store.state.spinShow = true;
-            setTimeout(() => {
-                this.$store.state.spinShow = false;
-            }, 1500);
+            this.form.pageNum = page;
+            api
+                .axs("post", "/jobCandidate/myJoinJobs", this.form)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.tableLists = data.data.list;
+                        this.form.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         reset(key) {
             Object.keys(this[key]).forEach(item => {
@@ -333,6 +358,7 @@ export default {
         }
     },
     mounted() {
+        this.loadLists();
         setTimeout(() => {
             this.$Loading.finish();
             this.$store.state.spinShow = false;

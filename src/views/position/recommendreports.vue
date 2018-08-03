@@ -39,81 +39,83 @@
                 <div class="font1">
                     <div class="title">
                         推荐信息
-                        <span @click="message = true" type="text">
+                        <span @click="messagechange()" type="text">
                             <Icon type="document-text"></Icon>编辑</span>
                     </div>
                     <ul class="message">
                         <li>
-                            <span>推荐企业：</span>浙江千里马人力资源股份有限公司</li>
+                            <span>推荐企业：</span>{{ jobcompanyname }}</li>
                         <li>
-                            <span>推荐职位：</span>人力资源总监</li>
+                            <span>推荐职位：</span>{{ jobname }}</li>
                         <li>
-                            <span>姓名：</span>李先生</li>
+                            <span>姓名：</span>{{ resume.name }}</li>
                         <li>
-                            <span>推荐企业：</span>年龄：44岁</li>
+                            <span>年龄：</span>{{ resume.age }}</li>
                         <li>
-                            <span>户籍所在地：</span>浙江省杭州市下城区</li>
+                            <span>户籍所在地：</span>{{ resume.address }}</li>
                         <li>
-                            <span>居住地所在地：</span>浙江省杭区</li>
+                            <span>居住地所在地：</span>{{ resume.address }}</li>
                         <li>
-                            <span>最高学历：</span>MBA</li>
+                            <span>最高学历：</span>{{ resume.education }}</li>
+                        <li>
+                            <span>第一学历：</span>{{ resume.education }}</li>
                     </ul>
                     <Modal width="820px" v-model="message" title="推荐信息" @on-ok="ok" @on-cancel="cancel">
                         <ul class="messagechange">
                             <li>
                                 <p>
                                     <span>*</span> 推荐企业：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input disabled v-model='messageForms.companyName' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 推荐职位：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input disabled v-model='messageForms.position' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 姓名：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.name' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 年龄：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.age' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     户籍所在地：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.address' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     居住所在地：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.liveAddress' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     家庭情况：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.famliyCondition' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     目前薪酬：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.salaryNow' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     期望薪酬：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.salaryExpect' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span>最高学历：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.highEdu' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     第一学历：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.firstEdu' placeholder="" class='selpro'></Input>
                             </li>
                         </ul>
                     </Modal>
@@ -123,15 +125,18 @@
                                 <Icon type="plus-circled"></Icon>新增</span> -->
                     </div>
                     <ul class="experience">
-                        <li>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
+                        <li v-for="(list,index) in experiencelist" :key='index'>{{ list.companyName }} | {{ list.jobTitle }}
                             <!-- <span class="change" @click="experience = true" type="text">
                                     <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>2017.06-2018.06</span>
-                        </li>
-                        <li>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
-                            <!-- <span class="change" @click="experience = true" type="text">
-                                    <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>2017.06-2018.06</span>
+                            <span>{{ list.startTime.substr(0, 10) }}-
+                                <template v-if='list.endTime'>
+                                    {{ list.endTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>
+                            </span>
                         </li>
                     </ul>
                     <Modal width="820px" v-model="experience" title="工作经历（由近及远）" @on-ok="ok" @on-cancel="cancel">
@@ -180,16 +185,24 @@
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="explain">
-                        <li>
-                            <p>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
-                                <span class="change" @click="experience = true" type="text">
+                        <li v-for="(list,index) in experiencelist" :key='index'>
+                            <p>{{ list.companyName }} | {{ list.jobTitle }}
+                                <span class="change" @click="experiencechange()" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
-                                <span>2017.06-2018.06</span>
+                                <span>{{ list.startTime.substr(0, 10) }}-
+                                    <template v-if='list.endTime'>
+                                        {{ list.endTime.substr(0, 10) }}
+                                    </template>
+
+                                    <template v-else>
+                                        无
+                                    </template>
+                                </span>
                             </p>
                             <p>企业简介：韩资企业，互联网电商贸易，重点方向韩国电子商务女装网站。</p>
                             <p>汇报对象：董事长</p>
                             <p>下属人数：14人</p>
-                            <p>工资职责：1、制定、组织、推动经营计划，实现业务目标。 2、负责主抓公司内部管理，分管人力资源、行政办公室、采购等部门的工作。 3、根据公司业务需求，重新确立和调整公司及办事处的组织机构，督导落实。 4、建立健全公司各项内部管理制度，包括人力资源招聘、考核、培训、薪酬以及各项行政规 章制度。 5、负责各项人事行政规章制度的实施和监督，充分激励员工积极性，提高工作效率。 6、定期组织召开管理层办公会和经营分析会，就相关重大问题进行讨论，并形成决议。 7、指导分支机构的筹划组建和变更撤消，包括北京、上海、天津、烟台等地。 8、参与策划品牌战略及电子商务发展策略，注册实施自有品牌。 9、负责协调内外部资源和公共关系，妥善处理经营中出现的各类事件。 10、协调与韩国电子商务女装网站的合作。 11、负责公司其他管理任务。
+                            <p>工资职责：{{ list.description }}
                             </p>
                             <p>离职原因：集团撤离中国市场</p>
                         </li>
@@ -251,11 +264,19 @@
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="education">
-                        <li>
-                            浙江大学 | 计算机科学与技术 | 本科
-                            <span class="change" @click="education = true" type="text">
+                        <li v-for="(list,index) in educationlist" :key='index'>
+                            {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
+                            <span class="change" @click="educationchange()" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
-                            <span>2017.06-2018.06</span>
+                            <span>{{ list.startTime.substr(0, 10) }}-
+                                <template v-if='list.endTime'>
+                                    {{ list.endTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>
+                            </span>
                         </li>
                     </ul>
                     <Modal width="820px" v-model="education" title="教育经历" @on-ok="ok" @on-cancel="cancel">
@@ -351,19 +372,21 @@
                     </div>
                     <ul class="message">
                         <li>
-                            <span>推荐企业：</span>浙江千里马人力资源股份有限公司</li>
+                            <span>推荐企业：</span>{{ jobcompanyname }}</li>
                         <li>
-                            <span>推荐职位：</span>人力资源总监</li>
+                            <span>推荐职位：</span>{{ jobname }}</li>
                         <li>
-                            <span>姓名：</span>李先生</li>
+                            <span>姓名：</span>{{ resume.name }}</li>
                         <li>
-                            <span>推荐企业：</span>年龄：44岁</li>
+                            <span>年龄：</span>{{ resume.age }}</li>
                         <li>
-                            <span>户籍所在地：</span>浙江省杭州市下城区</li>
+                            <span>户籍所在地：</span>{{ resume.age }}</li>
                         <li>
-                            <span>居住地所在地：</span>浙江省杭区</li>
+                            <span>居住地所在地：</span>{{ resume.age }}</li>
                         <li>
-                            <span>最高学历：</span>MBA</li>
+                            <span>最高学历：</span>{{ resume.education }}</li>
+                        <li>
+                            <span>第一学历：</span>{{ resume.education }}</li>
                     </ul>
                     <div class="title">
                         评估和执行内容（如遇项目紧急的特殊情况，顾问会将背调与推荐同时进行，之后及时反馈
@@ -394,15 +417,18 @@
                                 <Icon type="plus-circled"></Icon>新增</span> -->
                     </div>
                     <ul class="experience">
-                        <li>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
+                        <li v-for="(list,index) in experiencelist" :key='index'>{{ list.companyName }}} | {{ list.jobTitle }}}
                             <!-- <span class="change" @click="experience = true" type="text">
                                     <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>2017.06-2018.06</span>
-                        </li>
-                        <li>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
-                            <!-- <span class="change" @click="experience = true" type="text">
-                                    <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>2017.06-2018.06</span>
+                            <span>{{ list.startTime.substr(0, 10) }}-
+                                <template v-if='list.jobTitle'>
+                                    {{ list.jobTitle.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>
+                            </span>
                         </li>
                     </ul>
                     <div class="title">
@@ -431,9 +457,9 @@
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="education">
-                        <li>
-                            浙江大学 | 计算机科学与技术 | 本科
-                            <span class="change" @click="education = true" type="text">
+                        <li v-for="(list,index) in educationlist" :key='index'>
+                            {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
+                            <span class="change" @click="educationchange()" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
                             <span>2017.06-2018.06</span>
                         </li>
@@ -463,6 +489,10 @@ export default {
     components: {},
     data() {
         return {
+            id: this.$route.query.resumeId,
+            srcId: this.$route.query.srcId,
+            jobname: ls.get("jobname"),
+            jobcompanyname: ls.get("jobcompanyname"),
             stage1: true,
             stage2: false,
             stage3: false,
@@ -473,9 +503,27 @@ export default {
             styles2: "left",
             styles3: "left",
             candidate: "", //候选人
+            resume: {}, //基本信息
+            experiencelist: [], //工作经验
+            educationlist: [], //学历经验
             addnum: 0,
-            messageForm: {
+            messageForm:{
                 companyName: ""
+            },
+            messageForms: {
+                srcId: this.$route.query.srcId, //平台源编码
+                companyName: ls.get("jobcompanyname"),
+                name: "", //候选人名字
+                // sex: this.resume.name, //性别
+                age: "", //年龄
+                position: ls.get("jobname"), //职位
+                famliyCondition: "", //家庭情况
+                address: "", //户籍所在地
+                salaryExpect: "", //期望薪资
+                salaryNow: "", //目前薪资
+                firstEdu: "", //第一学历
+                highEdu: "", //最高学历
+                liveAddress: "" //居住地所在地
             },
             checkbox: []
         };
@@ -487,7 +535,7 @@ export default {
         // delexnum(){
         //     this.addnum+=1;
         // },
-         gonext1() {
+        gonext1() {
             this.stage1 = true;
             this.stage2 = false;
             this.stage3 = false;
@@ -511,6 +559,21 @@ export default {
             this.styles2 = "left";
             this.styles3 = "active";
         },
+        messagechange(){
+            this.message=true;
+            this.messageForms.name=this.resume.name;
+            this.messageForms.age=this.resume.age;
+            this.messageForms.age=this.resume.age
+            this.messageForms.age=this.resume.age
+        },
+        experiencechange() {
+
+            this.experience = true;
+            
+        },
+        educationchange() {
+            this.education = true;
+        },
         ok() {
             this.$Message.info("Clicked ok");
         },
@@ -519,6 +582,22 @@ export default {
         }
     },
     mounted() {
+        api
+            .axs("post", "/resume/info", {
+                id: this.id
+            })
+            .then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    console.log(data);
+                    this.resume = data.data.resume;
+                    this.experiencelist = data.data.work;
+                    this.educationlist = data.data.education;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
         this.$store.state.spinShow = false;
     }
 };

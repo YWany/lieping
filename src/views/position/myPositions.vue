@@ -67,14 +67,12 @@ export default {
                 sel5: "",
                 sel6: "",
                 createDate: "",
-                signDate: ""
-            },
-            form: {
+                signDate: "",
                 total: 100,
                 pageNum: 1,
                 pageSize: 10
             },
-             tableHeader: [
+            tableHeader: [
                 {
                     title: "职位名称",
                     key: "jobName",
@@ -82,13 +80,21 @@ export default {
                     align: "center",
                     render: (h, params) => {
                         var row = params.row;
+                        ls.set("jobname", row.jobName);
+                        ls.set("jobcompanyname", row.companyName);
                         return h(
                             "router-link",
                             {
                                 attrs: {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
-                                        row.id
+                                        row.id +
+                                        "&&jobName=" +
+                                        row.jobName +
+                                        "&&companyName=" +
+                                        row.companyName +
+                                        "&&companyid=" +
+                                        row.company_id
                                 }
                             },
                             row.jobName
@@ -158,8 +164,8 @@ export default {
                     key: "hhh",
                     width: 85,
                     align: "center"
-                },     
-                 {
+                },
+                {
                     title: "主要顾问",
                     key: "hhh",
                     width: 85,
@@ -211,14 +217,13 @@ export default {
                                     }
                                 },
                                 "共享发布"
-                            ),
-                            
+                            )
                         ]);
                     }
                 }
             ],
             tableLists: [
-              //我的职位list
+                //我的职位list
             ]
         };
     },
@@ -245,7 +250,7 @@ export default {
         }
     },
     mounted() {
-         this.loadLists();
+        this.loadLists();
         this.$store.state.spinShow = false;
         // api.axs("post", "/job/myJobPages").then(({ data }) => {
         //     if (data.code === "SUCCESS") {

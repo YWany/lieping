@@ -170,15 +170,15 @@ export default {
             subFlag: true,
             huiK1: false, //回款计划1
             huiK2: false, //回款计划2
-            hetongTrees: [], //合同类型
-            sourceTrees: [], //客户来源
-            payTrees: [], //支付类型
-            feeTrees: [], //收费类型
+            hetongTrees: this.$store.state.allTrees.contractype, //合同类型
+            sourceTrees: this.$store.state.allTrees.companysource, //客户来源
+            payTrees:  this.$store.state.allTrees.paytype, //支付类型
+            feeTrees: this.$store.state.allTrees.paytype, //收费类型
             contactLists: [], //联系人列表
             selUsersPop: false, //选择BD弹窗
             selContactsPop: false, //选择联系人弹窗
-            ensurePeriodtree: [], //保护人
-            protectPeriodtree: [],
+            ensurePeriodtree: this.$store.state.allTrees.ensureperiod, //保护人
+            protectPeriodtree: this.$store.state.allTrees.protectperiod,
             userForm: {
                 pageNum: 1,
                 total: 1,
@@ -313,14 +313,7 @@ export default {
         }
     },
     mounted() {
-        if (this.$store.state.selTrees.length) {
-            this.hetongTrees = this.$store.state.selTrees[5].children;
-            this.sourceTrees = this.$store.state.selTrees[1].children;
-            this.payTrees = this.$store.state.selTrees[8].children;
-            this.feeTrees = this.$store.state.selTrees[13].children;
-            this.ensurePeriodtree = this.$store.state.selTrees[9].children;
-            this.protectPeriodtree = this.$store.state.selTrees[10].children;
-        }
+        
     }
 };
 </script>

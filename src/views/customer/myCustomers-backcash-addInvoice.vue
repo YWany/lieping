@@ -1,6 +1,6 @@
 <template>
     <div class="addBackcashInvoice">
-        <div class='currentNav'>当前位置: 客户 > 
+        <div class='currentNav'>当前位置: 客户 >
             <router-link to='/customer/myCustomers'>我的客户</router-link> >
             <router-link :to="`/customer/myCustomers/records?id=${id}`">
                 {{cname}}
@@ -19,8 +19,8 @@
                 <FormItem label="申请人" prop="applyUserName">
                     <Input disabled v-model="formValidate.applyUserName" :readonly='true'></Input>
                 </FormItem>
-                <FormItem label="合同编号" prop="contractId">
-                    <Select v-model="formValidate.contractId" placeholder="请选择合同序号">
+                <FormItem label="合同编号">
+                    <Select v-model="formValidate.contractId" placeholder="请选择合同编号">
                         <Option v-for="(item,index) in hetongLists" :value="item.id" :key='index'>{{item.num}}</Option>
                     </Select>
                 </FormItem>
@@ -116,8 +116,8 @@
                     <Input v-model="formValidate.phone" placeholder="请输入联系电话"></Input>
                 </FormItem>
                 <!-- <FormItem label="详细地址" prop="address">
-                    <Input v-model="formValidate.address" placeholder="请输入详细地址"></Input>
-                </FormItem> -->
+                        <Input v-model="formValidate.address" placeholder="请输入详细地址"></Input>
+                    </FormItem> -->
                 <FormItem label="邮政编码" prop="zipCode">
                     <Input v-model="formValidate.zipCode" placeholder="请输入邮政编码"></Input>
                 </FormItem>
@@ -145,21 +145,21 @@ export default {
             id: this.$route.query.id || ls.get("companyId"),
             level: +this.$route.query.level || ls.get("level"),
             cname: this.$route.query.cname || ls.get("companyName"),
-            tag: this.$route.query.tag,
+            tag: this.$route.query.tag || "",
             four: true,
             hetongLists: [],
             contactId: "",
             contact_phone: "",
             contactlist: [],
-            fundTrees: [], //款项dic
-            invoiceTrees: [], //发票类型dic
-            headerTrees: [], //发票抬头dic
+            fundTrees: this.$store.state.allTrees.fundtype, //款项dic
+            invoiceTrees: this.$store.state.allTrees.invoicetype, //发票类型dic
+            headerTrees: this.$store.state.allTrees.headtype, //发票抬头dic
             formValidate: {
                 code: "",
                 applyUserId: ls.get("accid"),
                 applyUserName: ls.get("account"),
                 companyId: ls.get("companyId"),
-                contractId: "",
+                contractId: 0,
                 companyName: ls.get("companyName"),
                 fundType: "",
                 amount: "",
@@ -185,13 +185,7 @@ export default {
                         trigger: "blur"
                     }
                 ],
-                contractId: [
-                    {
-                        required: true,
-                        message: "请输入合同序号",
-                        trigger: "change"
-                    }
-                ],
+
                 companyName: [
                     {
                         required: true,
@@ -312,13 +306,14 @@ export default {
             this.$refs[name].validate(valid => {
                 if (valid) {
                     this.$store.state.spinShow = true;
+
                     api
                         .axs("post", "/invoice/add", this.formValidate)
                         .then(({ data }) => {
                             this.$store.state.spinShow = false;
                             if (data.code === "SUCCESS") {
                                 this.$Message.success("新增成功!");
-                                if (tag == "fromhk")
+                                if (this.tag == "fromhk")
                                     this.$router.push(
                                         "/customer/myCustomers/records?id=" +
                                             this.id
@@ -353,11 +348,11 @@ export default {
                     }
                 }
             });
-        if (this.$store.state.selTrees.length) {
-            this.fundTrees = this.$store.state.selTrees[13].children;
-            this.invoiceTrees = this.$store.state.selTrees[14].children;
-            this.headerTrees = this.$store.state.selTrees[15].children;
-        }
+        // if (this.$store.state.selTrees.length) {
+        //     this.fundTrees = this.$store.state.selTrees[13].children;
+        //     this.invoiceTrees = this.$store.state.selTrees[14].children;
+        //     this.headerTrees = this.$store.state.selTrees[15].children;
+        // }
     }
 };
 </script>

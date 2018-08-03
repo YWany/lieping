@@ -1,6 +1,6 @@
 <template>
     <div class="myCustomersRecords">
-        <div class='currentNav'>当前位置: 客户 > 
+        <div class='currentNav'>当前位置: 客户 >
             <router-link to='/customer/myCustomers'>我的客户</router-link> > {{recordsDetails.companyName}}
             <Rate disabled :value='+recordsDetails.importantLevel' style='font-size:14px'></Rate>
             <Button type="info" icon='arrow-right-a' class='toolBtn fr' @click='selUsersFun(1)'></Button>
@@ -137,7 +137,7 @@
                                 </p>
                             </div>
                             <div class="desc">
-                                <span>电话: 
+                                <span>电话:
                                     <template v-if='list.phone1'>{{list.phone1}}；</template>
                                     <template v-if='list.phone2'>{{list.phone2}}；</template>
                                     <template v-if='list.phone3'>{{list.phone3}}；</template>
@@ -292,7 +292,7 @@ export default {
             subFlag: true,
             sonFlag: false,
             tabShow: ls.get("recordTabShow") || "jilu",
-            genjinTrees: "",
+            genjinTrees: this.$store.state.allTrees.followtype,
             pageNum: "1",
             pageSize: "10",
             form: {
@@ -1092,7 +1092,7 @@ export default {
         else if (this.tabShow == "hetong") this.getHetongLists();
         else if (this.tabShow == "invoice") this.getInvoiceLists();
 
-        this.genjinTrees = this.$store.state.allTrees.followtype;
+        // this.genjinTrees = this.$store.state.allTrees.followtype;
 
         ls.set("companyId", this.$route.query.id);
     },

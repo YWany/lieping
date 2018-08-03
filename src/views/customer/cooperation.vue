@@ -1,6 +1,6 @@
 <template>
     <div class="cooperation">
-        <div class='currentNav'>当前位置:  客户 > 合作中客户
+        <div class='currentNav'>当前位置: 客户 > 合作中客户
             <Button type="success" class='addNew fr' @click='companyPop=true'>
                 <Icon type="plus"></Icon> 录入新客户</Button>
         </div>
@@ -164,11 +164,12 @@ export default {
                         const row = params.row;
                         if (
                             this.allTrees.statelist.length &&
-                            this.allTrees.statelist[+row.companyStatus+1]
+                            this.allTrees.statelist[+row.companyStatus + 1]
                         ) {
                             return h(
                                 "span",
-                                this.allTrees.statelist[+row.companyStatus+1].codeText
+                                this.allTrees.statelist[+row.companyStatus + 1]
+                                    .codeText
                             );
                         }
                     }
@@ -256,7 +257,7 @@ export default {
         ...mapActions(["selTrees", "getRoles"]),
         loadLists(page) {
             this.$store.state.spinShow = true;
-            this.form.pageNum = page;
+            this.form.pageNum = page || 1;
             api.axs("post", "/company/allPage", this.form).then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     this.tableLists = data.data.list;
@@ -282,7 +283,7 @@ export default {
             }
             this.form.pageNum = 1;
             this.tableLists = [];
-            this.loadLists();
+            this.loadLists(1);
         },
         selPro() {
             //选择职位

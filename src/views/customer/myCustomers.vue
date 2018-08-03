@@ -176,15 +176,18 @@ export default {
                     render: (h, params) => {
                         const row = params.row;
                         if (
-                            this.allTrees[12] &&
-                            this.allTrees[12].children[row.companyStatus] &&
-                            this.allTrees[12].children[row.companyStatus]
-                                .codeText
+                            row.companyStatus && 
+                            this.allTrees.statelist.length && 
+                            this.allTrees.statelist[+row.companyStatus+1]
                         ) {
                             return h(
                                 "span",
-                                this.allTrees[12].children[row.companyStatus]
-                                    .codeText
+                                this.allTrees.statelist[+row.companyStatus+1].codeText
+                            );
+                        } else {
+                            return h(
+                                "span",
+                                '--'
                             );
                         }
                     }
@@ -302,7 +305,7 @@ export default {
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees;
+            return this.$store.state.allTrees
         }
     },
     methods: {

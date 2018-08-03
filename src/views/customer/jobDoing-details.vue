@@ -217,7 +217,11 @@ export default {
         Menu,
         HelloWorld
     },
-    methods: {},
+    methods: {
+        toLoading() {
+            this.loading = true;
+        },
+    },
     mounted() {
         setTimeout(() => {
             this.$Loading.finish();

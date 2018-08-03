@@ -81,11 +81,13 @@
                         <div class="searchItem">
                             <Button type="ghost">他人推荐</Button>
                             <Button type="ghost">智能匹配</Button>
-                            <Button type="text" disabled>所有人选(25)</Button>
-                            <Button type="text" disabled>推荐(25)</Button>
-                            <Button type="text" disabled>面试(25)</Button>
-                            <Button type="text" disabled>入职(25)</Button>
-                            <Button type="text" disabled>过保(25)</Button>
+                            <div class="disInb fr">
+                                <Button type="text" disabled>推荐企业(1)</Button>
+                                <Button type="text" disabled>企业面试(25)</Button>
+                                <Button type="text" disabled>Offer(25)</Button>
+                                <Button type="text" disabled>上岗(25)</Button>
+                                <Button type="text" disabled>过保(25)</Button>
+                            </div>
                         </div>
                         <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                         <div class="tablePage fr">

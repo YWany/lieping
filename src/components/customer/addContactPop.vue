@@ -189,6 +189,7 @@ export default {
                     this.datas = data;
                     this.$Message.success("新增成功!");
                     this.$parent.contactPop = false;
+                    this.$parent.getContactLists()
                     this.reset("addForm");
                 } else {
                     this.$Message.error(data.remark);

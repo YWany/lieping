@@ -3,7 +3,7 @@
         <div class='currentNav'>当前位置: 职位 >
             <router-link to='/position/myPositions'>职位进展</router-link> >
             <router-link to='/position/myPositions/doing'>职位运作</router-link> > 推荐企业</div>
-        <div class="report1">
+        <div class="steps">
             <ul class="zoom">
                 <li>
                     <div :class='[styles1]'>
@@ -995,7 +995,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
-.report1 {
+.steps {
     width: 100%;
     .zoom {
         width: 100%;

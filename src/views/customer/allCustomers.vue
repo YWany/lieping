@@ -15,34 +15,26 @@
         </div>
         <form class="searches">
             <div class="search">
-                <Input v-model="form.companyName" @on-enter='searchIn' placeholder="请输入客户名称进行搜索...">
-                <Button slot="append" icon="ios-search" @click='searchIn'></Button>
+                <Input v-model="form.companyName" @on-enter="searchIn(1)" placeholder="请输入客户名称进行搜索...">
+                <Button slot="append" icon="ios-search" @click="searchIn(1)"></Button>
                 </Input>
             </div>
             <div class="sels">
-                <Select v-model="form.sel1" class='sels-item' placeholder='部门归属' style="width:100px">
-                    <Option value="部门归属1">部门归属1</Option>
-                    <Option value="部门归属2">部门归属2</Option>
+                <Select v-model="form.deptId" class='sels-item' placeholder='部门归属' style="width:150px">
+                    <Option v-for="(dept,index) in deptlist" :key="index" :value="dept.id">{{ dept.departmentName }}</Option>
                 </Select>
-                <Select v-model="form.sel2" class='sels-item' placeholder='客户行业' style="width:100px">
-                    <Option value="客户行业1">客户行业1</Option>
-                    <Option value="客户行业2">客户行业2</Option>
+                <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业" style="width:150px"></Input>
+                <Select v-model="form.companySource" class='sels-item' placeholder='客户来源' style="width:150px">
+                    <Option v-for="(tree,index) in allTrees.companysource" :key="index" :value="tree.code">{{ tree.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel3" class='sels-item' placeholder='客户来源' style="width:100px">
-                    <Option value="客户来源1">客户来源1</Option>
-                    <Option value="客户来源2">客户来源2</Option>
+                <Select v-model="form.importantLevel" class='sels-item' placeholder='客户重要性' style="width:150px">
+                    <Option v-for="(imports,index) in allTrees.importancelist" :key="index" :value="imports.code">{{ imports.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel4" class='sels-item' placeholder='客户重要性' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
+                <Select v-model="form.statelist" class='sels-item' placeholder='客户状态' style="width:150px">
+                    <Option v-for="(money,index) in allTrees.statelist" :key="index" :value="money.code">{{ money.codeText }}</Option>
                 </Select>
-                <Select v-model="form.sel4" class='sels-item' placeholder='客户状态' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
-                </Select>
-                <Select v-model="form.sel4" class='sels-item' placeholder='客户等级' style="width:100px">
-                    <Option value="客户重要性1">客户重要性1</Option>
-                    <Option value="客户重要性2">客户重要性2</Option>
+                <Select v-model="form.importancelist" class='sels-item' placeholder='客户等级' style="width:100px">
+                    <Option v-for="(peoples,index) in allTrees.importancelist" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
                 </Select>
                 <div class="disInB sels-item">
                     创建时间：
@@ -54,13 +46,13 @@
                 </div>
                 <div class="disInB sels-item">
                     最后联系时间：
-                    <DatePicker type="date" v-model='form.signDate' placeholder="开始时间" style="width: 110px"></DatePicker> -
-                    <DatePicker type="date" v-model='form.signDate' placeholder="结束时间" style="width: 110px"></DatePicker>
+                    <DatePicker type="date" v-model='form.lastStartTime' placeholder="开始时间" style="width: 110px"></DatePicker> -
+                    <DatePicker type="date" v-model='form.lastEndTime' placeholder="结束时间" style="width: 110px"></DatePicker>
                 </div>
                 <Input v-model="form.kehu" placeholder="客户提供人" style="width:100px;margin-right:10px"></Input>
-                <Input v-model="form.guwen" placeholder="BD顾问名字" style="width:100px;margin-right:10px"></Input>
+                <Input v-model="form.bdName" placeholder="BD顾问名字" style="width:100px;margin-right:10px"></Input>
                 <Button type="warning" class='fr sels-item' shape="circle" html-type='reset' @click="reset('form')" style='margin-right:0'>重置</Button>
-                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search">搜索</Button>
+                <Button type="primary" class='fr sels-item' shape="circle" icon="ios-search" @click="searchIn('selSearch')">搜索</Button>
             </div>
         </form>
         <div class="searchTable">
@@ -101,6 +93,8 @@
         <!-- 新增跟进提醒弹窗 -->
         <AttePop :attePop='attePop' :atteCompanyId='atteCompanyId' :atteCompanyName='atteCompanyName' />
 
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+
     </div>
 </template>
 
@@ -109,6 +103,9 @@
 import api from "@/api";
 import ls from "store2";
 import AttePop from "@/components/customer/addAttePop.vue";
+import CompanyPop from "@/components/customer/addCompanyPop.vue";
+import Professions from "@/components/common/professions.vue";
+import { mapState, mapMutations, mapActions } from "vuex";
 export default {
     name: "home",
     data() {
@@ -121,8 +118,12 @@ export default {
             attePop: false, //新增提醒弹窗
             atteCompanyId: "",
             atteCompanyName: "",
+            professName: "",
+            professId: "",
+            professPop: false,
             pickId: "",
             pickName: "",
+            deptlist: [],
             form: {
                 sel1: "",
                 sel2: "",
@@ -177,15 +178,12 @@ export default {
                     render: (h, params) => {
                         const row = params.row;
                         if (
-                            this.allTrees[12] &&
-                            this.allTrees[12].children[row.companyStatus] &&
-                            this.allTrees[12].children[row.companyStatus]
-                                .codeText
+                            this.allTrees.statelist.length &&
+                            this.allTrees.statelist[+row.companyStatus+1]
                         ) {
                             return h(
                                 "span",
-                                this.allTrees[12].children[row.companyStatus]
-                                    .codeText
+                                this.allTrees.statelist[+row.companyStatus+1].codeText
                             );
                         }
                     }
@@ -283,11 +281,12 @@ export default {
         };
     },
     components: {
-        AttePop
+        AttePop,
+        Professions
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees;
+            return this.$store.state.allTrees;
         }
     },
     methods: {
@@ -322,13 +321,26 @@ export default {
                     }
                 });
         },
-        searchIn() {
-            if (!this.form.companyName) {
+        searchIn(type) {
+            if (type == 1 && !this.form.companyName) {
                 this.$Message.warning("想搜点什么?");
                 return;
             }
+            this.form.pageNum = 1;
             this.tableLists = [];
-            // this.loadLists()
+            this.loadLists();
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.form.industryId = idName.split("&")[0];
+            this.professPop = false;
         },
         addRecord() {
             //添加记录
@@ -362,19 +374,21 @@ export default {
             Object.keys(this[key]).forEach(item => {
                 this[key][item] = "";
             });
-            this.form.selVal = "企业名称";
+            this.form.pageSize = 10;
         }
     },
 
     mounted() {
         this.loadLists();
+        api.axs("post", "/dept/info", {}).then(({ data: { data, code } }) => {
+            this.deptlist = data;
+            console.log(this.deptlist);
+        });
     }
 };
 </script>
 
 <style lang='less' scoped>
-.myCustomers {
-}
 
 .popContent {
     li {
@@ -397,5 +411,11 @@ export default {
             }
         }
     }
+}
+.selPro {
+    width: 100px;
+    margin: 10px;
+    margin-left: 0;
+    text-align: center;
 }
 </style>

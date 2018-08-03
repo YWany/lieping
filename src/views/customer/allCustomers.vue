@@ -359,7 +359,8 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        this.$Message.error("打捞成功!");
+                        this.$Message.success("打捞成功!");
+                        this.loadLists();
                         this.pickPop = false
                     } else {
                         this.$Message.error(data.remark);

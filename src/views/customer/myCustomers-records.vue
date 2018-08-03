@@ -102,7 +102,7 @@
                                 <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
                         </TabPane>
-                        <TabPane label="猎头(3)" name="name2" @on-change="getHetongLists(1,'lt')">
+                        <TabPane :label="`猎头(${hetongForm.total})`" name="name2" @on-change="getHetongLists(1,'lt')">
                             <div class="searchTable">
                                 <Table border ref="selection" :columns="hetongHeader" :data="hetongLists"></Table>
                             </div>
@@ -1092,9 +1092,7 @@ export default {
         else if (this.tabShow == "hetong") this.getHetongLists();
         else if (this.tabShow == "invoice") this.getInvoiceLists();
 
-        this.genjinTrees =
-            this.$store.state.selTrees.length &&
-            this.$store.state.selTrees[5].children;
+        this.genjinTrees = this.$store.state.allTrees.followtype;
 
         ls.set("companyId", this.$route.query.id);
     },

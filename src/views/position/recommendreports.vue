@@ -202,13 +202,13 @@
                                 <span class="change" @click="experiencechange(index)" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
                                 <span>{{ list.startTime.substr(0, 10) }}-
-<template v-if='list.endTime'>
-    {{ list.endTime.substr(0, 10) }}
-</template>
+                                    <template v-if='list.endTime'>
+                                        {{ list.endTime.substr(0, 10) }}
+                                    </template>
 
-<template v-else>
-    无
-</template>
+                                    <template v-else>
+                                        无
+                                    </template>
                                 </span>
                             </p>
                             <p>企业简介：韩资企业，互联网电商贸易，重点方向韩国电子商务女装网站。</p>
@@ -282,16 +282,16 @@
                     <ul class="education">
                         <li v-for="(list,index) in educationlist" :key='index'>
                             {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
-                            <span class="change" @click="educationchange(list.id)" type="text">
+                            <span class="change" @click="educationchange(index)" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
                             <span>{{ list.startTime.substr(0, 10) }}-
-<template v-if='list.endTime'>
-    {{ list.endTime.substr(0, 10) }}
-</template>
+                                <template v-if='list.endTime'>
+                                    {{ list.endTime.substr(0, 10) }}
+                                </template>
 
-<template v-else>
-    无
-</template>
+                                <template v-else>
+                                    无
+                                </template>
                             </span>
                         </li>
                     </ul>
@@ -326,7 +326,7 @@
                         </div>
                     </Modal>
                     <div class="save">
-                        <Button type="primary">保存</Button>
+                        <Button type="primary" @click="draftsok()">保存</Button>
                         <Button type="primary" @click="gonext2()">下一步</Button>
                     </div>
                 </div>
@@ -337,7 +337,7 @@
                         评估和执行内容（如遇项目紧急的特殊情况，顾问会将背调与推荐同时进行，之后及时反馈
                     </div>
                     <div class="assess">
-                        <CheckboxGroup v-model="checkbox">
+                        <CheckboxGroup v-model="suggestForms.assessContent">
                             <Checkbox label="个人基本信息核实"></Checkbox>
                             <Checkbox label="教育背景核实"></Checkbox>
                             <Checkbox label="工作经验核实"></Checkbox>
@@ -352,19 +352,14 @@
                         千里马推荐建议
                     </div>
                     <ul class="messagechange">
-                        <li>
+                        <li style="width:100%;">
                             <p>
-                                <span>*</span> 推荐建议：</p>
-                            <div class="suggest">
-
-                                1、17 年以上外企/集团公司/大型股份制企业人力资源及企业综合管理经验，经历 IT 电子商务/快递物流/ 金融投资/地产等多元行业，擅长集团化管控模式，根据企业运营模式和发展规划，建立健全人力资源管理体系， 包括招聘、绩效考核、薪酬激励、干部培养、劳动关系等，搭建核心高管团队。
-
-                                <br/> 2、具有资深人力资源管理水平和综合管理能力，同时在企业综合治理方面拥有大量实战经验，涉及领域包 括人力资源、营销、客服、信息技术、采购行政、法务等。
-                            </div>
+                                <span>*</span> 工作业绩：</p>
+                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
                         </li>
                     </ul>
                     <div class="save">
-                        <Button type="primary">保存</Button>
+                        <Button type="primary" @click="suggestok()">保存</Button>
                         <Button type="primary" @click="gonext3()">下一步</Button>
                     </div>
                 </div>
@@ -376,7 +371,7 @@
                     <p class="font-p">隐私及保密信息</p>
                     <div class="clear clearfloat">
                         <div class="changecad">
-                            <Select v-model="candidate" size="small" style="width:100px">
+                            <Select v-model="candidate" @change="changeone()" size="small" style="width:100px">
                                 <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
                                 <Option value="1">1</Option>
                                 <Option value="2">2</Option>
@@ -387,7 +382,7 @@
                     </div>
                     <div class="title">
                         推荐信息
-                        <span @click="message = true" type="text">
+                        <span @click="messagechange()" type="text">
                             <Icon type="document-text"></Icon>编辑</span>
                     </div>
                     <ul class="message">
@@ -412,7 +407,7 @@
                         评估和执行内容（如遇项目紧急的特殊情况，顾问会将背调与推荐同时进行，之后及时反馈
                     </div>
                     <div class="assess">
-                        <CheckboxGroup v-model="checkbox">
+                        <CheckboxGroup v-model="suggestForms.assessContent">
                             <Checkbox label="个人基本信息核实"></Checkbox>
                             <Checkbox label="教育背景核实"></Checkbox>
                             <Checkbox label="工作经验核实"></Checkbox>
@@ -426,11 +421,13 @@
                     <div class="title">
                         千里马推荐建议
                     </div>
-                    <p class="mass">
-                        1、17 年以上外企/集团公司/大型股份制企业人力资源及企业综合管理经验，经历 IT 电子商务/快递物流/ 金融投资/地产等多元行业，擅长集团化管控模式，根据企业运营模式和发展规划，建立健全人力资源管理体系， 包括招聘、绩效考核、薪酬激励、干部培养、劳动关系等，搭建核心高管团队。
-
-                        <br/> 2、具有资深人力资源管理水平和综合管理能力，同时在企业综合治理方面拥有大量实战经验，涉及领域包 括人力资源、营销、客服、信息技术、采购行政、法务等。
-                    </p>
+                    <ul class="messagechange">
+                        <li style="width:100%;">
+                            <p>
+                                <span>*</span> 工作业绩：</p>
+                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
+                        </li>
+                    </ul>
                     <div class="title">
                         工作经历
                         <!-- <span @click="experience = true" type="text">
@@ -441,32 +438,40 @@
                             <!-- <span class="change" @click="experience = true" type="text">
                                     <Icon type="document-text"></Icon>编辑</span> -->
                             <span>{{ list.startTime.substr(0, 10) }}-
-<template v-if='list.jobTitle'>
-    {{ list.jobTitle.substr(0, 10) }}
-</template>
+                                <template v-if='list.endTime'>
+                                    {{ list.endTime.substr(0, 10) }}
+                                </template>
 
-<template v-else>
-    无
-</template>
+                                <template v-else>
+                                    无
+                                </template>
                             </span>
                         </li>
                     </ul>
                     <div class="title">
                         详细说明
-                        <span @click="experience = true" type="text">
+                        <span @click="experienceadd()" type="text">
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="explain">
-                        <li>
-                            <p>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
-                                <span class="change" @click="experiencechange()" type="text">
+                        <li v-for="(list,index) in experiencelist" :key='index'>
+                            <p>{{ list.companyName }} | {{ list.jobTitle }}
+                                <span class="change" @click="experiencechange(index)" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
-                                <span>2017.06-2018.06</span>
+                                <span>{{ list.startTime.substr(0, 10) }}-
+                                    <template v-if='list.endTime'>
+                                        {{ list.endTime.substr(0, 10) }}
+                                    </template>
+
+                                    <template v-else>
+                                        无
+                                    </template>
+                                </span>
                             </p>
                             <p>企业简介：韩资企业，互联网电商贸易，重点方向韩国电子商务女装网站。</p>
                             <p>汇报对象：董事长</p>
                             <p>下属人数：14人</p>
-                            <p>工资职责：1、制定、组织、推动经营计划，实现业务目标。 2、负责主抓公司内部管理，分管人力资源、行政办公室、采购等部门的工作。 3、根据公司业务需求，重新确立和调整公司及办事处的组织机构，督导落实。 4、建立健全公司各项内部管理制度，包括人力资源招聘、考核、培训、薪酬以及各项行政规 章制度。 5、负责各项人事行政规章制度的实施和监督，充分激励员工积极性，提高工作效率。 6、定期组织召开管理层办公会和经营分析会，就相关重大问题进行讨论，并形成决议。 7、指导分支机构的筹划组建和变更撤消，包括北京、上海、天津、烟台等地。 8、参与策划品牌战略及电子商务发展策略，注册实施自有品牌。 9、负责协调内外部资源和公共关系，妥善处理经营中出现的各类事件。 10、协调与韩国电子商务女装网站的合作。 11、负责公司其他管理任务。
+                            <p>工资职责：{{ list.description }}
                             </p>
                             <p>离职原因：集团撤离中国市场</p>
                         </li>
@@ -479,9 +484,17 @@
                     <ul class="education">
                         <li v-for="(list,index) in educationlist" :key='index'>
                             {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
-                            <span class="change" @click="educationchange()" type="text">
+                            <span class="change" @click="educationchange(index)" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
-                            <span>2017.06-2018.06</span>
+                            <span>{{ list.startTime.substr(0, 10) }}-
+                                <template v-if='list.jobTitle'>
+                                    {{ list.jobTitle.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>
+                            </span>
                         </li>
                     </ul>
                     <div class="aside">
@@ -519,15 +532,18 @@ export default {
             stage3: false,
             message: false,
             experience: false,
-            experiencestate: "1", //判断新增或者编辑
+            experiencestate: "1", //判断经验新增或者编辑
+            educationstate: "1", //判断教育新增或者编辑
             education: false,
             styles1: "active",
             styles2: "left",
             styles3: "left",
-            candidate: "", //候选人
+            candidate: "1", //候选人
             resume: {}, //基本信息
             experiencelist: [], //工作经验
             educationlist: [], //学历经验
+            experiencearr: [], //保存工作id
+            educationarr: [], //保存学历id
             addnum: 0,
             messageForm: {
                 companyName: ""
@@ -562,16 +578,21 @@ export default {
                 startTime: "", //工作时间开始
                 endTime: "" //工作时间结束
             },
-            educationForm:{
+            educationForm: {
+                id: "",
                 srcId: this.$route.query.srcId, //平台源编码
-                eduId:"",//教育经历id
-                level:"",//学历
-                majorName:"",//专业名称
-                schoolName:"",//学校名称
-                startTime:"",//工作时间开始
-                endTime:"",//工作时间结束
+                eduId: "", //教育经历id
+                level: "", //学历
+                majorName: "", //专业名称
+                schoolName: "", //学校名称
+                startTime: "", //工作时间开始
+                endTime: "" //工作时间结束
             },
-            checkbox: []
+            suggestForms: {
+                srcId: this.$route.query.srcId, //平台源编码
+                assessContent: [],
+                suggest: ""
+            }
         };
     },
     methods: {
@@ -590,20 +611,67 @@ export default {
             this.styles3 = "left";
         },
         gonext2() {
-            this.stage1 = false;
-            this.stage2 = true;
-            this.stage3 = false;
-            this.styles1 = "left";
-            this.styles2 = "active";
-            this.styles3 = "left";
+            for (var i = 0; i < this.experiencelist.length; i++) {
+                this.experiencearr.push(this.experiencelist[i].id);
+            }
+            for (var i = 0; i < this.educationlist.length; i++) {
+                this.educationarr.push(this.educationlist[i].id);
+            }
+            this.experiencearr = JSON.stringify(this.experiencearr);
+            this.educationarr = JSON.stringify(this.educationarr);
+            api
+                .axs("post", "/resumeReport/saveCandidate", {
+                    candidateId: this.id,
+                    workExperienceId: this.experiencearr,
+                    eduId: this.educationarr
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.$Message.success("编辑成功!");
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                        this.stage1 = false;
+                        this.stage2 = true;
+                        this.stage3 = false;
+                        this.styles1 = "left";
+                        this.styles2 = "active";
+                        this.styles3 = "left";
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         gonext3() {
-            this.stage1 = false;
-            this.stage2 = false;
-            this.stage3 = true;
-            this.styles1 = "left";
-            this.styles2 = "left";
-            this.styles3 = "active";
+            if (!this.suggestForms.suggest) {
+                this.$Message.error("请填写推荐建议");
+                return;
+            }
+            this.suggestForms.assessContent = JSON.stringify(
+                this.suggestForms.assessContent
+            );
+            api
+                .axs(
+                    "post",
+                    "/resumeReport/saveCandidateReport",
+                    this.suggestForms
+                )
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.$Message.success("编辑成功!");
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                        this.stage1 = false;
+                        this.stage2 = false;
+                        this.stage3 = true;
+                        this.styles1 = "left";
+                        this.styles2 = "left";
+                        this.styles3 = "active";
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
         seltime1(date) {
             this.experienceForms.startTime = date;
@@ -779,36 +847,122 @@ export default {
                     });
             }
         },
-       
+
         educationadd() {
             this.education = true;
+            this.educationstate = "1";
         },
-        educationchange() {
+        educationchange(data) {
             this.education = true;
+            this.educationstate = "2";
+            this.educationForm.id = this.educationlist[data].id;
+            this.educationForm.level = this.educationlist[data].level;
+            this.educationForm.majorName = this.educationlist[data].majorName;
+            this.educationForm.schoolName = this.educationlist[data].schoolName;
+            this.educationForm.startTime = this.educationlist[data].startTime;
+            this.educationForm.endTime = this.educationlist[data].endTime;
         },
-         educationok(data){
-             alert(data)
+        educationok() {
             //  if (!this.educationForm.startTime) {
             //     this.$Message.error("请选择开始时间");
             //     return;
             // }
-            // api
-            //         .axs(
-            //             "post",
-            //             "/resumeReport/saveEducationExperienceReport",
-            //             this.educationForm
-            //         )
-            //         .then(({ data }) => {
-            //             if (data.code === "SUCCESS") {
-            //                 console.log(data);
-            //                 this.$Message.success("新增成功!");
-            //                 this.$Loading.finish();
-            //                 this.$store.state.spinShow = false;
-            //             } else {
-            //                 this.$Message.error(data.remark);
-            //             }
-            //         });
-         },
+            if (this.educationstate == 1) {
+                api
+                    .axs(
+                        "post",
+                        "/resumeReport/saveEducationExperienceReport",
+                        this.educationForm
+                    )
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            console.log(data);
+                            this.$Message.success("新增成功!");
+                            this.$Loading.finish();
+                            this.$store.state.spinShow = false;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.educationForm.startTime = UTC2Date(
+                    this.educationForm.startTime
+                );
+                this.educationForm.endTime = UTC2Date(
+                    this.educationForm.endTime
+                );
+                api
+                    .axs(
+                        "post",
+                        "/resumeReport/updateEducationExperienceReport",
+                        this.educationForm
+                    )
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            console.log(data);
+                            this.$Message.success("编辑成功!");
+                            this.$Loading.finish();
+                            this.$store.state.spinShow = false;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+        draftsok() {
+            for (var i = 0; i < this.experiencelist.length; i++) {
+                this.experiencearr.push(this.experiencelist[i].id);
+            }
+            for (var i = 0; i < this.educationlist.length; i++) {
+                this.educationarr.push(this.educationlist[i].id);
+            }
+            this.experiencearr = JSON.stringify(this.experiencearr);
+            this.educationarr = JSON.stringify(this.educationarr);
+            api
+                .axs("post", "/resumeReport/saveCandidate", {
+                    candidateId: this.id,
+                    workExperienceId: this.experiencearr,
+                    eduId: this.educationarr
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.$Message.success("编辑成功!");
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        suggestok() {
+            if (!this.suggestForms.suggest) {
+                this.$Message.error("请填写推荐建议");
+                return;
+            }
+            this.suggestForms.assessContent = JSON.stringify(
+                this.suggestForms.assessContent
+            );
+            api
+                .axs(
+                    "post",
+                    "/resumeReport/saveCandidateReport",
+                    this.suggestForms
+                )
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.$Message.success("编辑成功!");
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        changeone(){
+            alert(1)
+        },
         ok() {
             this.$Message.info("Clicked ok");
         },

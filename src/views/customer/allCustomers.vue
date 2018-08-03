@@ -252,7 +252,7 @@ export default {
                                         }
                                     }
                                 },
-                                row.lastFollowRecord.substr(0, 5) + "..."
+                                row.lastFollowRecord.substr(0, 10) + "..."
                             );
                         } else {
                             return h("span", "无记录");

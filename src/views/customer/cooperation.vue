@@ -15,23 +15,23 @@
                 <Button slot="append" icon="ios-search" @click='searchIn'></Button>
                 </Input>
             </div>
-            <div class="sels" v-if='allTrees.length'>
+            <div class="sels" v-if='allTrees'>
                 <Select v-model="form.deptId" class='sels-item' placeholder='部门归属' style="width:150px">
                     <Option v-for="(dept,index) in deptlist" :key="index" :value="dept.id">{{ dept.departmentName }}</Option>
                 </Select>
 
                 <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业" style="width:150px"></Input>
                 <Select v-model="form.companySource" class='sels-item' placeholder='客户来源' style="width:150px">
-                    <Option v-for="(tree,index) in allTrees[1].children" :key="index" :value="tree.code">{{ tree.codeText }}</Option>
+                    <Option v-for="(tree,index) in allTrees.companysource" :key="index" :value="tree.code">{{ tree.codeText }}</Option>
                 </Select>
                 <Select v-model="form.importantLevel" class='sels-item' placeholder='客户重要性' style="width:150px">
-                    <Option v-for="(imports,index) in allTrees[6].children" :key="index" :value="imports.code">{{ imports.codeText }}</Option>
+                    <Option v-for="(imports,index) in allTrees.importancelist" :key="index" :value="imports.code">{{ imports.codeText }}</Option>
                 </Select>
                 <Select v-model="form.preFee" class='sels-item' placeholder='前期服务费' style="width:150px">
-                    <Option v-for="(money,index) in allTrees[7].children" :key="index" :value="money.code">{{ money.codeText }}</Option>
+                    <Option v-for="(money,index) in allTrees.prefee" :key="index" :value="money.code">{{ money.codeText }}</Option>
                 </Select>
                 <Select v-model="form.changeInto" class='sels-item' placeholder='转入客户' style="width:100px">
-                    <Option v-for="(peoples,index) in allTrees[8].children" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
+                    <Option v-for="(peoples,index) in allTrees.changeinto" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
                 </Select>
                 <div class="disInB sels-item">
                     签约时间：
@@ -164,14 +164,12 @@ export default {
                     render: (h, params) => {
                         const row = params.row;
                         if (
-                            this.allTrees[12].children[row.companyStatus] &&
-                            this.allTrees[12].children[row.companyStatus]
-                                .codeText
+                            this.allTrees.statelist.length &&
+                            this.allTrees.statelist[+row.companyStatus+1]
                         ) {
                             return h(
                                 "span",
-                                this.allTrees[12].children[row.companyStatus]
-                                    .codeText
+                                this.allTrees.statelist[+row.companyStatus+1].codeText
                             );
                         }
                     }
@@ -252,7 +250,7 @@ export default {
     },
     computed: {
         allTrees() {
-            return this.$store.state.selTrees;
+            return this.$store.state.allTrees;
         }
     },
     methods: {

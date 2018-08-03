@@ -28,12 +28,12 @@
                 <li>
                     <p>
                         <span>*</span> 跟进时间：</p>
-                    <DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' type="date" placeholder="Select date"></DatePicker>
+                    <DatePicker :value='atteForm.followTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' type="date" placeholder="请选择时间"></DatePicker>
                 </li>
                 <li>
                     <p>
                         <span>*</span> 提醒时间：</p>
-                    <DatePicker :value='atteForm.remindBefore' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="Select date"></DatePicker>
+                    <DatePicker :value='atteForm.remindBefore' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="请选择时间"></DatePicker>
                 </li>
                 <li>
                     <p>
@@ -51,19 +51,21 @@
 
 <script>
 import api from "@/api";
+import ls from "store2";
 import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "addAttePop",
-    props: ["attePop", "atteCompanyId", "atteCompanyName"],
+    props: ["attePop", "atteCompanyId"],
     components: {},
     data() {
         return {
+            atteCompanyName:ls.get("companyName"),
             subFlag: true,
             userlist: [],
             id: "",
             company: "",
             atteForm: {
-                companyId: "",
+                companyId: this.$route.query.id,
                 title: "",
                 followUserId: "",
                 followTime: UTC2Date(new Date()),
@@ -83,7 +85,6 @@ export default {
     methods: {
         subSave() {
             var forms = this.atteForm;
-            this.atteForm.companyId = this.companyId;
             //    date = this.atteForm.followTime.replace("Z", " UTC");
             //    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
             for (var companyId in forms) {

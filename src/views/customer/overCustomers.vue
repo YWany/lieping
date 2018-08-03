@@ -63,7 +63,11 @@ export default {
                 {
                     title: "申请原因",
                     key: "importantLevel",
-                    sortable: true
+                    sortable: true,
+                    render: (h, params) => {
+                        var row = params.row;
+                        return h("span", '---');
+                    }
                 },
                 {
                     title: "退款",

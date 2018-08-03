@@ -33,9 +33,6 @@
                 <Select v-model="form.statelist" class='sels-item' placeholder='客户状态' style="width:150px">
                     <Option v-for="(money,index) in allTrees.statelist" :key="index" :value="money.code">{{ money.codeText }}</Option>
                 </Select>
-                <Select v-model="form.importancelist" class='sels-item' placeholder='客户等级' style="width:100px">
-                    <Option v-for="(peoples,index) in allTrees.importancelist" :key="index" :value="peoples.code">{{ peoples.codeText }}</Option>
-                </Select>
                 <div class="disInB sels-item">
                     创建时间：
                     <DatePicker type="date" v-model='form.createDate' placeholder="选择日期" style="width: 110px"></DatePicker>

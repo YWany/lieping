@@ -19,7 +19,6 @@
                 <Select v-model="form.deptId" class='sels-item' placeholder='部门归属' style="width:150px">
                     <Option v-for="(dept,index) in deptlist" :key="index" :value="dept.id">{{ dept.departmentName }}</Option>
                 </Select>
-
                 <Input slot="append" @on-focus='professPop=true' v-model='professName' :readonly='true' class='selPro' placeholder="选择行业" style="width:150px"></Input>
                 <Select v-model="form.companySource" class='sels-item' placeholder='客户来源' style="width:150px">
                     <Option v-for="(tree,index) in allTrees.companysource" :key="index" :value="tree.code">{{ tree.codeText }}</Option>

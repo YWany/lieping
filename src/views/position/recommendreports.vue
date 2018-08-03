@@ -100,34 +100,46 @@
                             <li>
                                 <p>
                                     目前薪酬：</p>
-                                <Input v-model='messageForms.salaryNow' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.salaryNow' placeholder="月薪，如10k" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     期望薪酬：</p>
-                                <Input v-model='messageForms.salaryExpect' placeholder="" class='selpro'></Input>
-                            </li>
-                            <li>
-                                <p>
-                                    <span>*</span>最高学历：</p>
-                                <Input v-model='messageForms.highEdu' placeholder="" class='selpro'></Input>
+                                <Input v-model='messageForms.salaryExpect' placeholder="月薪，如10k" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     第一学历：</p>
-                                <Input v-model='messageForms.firstEdu' placeholder="" class='selpro'></Input>
+                                <Select style="width:300px;" class='selpro' v-model="messageForms.firstEdu" placeholder="选择学历">
+                                    <Option style="width:300px;" value="小学">小学</Option>
+                                    <Option style="width:300px;" value="高中">高中</Option>
+                                    <Option style="width:300px;" value="本科">本科</Option>
+                                </Select>
+                            </li>
+                            <li>
+                                <p>
+                                    <span>*</span>最高学历：</p>
+                                <Select style="width:300px;" class='selpro' v-model="messageForms.highEdu" placeholder="选择学历">
+                                    <Option style="width:300px;" value="小学">小学</Option>
+                                    <Option style="width:300px;" value="高中">高中</Option>
+                                    <Option style="width:300px;" value="本科">本科</Option>
+                                </Select>
                             </li>
                         </ul>
+                        <div slot="footer">
+                            <Button type="primary" @click="messageok()">保存</Button>
+                            <Button type="ghost" @click="cancel()" style="margin-left: 8px">取消</Button>
+                        </div>
                     </Modal>
                     <div class="title">
                         工作经历
                         <!-- <span @click="experience = true" type="text">
-                                <Icon type="plus-circled"></Icon>新增</span> -->
+                                    <Icon type="plus-circled"></Icon>新增</span> -->
                     </div>
                     <ul class="experience">
                         <li v-for="(list,index) in experiencelist" :key='index'>{{ list.companyName }} | {{ list.jobTitle }}
                             <!-- <span class="change" @click="experience = true" type="text">
-                                    <Icon type="document-text"></Icon>编辑</span> -->
+                                        <Icon type="document-text"></Icon>编辑</span> -->
                             <span>{{ list.startTime.substr(0, 10) }}-
                                 <template v-if='list.endTime'>
                                     {{ list.endTime.substr(0, 10) }}
@@ -144,19 +156,19 @@
                             <li>
                                 <p>
                                     <span>*</span> 工作时间：</p>
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>-
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>
+                                <DatePicker type="date" placeholder="Select date" v-model="experienceForms.companyName"></DatePicker>-
+                                <DatePicker type="date" placeholder="Select date" v-model="experienceForms.companyName"></DatePicker>
                                 <!-- <Button type="primary" shape="circle" size='small' icon="plus" class='addNewContact' @click='addexnum'></Button> -->
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 企业名称：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='experienceForms.companyName' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 职位：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='experienceForms.companyName' placeholder="" class='selpro'></Input>
                             </li>
                             <!-- <div v-for="(num,index) in addnum" :key='index'>
                                     <li>
@@ -181,22 +193,22 @@
                     </Modal>
                     <div class="title">
                         详细说明
-                        <span @click="experience = true" type="text">
+                        <span @click="experienceadd()" type="text">
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="explain">
                         <li v-for="(list,index) in experiencelist" :key='index'>
                             <p>{{ list.companyName }} | {{ list.jobTitle }}
-                                <span class="change" @click="experiencechange()" type="text">
+                                <span class="change" @click="experiencechange(index)" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
                                 <span>{{ list.startTime.substr(0, 10) }}-
-                                    <template v-if='list.endTime'>
-                                        {{ list.endTime.substr(0, 10) }}
-                                    </template>
+<template v-if='list.endTime'>
+    {{ list.endTime.substr(0, 10) }}
+</template>
 
-                                    <template v-else>
-                                        无
-                                    </template>
+<template v-else>
+    无
+</template>
                                 </span>
                             </p>
                             <p>企业简介：韩资企业，互联网电商贸易，重点方向韩国电子商务女装网站。</p>
@@ -213,69 +225,73 @@
                             <li>
                                 <p>
                                     <span>*</span> 工作时间：</p>
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>-
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>
+                                <DatePicker v-model="experienceForms.startTime" type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1'></DatePicker>-
+                                <DatePicker v-model="experienceForms.endTime" type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" @on-change='seltime2'></DatePicker>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 企业名称：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='experienceForms.companyName' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 职位：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='experienceForms.jobTitle' placeholder="" class='selpro'></Input>
                             </li>
                             <li style="width:100%;">
                                 <p>
-                                    <span>*</span> 企业介绍：</p>
-                                <Input style="width:600px;" type="textarea" v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                    <span></span> 企业介绍：</p>
+                                <Input style="width:600px;" type="textarea" v-model='experienceForms.description' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 汇报对象：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='experienceForms.reportTarget' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
-                                    <span>*</span> 下属人数：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                    <span></span> 下属人数：</p>
+                                <Input v-model='experienceForms.subordinateNum' placeholder="" class='selpro'></Input>
                             </li>
                             <li style="width:100%;">
                                 <p>
                                     <span>*</span> 工作职责：</p>
-                                <Input style="width:600px;" type="textarea" v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input style="width:600px;" type="textarea" v-model='experienceForms.workDuty' placeholder="" class='selpro'></Input>
                             </li>
                             <li style="width:100%;">
                                 <p>
-                                    <span>*</span> 工作业绩：</p>
-                                <Input style="width:600px;" type="textarea" v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                    <span></span> 工作业绩：</p>
+                                <Input style="width:600px;" type="textarea" v-model='experienceForms.workAchievement' placeholder="" class='selpro'></Input>
                             </li>
                             <li style="width:100%;">
                                 <p>
-                                    <span>*</span> 离职原因：</p>
-                                <Input style="width:600px;" type="textarea" v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                    <span></span> 离职原因：</p>
+                                <Input style="width:600px;" type="textarea" v-model='experienceForms.leaveReason' placeholder="" class='selpro'></Input>
                             </li>
                         </ul>
+                        <div slot="footer">
+                            <Button type="primary" @click="experienceok()">保存</Button>
+                            <Button type="ghost" @click="cancel()" style="margin-left: 8px">取消</Button>
+                        </div>
                     </Modal>
                     <div class="title">
                         教育经历
-                        <span @click="education = true" type="text">
+                        <span @click="educationadd()" type="text">
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="education">
                         <li v-for="(list,index) in educationlist" :key='index'>
                             {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
-                            <span class="change" @click="educationchange()" type="text">
+                            <span class="change" @click="educationchange(list.id)" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
                             <span>{{ list.startTime.substr(0, 10) }}-
-                                <template v-if='list.endTime'>
-                                    {{ list.endTime.substr(0, 10) }}
-                                </template>
+<template v-if='list.endTime'>
+    {{ list.endTime.substr(0, 10) }}
+</template>
 
-                                <template v-else>
-                                    无
-                                </template>
+<template v-else>
+    无
+</template>
                             </span>
                         </li>
                     </ul>
@@ -284,26 +300,30 @@
                             <li>
                                 <p>
                                     <span>*</span> 起止时间：</p>
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>-
-                                <DatePicker type="date" placeholder="Select date" v-model="messageForm.companyName"></DatePicker>
+                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.startTime"></DatePicker>-
+                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.endTime"></DatePicker>
                                 <!-- <Button type="primary" shape="circle" size='small' icon="plus" class='addNewContact' @click='addexnum'></Button> -->
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 学校名称：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='educationForm.schoolName' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 专业名称：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='educationForm.majorName' placeholder="" class='selpro'></Input>
                             </li>
                             <li>
                                 <p>
                                     <span>*</span> 学历：</p>
-                                <Input v-model='messageForm.companyName' placeholder="" class='selpro'></Input>
+                                <Input v-model='educationForm.level' placeholder="" class='selpro'></Input>
                             </li>
                         </ul>
+                        <div slot="footer">
+                            <Button type="primary" @click="educationok()">保存</Button>
+                            <Button type="ghost" @click="cancel()" style="margin-left: 8px">取消</Button>
+                        </div>
                     </Modal>
                     <div class="save">
                         <Button type="primary">保存</Button>
@@ -421,13 +441,13 @@
                             <!-- <span class="change" @click="experience = true" type="text">
                                     <Icon type="document-text"></Icon>编辑</span> -->
                             <span>{{ list.startTime.substr(0, 10) }}-
-                                <template v-if='list.jobTitle'>
-                                    {{ list.jobTitle.substr(0, 10) }}
-                                </template>
+<template v-if='list.jobTitle'>
+    {{ list.jobTitle.substr(0, 10) }}
+</template>
 
-                                <template v-else>
-                                    无
-                                </template>
+<template v-else>
+    无
+</template>
                             </span>
                         </li>
                     </ul>
@@ -439,7 +459,7 @@
                     <ul class="explain">
                         <li>
                             <p>杭州千里马信息科技有限公司 | 副总经理（行政人力中心）
-                                <span class="change" @click="experience = true" type="text">
+                                <span class="change" @click="experiencechange()" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
                                 <span>2017.06-2018.06</span>
                             </p>
@@ -453,7 +473,7 @@
                     </ul>
                     <div class="title">
                         教育经历
-                        <span @click="education = true" type="text">
+                        <span @click="educationadd()" type="text">
                             <Icon type="plus-circled"></Icon>添加</span>
                     </div>
                     <ul class="education">
@@ -484,6 +504,7 @@
 <script>
 import api from "@/api";
 import ls from "store2";
+import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "recommendreports",
     components: {},
@@ -498,6 +519,7 @@ export default {
             stage3: false,
             message: false,
             experience: false,
+            experiencestate: "1", //判断新增或者编辑
             education: false,
             styles1: "active",
             styles2: "left",
@@ -507,10 +529,11 @@ export default {
             experiencelist: [], //工作经验
             educationlist: [], //学历经验
             addnum: 0,
-            messageForm:{
+            messageForm: {
                 companyName: ""
             },
             messageForms: {
+                id: "",
                 srcId: this.$route.query.srcId, //平台源编码
                 companyName: ls.get("jobcompanyname"),
                 name: "", //候选人名字
@@ -524,6 +547,29 @@ export default {
                 firstEdu: "", //第一学历
                 highEdu: "", //最高学历
                 liveAddress: "" //居住地所在地
+            },
+            experienceForms: {
+                id: "",
+                srcId: this.$route.query.srcId, //平台源编码
+                companyName: "", //企业名称
+                jobTitle: "", //职位
+                description: "", //企业简介
+                subordinateNum: "", //下属人数
+                reportTarget: "", //汇报对象
+                workDuty: "", //工作职责
+                workAchievement: "", //工作业绩
+                leaveReason: "", //离职原因
+                startTime: "", //工作时间开始
+                endTime: "" //工作时间结束
+            },
+            educationForm:{
+                srcId: this.$route.query.srcId, //平台源编码
+                eduId:"",//教育经历id
+                level:"",//学历
+                majorName:"",//专业名称
+                schoolName:"",//学校名称
+                startTime:"",//工作时间开始
+                endTime:"",//工作时间结束
             },
             checkbox: []
         };
@@ -559,25 +605,215 @@ export default {
             this.styles2 = "left";
             this.styles3 = "active";
         },
-        messagechange(){
-            this.message=true;
-            this.messageForms.name=this.resume.name;
-            this.messageForms.age=this.resume.age;
-            this.messageForms.age=this.resume.age
-            this.messageForms.age=this.resume.age
+        seltime1(date) {
+            this.experienceForms.startTime = date;
         },
-        experiencechange() {
-
+        seltime2(date) {
+            this.experienceForms.endTime = date;
+        },
+        messagechange() {
+            this.message = true;
+            this.messageForms.name = this.resume.name;
+            this.messageForms.age = this.resume.age;
+            this.messageForms.address = this.resume.address;
+            this.messageForms.highEdu = this.resume.education;
+        },
+        experienceadd() {
+            this.experiencestate = "1";
             this.experience = true;
-            
+        },
+        experiencechange(data) {
+            this.experiencestate = "2";
+            this.experience = true;
+            this.experienceForms.id = this.experiencelist[data].id;
+            this.experienceForms.startTime = this.experiencelist[
+                data
+            ].startTime;
+            this.experienceForms.endTime = this.experiencelist[data].endTime;
+            this.experienceForms.companyName = this.experiencelist[
+                data
+            ].companyName;
+            this.experienceForms.jobTitle = this.experiencelist[data].jobTitle;
+
+            this.experienceForms.description = this.experiencelist[
+                data
+            ].description;
+            this.experienceForms.subordinateNum = this.experiencelist[
+                data
+            ].subordinateNum;
+            this.experienceForms.reportTarget = this.experiencelist[
+                data
+            ].reportTarget;
+            this.experienceForms.workDuty = this.experiencelist[data].workDuty;
+            this.experienceForms.workAchievement = this.experiencelist[
+                data
+            ].workAchievement;
+            this.experienceForms.leaveReason = this.experiencelist[
+                data
+            ].leaveReason;
+        },
+
+        messageok() {
+            //基本信息修改。增加
+            console.log(this.messageForms);
+            api
+                .axs("post", "/resumeReport/queryBasicInfo", {
+                    srcId: this.srcId
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        if (data.data.id) {
+                            this.messageForms.id = data.data.id;
+                            api
+                                .axs(
+                                    "post",
+                                    "/resumeReport/updateBasicInfo",
+                                    this.messageForms
+                                )
+                                .then(({ data }) => {
+                                    if (data.code === "SUCCESS") {
+                                        console.log(data);
+                                        this.message = false;
+                                        this.$Loading.finish();
+                                        this.$Message.success("编辑成功!");
+                                        this.$store.state.spinShow = false;
+                                    } else {
+                                        this.$Message.error(data.remark);
+                                    }
+                                });
+                        } else {
+                            api
+                                .axs(
+                                    "post",
+                                    "/resumeReport/saveBasicInfo",
+                                    this.messageForms
+                                )
+                                .then(({ data }) => {
+                                    if (data.code === "SUCCESS") {
+                                        console.log(data);
+                                        this.message = false;
+                                        this.$Message.success("新增成功!");
+                                        this.$Loading.finish();
+                                        this.$store.state.spinShow = false;
+                                    } else {
+                                        this.$Message.error(data.remark);
+                                    }
+                                });
+                        }
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+
+        experienceok() {
+            if (!this.experienceForms.startTime) {
+                this.$Message.error("请选择工作开始时间");
+                return;
+            }
+            if (!this.experienceForms.endTime) {
+                this.$Message.error("请选择工作结束时间");
+                return;
+            }
+
+            if (!this.experienceForms.companyName) {
+                this.$Message.error("请输入公司名称");
+                return;
+            }
+            if (!this.experienceForms.jobTitle) {
+                this.$Message.error("请输入职位名称");
+                return;
+            }
+            if (!this.experienceForms.reportTarget) {
+                this.$Message.error("请输入汇报对象");
+                return;
+            }
+            if (!this.experienceForms.workDuty) {
+                this.$Message.error("请输入工作职责");
+                return;
+            }
+            if (this.experiencestate == 1) {
+                console.log(this.experienceForms);
+                api
+                    .axs(
+                        "post",
+                        "/resumeReport/saveWorkExperienceReport",
+                        this.experienceForms
+                    )
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            console.log(data);
+                            this.$Message.success("新增成功!");
+                            this.$Loading.finish();
+                            this.$store.state.spinShow = false;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                console.log(this.experienceForms);
+                this.experienceForms.startTime = UTC2Date(
+                    this.experienceForms.startTime
+                );
+                this.experienceForms.endTime = UTC2Date(
+                    this.experienceForms.endTime
+                );
+                api
+                    .axs(
+                        "post",
+                        "/resumeReport/updateWorkExperienceReport",
+                        this.experienceForms
+                    )
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            console.log(data);
+                            this.$Message.success("编辑成功!");
+                            this.$Loading.finish();
+                            this.$store.state.spinShow = false;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+       
+        educationadd() {
+            this.education = true;
         },
         educationchange() {
             this.education = true;
         },
+         educationok(data){
+             alert(data)
+            //  if (!this.educationForm.startTime) {
+            //     this.$Message.error("请选择开始时间");
+            //     return;
+            // }
+            // api
+            //         .axs(
+            //             "post",
+            //             "/resumeReport/saveEducationExperienceReport",
+            //             this.educationForm
+            //         )
+            //         .then(({ data }) => {
+            //             if (data.code === "SUCCESS") {
+            //                 console.log(data);
+            //                 this.$Message.success("新增成功!");
+            //                 this.$Loading.finish();
+            //                 this.$store.state.spinShow = false;
+            //             } else {
+            //                 this.$Message.error(data.remark);
+            //             }
+            //         });
+         },
         ok() {
             this.$Message.info("Clicked ok");
         },
         cancel() {
+            this.message = false;
             this.$Message.info("Clicked cancel");
         }
     },
@@ -608,7 +844,7 @@ export default {
 .steps {
     width: 100%;
     .zoom {
-        width: 100%;    
+        width: 100%;
         padding: 20px 50px;
         background: #f5fbff;
         overflow: auto;
@@ -650,6 +886,7 @@ export default {
         }
     }
 }
+
 .clearfloat:after {
     display: block;
     clear: both;
@@ -657,9 +894,11 @@ export default {
     visibility: hidden;
     height: 0;
 }
+
 .clearfloat {
     zoom: 1;
 }
+
 .stage {
     width: 100%;
     padding: 10px 0;
@@ -701,7 +940,6 @@ export default {
             border-top: 2px solid #dddddd;
             border-bottom: 1px solid #dddddd;
         }
-
         .bottom {
             padding: 5px 0;
             span {

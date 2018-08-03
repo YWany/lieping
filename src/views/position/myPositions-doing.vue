@@ -241,7 +241,7 @@ export default {
                         const row = params.row;
                         return h("div", [
                             h(
-                                "Button",
+                                "router-link",
                                 {
                                     props: {
                                         type: "success", //primary、ghost、dashed、text、info、success、warning、error

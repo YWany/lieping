@@ -288,26 +288,26 @@ export default {
                                 },
                                 "推荐企业"
                             ),
-                            h(
-                                "router-link",
-                                {
-                                    props: {
-                                        type: "info",
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                    attrs: {
-                                        to:
-                                           "/position/myPositions/recommendreports?srcId=" +
-                                            row.srcId +
-                                            "&&resumeId=" +
-                                            row.resumeId
-                                    }
-                                },
-                                "推荐职位"
-                            ),
+                            // h(
+                            //     "router-link",
+                            //     {
+                            //         props: {
+                            //             type: "info",
+                            //             size: "small"
+                            //         },
+                            //         style: {
+                            //             marginRight: "6px"
+                            //         },
+                            //         attrs: {
+                            //             to:
+                            //                "/position/myPositions/recommendreports?srcId=" +
+                            //                 row.srcId +
+                            //                 "&&resumeId=" +
+                            //                 row.resumeId
+                            //         }
+                            //     },
+                            //     "推荐职位"
+                            // ),
                             h(
                                 "a",
                                 {

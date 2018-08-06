@@ -10,6 +10,7 @@
             <Button type="warning" icon='ios-compose' class='toolBtn fr' @click='companyPop=true'></Button>
             <span class='fr'>&nbsp;&nbsp;</span>
         </div>
+
         <ul class="info">
             <li>BD顾问: {{recordsDetails.bdName}}
                 <span>|</span>
@@ -18,7 +19,9 @@
                 <span>|</span>
             </li>
             <li>最后跟进时间: {{recordsDetails.updateTime}}</li>
+            <Button style="position:absolute;right:0;top:5px;" @click='companymass=true' type="info">查看企业信息</Button>
         </ul>
+
         <div class="recordsContent">
             <Tabs type="card" :value="tabShow" :animated=false @on-click='clickTab'>
                 <TabPane label="跟进记录" name="jilu">
@@ -245,7 +248,30 @@
                 <Button type='primary' @click='selContactFun'>确定</Button>
             </div>
         </Modal>
+        <Modal v-model="companymass" width='400px' :mask-closable='false' :closable='false'>
+            <div slot="header">
+                <span style='font-size:14px'>企业基本信息</span>
+                <a href="javascript:;" class='fr' @click='closeSelUsersPop'>
+                    <Icon type="close-round"></Icon>
+                </a>
+            </div>
+            <ul class='users-content'>
+                <li>客户名称：{{ this.recordsDetails.companyName }}</li>
+                <li>客户来源：{{ allTrees.statelist[+recordsDetails.companyStatus].codeText }}</li>
+                <li>客户对外显示名称：{{ this.recordsDetails.outerName }}</li>
+                <li>重要程度：{{ this.recordsDetails.companyStatus }}</li>
+                <li>客户状态：{{ this.recordsDetails.importantLevel }}</li>
+                <li>企业性质：{{ this.recordsDetails.network }}</li>
+                <li>企业规模：{{ this.recordsDetails.companyScope }}</li>
+                <li>官网链接：
+                    <a :href="this.recordsDetails.network">{{ this.recordsDetails.network }}</a>
+                </li>
+                <li>企业介绍：{{ this.recordsDetails.introduction }}</li>
+            </ul>
+            <div slot='footer' style='text-align:center'>
 
+            </div>
+        </Modal>
         <!-- 删除 -->
         <Modal v-model="delCompanyPop" title="删除确认" width='400px' @on-ok="delCompany" style='text-align: center'>
             <p style='font-size:14px;text-align:center;padding:20px 0'>确定要删除这个客户 : {{recordsDetails.companyName}} ?</p>
@@ -289,6 +315,7 @@ export default {
     },
     data() {
         return {
+            companymass: false, //查看企业信息
             subFlag: true,
             sonFlag: false,
             tabShow: ls.get("recordTabShow") || "jilu",
@@ -790,6 +817,9 @@ export default {
     computed: {
         users() {
             return this.$store.state.users;
+        },
+        allTrees() {
+            return this.$store.state.allTrees;
         }
     },
     created() {
@@ -1036,6 +1066,7 @@ export default {
             this.selUserSelect = false;
             this.selUsersPop = false;
             this.selContactsPop = false;
+            this.companymass = false;
         },
         delCompany() {
             api
@@ -1109,6 +1140,7 @@ export default {
         border: 1px solid #eee;
         border-radius: 5px;
         padding: 10px;
+        position: relative;
         li {
             font-size: 14px;
             span {

@@ -7,12 +7,14 @@
                     <span>1</span> 基本信息
                 </div>
                 <FormItem label="关联企业：" class="half">
-                    <Select v-model="formValidate.companyId" placeholder="Select your city">
+                    <Input slot="append" type="text" @on-focus='professPop=true' v-model="formValidate.companyId" :readonly='true' placeholder="Enter your name"></Input>
+
+                    <!-- <Select v-model="formValidate.companyId" placeholder="Select your city">
                         <Option value="beijing">New York</Option>
                         <Option value="shanghai">London</Option>
                         <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                    <!-- <Input slot="append" @on-focus="getContactLists('select')" v-model='userName' :readonly='true' class='selPro' placeholder="请选择" style='width:200px;'></Input> -->
+                    </Select> -->
+                    <!-- <Input slot="append" @on-focus='professPop=true'  v-model='formValidate.companyId' :readonly='true' placeholder="请选择" style='width:200px;'></Input> -->
                 </FormItem>
                 <FormItem label="所属合同：" prop="contractId" class="half">
                     <Select v-model="formValidate.contractId" placeholder="Select your city">
@@ -267,17 +269,28 @@
                 <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">保存至草稿箱</Button>
             </FormItem>
         </Form>
+     <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+
     </div>
+
 </template>
 
 <script>
 import api from "@/api";
 import ls from "store2";
+// import Investment from "@/components/common/Investment.vue";
+import Professions from "@/components/common/professions.vue";
+
 export default {
     name: "addNewPosition",
-    components: {},
+    components: {
+        // Investment,
+        Professions
+    },
     data() {
         return {
+            professPop: false, //职位弹窗
+
             formValidate: {
                 companyId: "",//公司id
                 contractId: "",//合同id
@@ -411,7 +424,19 @@ export default {
         },
         handleReset(name) {
             this.$refs[name].resetFields();
-        }
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            this.professId = idName.split("&")[0];
+            this.professName = idName.split("&")[1];
+            this.form.industryId = idName.split("&")[0];
+            this.professPop = false;
+        },
     },
     mounted() {
         this.$store.state.spinShow = false;

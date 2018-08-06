@@ -78,9 +78,13 @@
                     </Select>
                 </li>
                 <li>
+                    <p>企业官网：</p>
+                    <Input v-model='companyForm.network' placeholder="" class='selpro'></Input>
+                </li>
+                <li>
                     <p>
                         <span>*</span> 企业介绍：</p>
-                    <Input v-model='companyForm.introduction' type="textarea" :rows="4" placeholder=""></Input>
+                    <Input v-model='companyForm.introduction' type="textarea" :rows="2" placeholder=""></Input>
                 </li>
             </ul>
             <div slot='footer' style='text-align:center'>
@@ -129,7 +133,8 @@ export default {
                 companyVocation: "",
                 companyScope: "",
                 introduction: "",
-                areaId: ""
+                areaId: "",
+                network: ""
             },
             companyFormError: {
                 companyName: "客户名称",
@@ -271,8 +276,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .company-content {
-    height: 380px;
-    overflow-y: auto;
+    height: 510px;
     li {
         margin-bottom: 10px;
         .selpro {

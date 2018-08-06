@@ -29,6 +29,10 @@ export default {
             api.axs("post", "/param/area/provinceList").then(({ data }) => {
                 if (data.code === "SUCCESS") {
                     this.provinces = data.data;
+                    if (this.cityId) {
+                        this.getCities()
+                        this.cityId = "540"
+                    }
                 } else {
                     this.$Message.error(data.remark);
                 }

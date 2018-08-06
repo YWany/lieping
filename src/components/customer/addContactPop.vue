@@ -97,7 +97,8 @@
                 <li>
                     <p>生日：</p>
                     <div style="display:inline-block;vertical-align:middle">
-                        <DatePicker type="date" v-model='addForm.birthday' placeholder="Select date" style="width:220px;float:left"></DatePicker>
+                        <!-- <DatePicker type="date" v-model='addForm.birthday' placeholder="Select date" style="width:220px;float:left"></DatePicker> -->
+                        <DatePicker type="datetime" :value='addForm.birthday' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime' style="width:220px;float:left"></DatePicker>
                         <Select v-model='addForm.dateType' style="width:80px;float:left;">
                             <Option value="1">公历</Option>
                             <Option value="2">农历</Option>
@@ -122,6 +123,7 @@
 
 <script>
 import api from "@/api";
+import { UTC2Date } from "@/assets/js/utils.js";
 export default {
     name: "addContactPop",
     props: ["contactPop"],
@@ -221,6 +223,9 @@ export default {
         closePop() {
             this.$parent.contactPop = false;
             // this.reset(this.addForm)
+        },
+         seltime(date) {
+            this.addForm.birthday = date;
         },
         inputPhone(val, tag) {
             if (tag == 1) this.addForm.phone1 = val.replace(/[^\d]/g, "");

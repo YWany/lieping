@@ -130,7 +130,7 @@ export default {
                 importantLevel: "",
                 companyStatus: "",
                 companyType: "",
-                companyVocation: "",
+                industryId: "",
                 companyScope: "",
                 introduction: "",
                 areaId: "",
@@ -145,7 +145,7 @@ export default {
                 importantLevel: "重要程度",
                 companyStatus: "客户状态",
                 companyType: "企业性质",
-                companyVocation: "所属行业",
+                industryId: "所属行业",
                 companyScope: "企业规模",
                 introduction: "企业介绍"
             }
@@ -180,7 +180,7 @@ export default {
                 } else {
                     this.companyForm.areaId = this.$refs.proCity.cityId;
                 }
-                this.companyForm.companyVocation = this.professId;
+                this.companyForm.industryId = this.professId;
                 var forms = this.companyForm;
                 for (var name in forms) {
                     if (!forms[name] && this.companyFormError[name]) {
@@ -212,7 +212,7 @@ export default {
                 } else {
                     this.companyForm.areaId = this.$refs.proCity.cityId;
                 }
-                this.companyForm.companyVocation = this.professId;
+                this.companyForm.industryId = this.professId;
                 var forms = this.companyForm;
                 for (var name in forms) {
                     if (!forms[name] && this.companyFormError[name]) {

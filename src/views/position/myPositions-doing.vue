@@ -93,6 +93,25 @@
                         <div class="tablePage fr">
                             <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
                         </div>
+                        <Modal v-model="ranspond" title="转发简历" >
+                    <Form ref="" :model="transpondform" :label-width="80">
+                        
+                        <FormItem label="顾问" prop="sex">
+                            <Select v-model="transpondform.refereeTo"  placeholder="请选择顾问">
+
+                                <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
+                            </Select>
+                        </FormItem>
+                       
+                       
+                    </Form>
+                    <div slot="footer">
+
+                        <Button  @click="transmit" type="primary" >保存</Button>
+                        <!-- <Button type="ghost" @click="handleReset('ranspond')" style="margin-left: 8px">清空表格</Button> -->
+
+                    </div>
+                </Modal>
                     </TabPane>
                     <TabPane label="职位日志" name="xiangqing">
                         职位日志
@@ -124,6 +143,7 @@ export default {
     data() {
         return {
             jodId: this.$route.query.jodId,
+            userlist: [],
             form: {
                 searchVal: "",
                 selVal: "候选人名",
@@ -139,6 +159,12 @@ export default {
                 current: 1,
                 pageSize: 20
             },
+            ranspond:false,
+            transpondform:{//转发简历参数
+                refereeTo:"",
+                id:ls.get("candidateId")
+            },
+
             jodId: this.$route.query.jodId,
             companyName: this.$route.query.companyName,
             companyid: this.$route.query.companyid,
@@ -283,7 +309,7 @@ export default {
                                 "推荐职位"
                             ),
                             h(
-                                "router-link",
+                                "a",
                                 {
                                     props: {
                                         type: "info",
@@ -292,16 +318,20 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    attrs: {
-                                        to:
-                                            "/position/myPositions/recommendreports?id=" +
-                                            row.id
+                                     on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "转发简历!!!" + row.name
+                                            );
+                                            this.ranspond=true
+                                            ls.set("candidateId",row.candidateId)
+                                        }
                                     }
                                 },
                                 "转发简历"
                             ),
                             h(
-                                "router-link",
+                                "a",
                                 {
                                     props: {
                                         type: "warning",
@@ -310,10 +340,14 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                    attrs: {
-                                        to:
-                                            "/position/myPositions/recommendreports?id=" +
-                                            row.id
+                                     on: {
+                                        click: () => {
+                                            this.$Message.info(
+                                                "转发简历!!!" + row.name
+                                            );
+                                            this.ranspond=true
+                                            ls.set("candidateId",row.candidateId)
+                                        }
                                     }
                                 },
                                 "人才备注"
@@ -357,7 +391,20 @@ export default {
                 this[key][item] = "";
             });
             this.form.selVal = "候选人名";
-        }
+        },
+        transmit(){
+            api.axs("post", "/jobCandidate/redirectJob",this.transpondform).then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.$Message.success(data.remark);
+                this.ranspond=false;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        }); 
+        },
+         handleReset(name) {
+            this.$refs[name].resetFields();
+        },
     },
     mounted() {
         this.loadLists();
@@ -365,11 +412,20 @@ export default {
             this.$Loading.finish();
             this.$store.state.spinShow = false;
         }, 1500);
+        api.axs("post", "/user/list").then(({ data }) => {
+            if (data.code === "SUCCESS") {
+                this.userlist = data.data;
+            } else {
+                this.$Message.error(data.remark);
+            }
+        });
     },
     beforeRouteLeave(to, from, next) {
         ls.session("lastRouter", this.$route.fullPath);
         next();
-    }
+    },
+   
+
 };
 </script>
 

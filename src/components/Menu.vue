@@ -68,7 +68,10 @@
                     <MenuItem name="/position/recommend">职位推荐</MenuItem>
                 </router-link>
                 <router-link to='/position/allPositions'>
-                    <MenuItem name="/position/allPositions">职位公海池</MenuItem>
+                    <MenuItem name="/position/allPositions">所有职位</MenuItem>
+                </router-link>
+                <router-link to='/position/publicePositions'>
+                    <MenuItem name="/position/publicePositions">职位公海池</MenuItem>
                 </router-link>
             </Submenu>
             <Submenu name="4">

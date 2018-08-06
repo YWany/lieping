@@ -318,12 +318,21 @@ export default new Router({
                 },
                 {
                     meta: {
-                        title: '千里马-职位-职位公海池'
+                        title: '千里马-职位-所有职位'
                     },
                     path: '/position/allPositions',
                     name: 'position/allPositions',
                     component: () =>
                         import ("./views/position/allPositions.vue")
+                },
+                {
+                    meta: {
+                        title: '千里马-职位-职位公海池'
+                    },
+                    path: '/position/publicePositions',
+                    name: 'position/publicePositions',
+                    component: () =>
+                        import ("./views/position/publicePositions.vue")
                 },
 
                 { // manager 管理 =======================================================

@@ -176,11 +176,11 @@ export default {
                         if (
                             row.companyStatus && 
                             this.allTrees.statelist.length && 
-                            this.allTrees.statelist[+row.companyStatus+1]
+                            this.allTrees.statelist[+row.companyStatus]
                         ) {
                             return h(
                                 "span",
-                                this.allTrees.statelist[+row.companyStatus+1].codeText
+                                this.allTrees.statelist[+row.companyStatus].codeText
                             );
                         } else {
                             return h(

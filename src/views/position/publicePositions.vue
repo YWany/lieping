@@ -1,6 +1,6 @@
 <template>
-    <div class="allPositions">
-        所有职位
+    <div class="publiPositions">
+        职位公海
     </div>
 </template>
 
@@ -8,7 +8,7 @@
 import api from "@/api";
 import ls from "store2";
 export default {
-    name: "allPositions",
+    name: "publiPositions",
     components: {},
     data() {
         return {};

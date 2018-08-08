@@ -1,10 +1,23 @@
 <template>
     <div class="personalDetails">
         <div class='currentNav'>当前位置: 客户 >
-            <router-link to='/customer/jobDoing'>职位进展</router-link> >
-            <router-link :to='lastRouter'>职位运作</router-link> > 候选人详情</div>
+            <!-- <router-link>职位进展</router-link> >
+            <router-link>职位运作</router-link> >  -->
+            候选人详情</div>
         <div class="detailsWrap">
             <div class="content-left">
+                <div class="mass">
+                    <div class="img-left">
+                        <img :src="resume.headUrl" alt="">
+                    </div>
+                    <div class="mass-iphone">
+                        <p>{{ resume.name }}</p>
+                        <p class="iphone-p">{{ resume.mobile }} | {{ resume.email }}
+                            <span>
+                                <Icon type="clock"></Icon>郎超群上传于2018.02.15</span>
+                        </p>
+                    </div>
+                </div>
                 <div class="mass">
                     <div class="mass-title">
                         推荐信息
@@ -35,45 +48,59 @@
                                     最后更新于 2018-06-16 20:12:00
                                 </div>
                                 <div class="header-c">
-                                    <h4>高三吉</h4>
+                                    <h4>{{ resume.name }}</h4>
                                     <div class="header-name">
                                         <span class="education">
-                                            <Icon type="briefcase"></Icon>本科学历</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.education }}学历</span>
                                         <span class="experience">
-                                            <Icon type="briefcase"></Icon>12年经验</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.jobYear }}年经验</span>
                                         <span class="site">
-                                            <Icon type="briefcase"></Icon>杭州</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.address }}</span>
                                         <span class="university">
-                                            <Icon type="briefcase"></Icon>浙江教育学院</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.school }}</span>
                                         <span class="purpose">
-                                            <Icon type="briefcase"></Icon>我怼现在工作表满意，考虑跳槽</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.jobHuntStatus }}</span>
                                     </div>
                                     <div class="header-img">
-                                        <img src="@/assets/images/logo.png" alt="">
+                                        <img :src="resume.headUrl" alt="">
                                     </div>
                                 </div>
                                 <div class="purpose-c">
                                     <h4>求职意向</h4>
                                     <div class="purpose-name">
                                         <span class="education">
-                                            <Icon type="briefcase"></Icon>杭州</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.expectedLocation }}</span>
                                         <span class="experience">
-                                            <Icon type="briefcase"></Icon>10k-20k</span>
+                                            <Icon type="briefcase"></Icon>{{ resume.expectedSalary }}</span>
                                     </div>
                                 </div>
                                 <div class="experience-c">
                                     <h4>工作经历</h4>
                                     <ul class="experience-name">
-                                        <li>
+                                        <li v-for="(work,index) in worklist" :value="work.id" :key='index'>
                                             <div class="ex-c">
-                                                <span class="company">杭州千里马科技有限公司</span>
-                                                <span class="job">UI设计师</span>
-                                                <span class="money">4000-6000/月</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span style="width:200px;" class="company">{{ work.companyName }}</span>
+                                                <span class="job">{{ work.jobTitle }}</span>
+                                                <!-- <span class="money">{{ work.companyName }}</span> -->
+                                                <span class="time">
+                                                    <template v-if='work.startTime'>{{ work.startTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
+                                                    -
+                                                    <template v-if='work.endTime'>
+                                                        {{ work.endTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
+                                                </span>
                                             </div>
                                             <p class="ex-de">
-                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                                {{ work.description }}
                                             </p>
                                         </li>
                                     </ul>
@@ -81,14 +108,13 @@
                                 <div class="project-c">
                                     <h4>项目经历</h4>
                                     <ul class="project-name">
-                                        <li>
+                                        <li v-for="(project,index) in projectlist" :value="project.id" :key='index'>
                                             <div class="pr-c">
-                                                <span class="project">蚂蚁金服</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span style="width:300px" class="project">{{ project.name }}</span>
+                                                <!-- <span class="time">{{ project.startTime }}~{{ project.startTime }}</span> -->
                                             </div>
                                             <p class="pr-de">
-                                                圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                                {{ project.description }}
                                             </p>
                                         </li>
 
@@ -97,12 +123,28 @@
                                 <div class="education-c">
                                     <h4>教育经历</h4>
                                     <ul class="education-name">
-                                        <li>
+                                        <li v-for="(education,index) in educationlist" :value="education.id" :key='index'>
                                             <div class="ed-c">
-                                                <span class="company">武汉生物工程学院</span>
-                                                <span class="job">计算机科学与技术</span>
-                                                <span class="money">本科</span>
-                                                <span class="time">2017.6~2018.6</span>
+                                                <span class="company">{{ education.schoolName }}</span>
+                                                <span class="job">{{ education.majorName }}</span>
+                                                <span class="money">{{ education.level }}</span>
+                                                <span class="time">
+                                                    <template v-if='education.startTime'>
+                                                        {{ education.startTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
+                                                    ~
+                                                    <template v-if='education.endTime'>
+                                                        {{ education.endTime.substr(0, 10) }}
+                                                    </template>
+
+                                                    <template v-else>
+                                                        无
+                                                    </template>
+                                                </span>
                                             </div>
 
                                         </li>
@@ -111,8 +153,7 @@
                                 <div class="personal-c">
                                     <h4>自我评价</h4>
                                     <p class="pe-de">
-                                        圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课 圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课圣诞节不上课
-
+                                        {{ resume.selfEvaluation }}
                                     </p>
                                 </div>
                             </div>
@@ -122,9 +163,10 @@
                         <TabPane label="其他简历" name="name4">其他简历</TabPane>
                     </Tabs>
                     <div class="buts">
-                        <Button type="primary">和他聊聊</Button>
-                        <Button type="primary">分组</Button>
-                        <Button type="primary">加关注</Button>
+                        <Button type="primary">人才查重</Button>
+                        <Button v-if="ifattention" type="primary" @click='savesume()'>加关注</Button>
+                        <Button v-else type="primary" @click='cancelresume'>取消关注</Button>
+                        <Button type="primary">举报简历</Button>
                     </div>
                 </div>
 
@@ -143,35 +185,50 @@
                         备注记录
 
                         <Button type="primary" shape="circle" icon="plus" @click="modal1 = true"></Button>
-                        <Modal v-model="modal1" title="添加备注信息" @on-ok="ok" @on-cancel="cancel">
-                            <p>Content of dialog</p>
-                            <p>Content of dialog</p>
-                            <p>Content of dialog</p>
+
+                        <Modal v-model="modal1" title="新增人才备注">
+                            <ul class="company-content">
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 人才姓名：</p>
+                                    <Input disabled v-model='addremark.resumeName' placeholder="请输入"></Input>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 职位：</p>
+                                    <Input disabled v-model='addremark.jobName' placeholder="请输入"></Input>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span></span> 创建人：</p>
+                                    <Select style="width:300px" v-model="addremark.createName" placeholder="请选择创建人">
+                                        <Option v-for="(item,index) in userlist" :key='index' :value="item.userName">{{item.userName}}</Option>
+                                    </Select>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 记录内容：</p>
+                                    <Input v-model='addremark.recordContent' placeholder="请输入" type="textarea" :rows="2"></Input>
+                                </li>
+                            </ul>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info' @click='subSaveremark'>确定</Button>
+                            </div>
                         </Modal>
                     </div>
                     <ul class="re-list">
-                        <li>
-                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
-
+                        <li v-for="(remark,index) in remarklist" :key='index'>
+                            <p style="color:#999">{{ companyName }}-{{ jobName }}</p>
+                            <p>{{ remark.recordContent }}</p>
+                            <p style="overflow:auto">
+                                <span style="float:right">
+                                    {{ remark.createTime }} 来自{{ remark.createName }}创建</span>
+                            </p>
                         </li>
-                        <li>
-                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
 
-                        </li>
-                        <li>
-                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
-
-                        </li>
-                        <li>
-                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
-
-                        </li>
-                        <li>
-                            <span>2018-05-01 于新华：</span> 说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话说的话
-
-                        </li>
                     </ul>
-                    <Button class="more" type="ghost" long>查看更多</Button>
+                    <Button class="more" type="ghost" long @click="remarkbut=true">查看更多</Button>
+
                 </div>
 
                 <div class="tickling">
@@ -205,6 +262,52 @@
                     </ul>
 
                 </div>
+                <div class="listGroupPop">
+                    <Modal v-model="listGroupPop" :closable='false' :mask-closable='false' style='text-align:center;' width='360px'>
+                        <div slot='header' style='font-size:14px;color:#444'>
+                            新建分组
+                            <a href="javascript:;" @click='listGroupPop=false'>
+                                <Icon type="close" class='fr'></Icon>
+                            </a>
+                        </div>
+                        <Input v-model="addgroupForm.folderName" @on-enter='searchIn' placeholder="请输入分组名称" style='margin:20px auto;width:300px;'>
+                        <Button slot="append" @click='searchIn'>新增</Button>
+                        </Input>
+                        <div class="sels">
+                            <RadioGroup v-model="selgroupForm.folderId">
+                                <Radio v-for="(group,index) in groupLists" :key="index" :label="group.id">{{ group.folderName }}</Radio>
+                            </RadioGroup>
+                        </div>
+                        <div slot='footer' style='text-align:center'>
+                            <Button type='info' @click='subGroupSave'>确定</Button>
+                        </div>
+                    </Modal>
+
+                </div>
+                <Modal v-model="remarkbut" :closable='false' :mask-closable='false' style='text-align:center;'>
+                    <div slot='header' style='font-size:14px;color:#444'>
+                        人才备注-{{ resume.name }}
+                        <a href="javascript:;" @click='remarkbut=false'>
+                            <Icon type="close" class='fr'></Icon>
+                        </a>
+                    </div>
+                    <ul class="re-listpage">
+                        <li v-for="(remarks,index) in remarklistpage" :key='index'>
+                            <p>{{ remarks.recordContent }}</p>
+                            <p>
+                                <span>
+                                    {{ remarks.createTime }} 来自{{ remarks.createName }}</span>
+                            </p>
+                        </li>
+                        <div class="tablePage fr">
+                            <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
+                        </div>
+                    </ul>
+
+                    <div slot='footer' style='text-align:center'>
+                        <Button type='info' @click='remarkbut=false;modal1 = true'>添加新备注</Button>
+                    </div>
+                </Modal>
             </div>
         </div>
     </div>
@@ -225,8 +328,48 @@ export default {
     },
     data() {
         return {
-            modal1: false,
-            lastRouter: ls.session.get("lastRouter")
+            listGroupPop: false,
+            ifattention: true,
+            groupLists: [], //分组列表
+            remarkbut: false,
+            id: this.$route.query.id,
+            companyName: this.$route.query.companyName,
+            jobName: this.$route.query.jobName,
+            modal1: false, //新增备注
+            userlist: [],
+            showif: true,
+            resume: "",
+            remarklist: [],
+            remarklistpage: [],
+            form: {
+                resumeId: this.$route.query.id,
+                total: 100,
+                pageNum: 1,
+                pageSize: 10
+            },
+            addremark: {
+                resumeId: this.$route.query.id,
+                resumeName: this.$route.query.resumeName,
+                jobName:
+                    this.$route.query.jobName +
+                    "-" +
+                    this.$route.query.companyName,
+                recordContent: "",
+                resumeStatus: "2",
+                createName: ""
+            },
+            addgroupForm: {
+                userId: ls.get("accid"),
+                folderName: ""
+            },
+            selgroupForm: {
+                folderId: "",
+                id: ls.get("addfoldid")
+            },
+            projectlist: [],
+            educationlist: [],
+            worklist: [],
+            resumelist: ls.get("resumeList")
         };
     },
     methods: {
@@ -235,16 +378,280 @@ export default {
         },
         cancel() {
             this.$Message.info("Clicked cancel");
+        },
+        subSaveremark() {
+            if(!this.addremark.recordContent){
+               this.$Message.error("请填写记录");
+               return
+            }
+            api
+                .axs("post", "/talnetRemark/save", this.addremark)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.modal1 = false;
+                        this.init();
+                        this.loadLists();
+                        this.$store.state.spinShow = false;
+                        this.$Message.success(data.remark);
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        savesume() {
+            this.listGroupPop = true;
+            ls.set("resumeid", this.id);
+        },
+        cancelresume() {
+            this.$store.state.spinShow = true;
+            if (this.resumelist.length == 0) {
+                api
+                    .axs("post", "/userFolder/cancelConcern", {
+                        resumeId: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.ifattention = true;
+                            this.$store.state.spinShow = false;
+                            this.$Message.success("取消成功");
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.id = this.resumelist[0].id;
+                api
+                    .axs("post", "/userFolder/cancelConcern", {
+                        resumeId: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.ifattention = true;
+                            this.$store.state.spinShow = false;
+                            this.$Message.success("取消成功");
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+        ifaddresume(id) {
+            api
+                .axs("post", "/userFolder/isConcern", {
+                    resumeId: id
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        if (data.data == 1) {
+                            this.ifattention = false;
+                        }
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        changeid(id) {
+            //切换简历
+            this.$store.state.spinShow = true;
+            ls.set("addfoldid", id);
+            this.ifaddresume(id);
+            api
+                .axs("post", "/resume/info", {
+                    id: id
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$store.state.spinShow = false;
+                        this.resume = data.data.resume;
+                        this.projectlist = data.data.project;
+                        this.educationlist = data.data.education;
+                        this.worklist = data.data.work;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        loadLists(page) {
+            this.$store.state.spinShow = true;
+            this.form.pageNum = page;
+            api
+                .axs("post", "/talnetRemark/queryForPage", this.form)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.remarklistpage = data.data.list;
+                        this.form.total = data.data.total;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        init() {
+            //初始化
+
+            //人才备注
+            api
+                .axs("post", "/talnetRemark/queryForPage", {
+                    resumeId: this.$route.query.id,
+                    pageSize: "3"
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.remarklist = data.data.list;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+            //获取分组列表
+            api.axs("post", "/userFolder/folderList").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.groupLists = data.data;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
+            //获取顾问
+            api.axs("post", "/user/list").then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.userlist = data.data;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
+            //获取简历详情
+            if (this.resumelist.length == 0) {
+                //判断是否为单个简历
+                console.log(this.id);
+                this.ifaddresume(this.id);
+                api
+                    .axs("post", "/resume/info", {
+                        id: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.$store.state.spinShow = false;
+                            this.resume = data.data.resume;
+                            this.projectlist = data.data.project;
+                            this.educationlist = data.data.education;
+                            this.worklist = data.data.work;
+                            ls.set("addfoldid", this.id);
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.id = this.resumelist[0].id;
+                this.ifaddresume(this.id);
+                api
+                    .axs("post", "/resume/info", {
+                        id: this.id
+                    })
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.$store.state.spinShow = false;
+                            this.resume = data.data.resume;
+                            this.projectlist = data.data.project;
+                            this.educationlist = data.data.education;
+                            this.worklist = data.data.work;
+                            ls.set("addfoldid", this.id);
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            }
+        },
+        subGroupSave() {
+            //加入分组
+            this.selgroupForm.id = ls.get("addfoldid");
+            if (!this.selgroupForm.folderId) {
+                this.$Message.warning("请选择一个分组！");
+                return;
+            }
+            api
+                .axs("post", "/userFolder/concern", this.selgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                        this.listGroupPop = false;
+                        this.ifattention = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleSubmit(name) {
+            //
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    this.$store.state.spinShow = true;
+                    api
+                        .axs("post", "/resume/search", this.formValidate)
+                        .then(({ data }) => {
+                            this.$store.state.spinShow = false;
+                            if (data.code === "SUCCESS") {
+                                this.$Message.success("新增成功!");
+                            } else {
+                                this.$Message.error(data.remark);
+                            }
+                        });
+                } else {
+                    this.$Message.warning("请填写完整!");
+                }
+            });
+        },
+        searchIn() {
+            //新增文件夹
+            if (!this.addgroupForm.folderName) {
+                this.$Message.warning("是否输入新的文件夹名?");
+                return;
+            }
+            api
+                .axs("post", "/userFolder/addUserFolder", this.addgroupForm)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("新增成功!");
+                        this.listGroupPop = false;
+                        this.ifattention = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        seltime(date) {
+            this.recordsForm.followTime = date;
+        },
+        selPro() {
+            //选择职位
+            var idName = this.$refs.professionComp.professVal;
+            if (!idName) {
+                this.$Message.warning("不选一个职位么?");
+                return;
+            }
+            // this.professId = idName.split("&")[0];
+            // this.professName = idName.split("&")[1];
+            // this.form.industryId = idName.split("&")[0];
+            // this.professPop = false;
+
+            const title = "成功提示";
+            const content = "<p>加入职位成功</p>";
+            this.$Modal.success({
+                title: title,
+                content: content
+            });
         }
     },
 
     mounted() {
-        setTimeout(() => {
-            this.$Loading.finish();
-            this.$store.state.spinShow = false;
-        }, 1500);
+        this.init();
+        this.loadLists();
     },
-    beforeDestroy() {}
+    beforeDestroy() {
+        ls.set("resumeList", []);
+        ls.set("addfoldid", "");
+    }
 };
 </script>
 
@@ -267,6 +674,28 @@ export default {
             border: 1px solid #ddd;
             margin-bottom: 0.5rem;
             overflow: auto;
+            .img-left {
+                float: left;
+                width: 65px;
+                height: 65px;
+                border-radius: 50%;
+                text-align: center;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .mass-iphone {
+                float: left;
+                padding: 10px 10px;
+                width: 800px;
+                p {
+                    span {
+                        float: right;
+                    }
+                }
+            }
             .mass-title {
                 float: left;
                 margin-top: 0.5rem;
@@ -339,7 +768,6 @@ export default {
                             float: right;
                             display: flex;
                             justify-content: center;
-                            align-items: center;
                             border-radius: 100%;
                             margin-top: -1.2rem;
                             img {
@@ -639,15 +1067,15 @@ export default {
                 li {
                     width: 100%;
                     padding: 0.3rem;
-                    background: #ddd;
+                    background: rgb(228, 226, 226);
                     margin-top: 0.75rem;
-                    height: 3rem;
+                    // height: 3rem;
                     line-height: 1.3rem;
-                    overflow: hidden;
-                    text-overflow: ellipsis; //文本溢出显示省略号
-                    display: -webkit-box;
-                    -webkit-line-clamp: 2;
-                    -webkit-box-orient: vertical; // background-color:cornflowerblue;
+                    // overflow: hidden;
+                    // text-overflow: ellipsis; //文本溢出显示省略号
+                    // display: -webkit-box;
+                    // -webkit-line-clamp: 2;
+                    // -webkit-box-orient: vertical; // background-color:cornflowerblue;
                     span {
                         font-weight: 900;
                         text-align: left;
@@ -713,6 +1141,51 @@ export default {
                         text-align: right;
                     }
                 }
+            }
+        }
+    }
+}
+.company-content {
+    max-height: 500px;
+    overflow: auto;
+    padding: 0px 0;
+    .company-li {
+        margin-bottom: 10px;
+        .selpro {
+            .ivu-input {
+                text-align: center;
+            }
+        }
+        p {
+            display: inline-block;
+            width: 80px;
+            line-height: 32px;
+            text-align: right;
+            color: #444;
+            margin-right: 10px;
+            span {
+                color: #ff8686;
+            }
+        }
+        .ivu-input-wrapper {
+            width: 300px;
+        }
+    }
+}
+.re-listpage {
+    width: 100%;
+    overflow: auto;
+    li {
+        float: right;
+        width: 100%;
+        padding: 0.5rem 0.3rem;
+        background: rgb(228, 226, 226);
+        margin-top: 0.75rem;
+        p {
+            text-align: left;
+            overflow: auto;
+            span {
+                float: right;
             }
         }
     }

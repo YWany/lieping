@@ -8,17 +8,17 @@
                 </a>
             </div>
             <ul class="contact-content">
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 姓名：</p>
                     <Input v-model='addForm.name' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 关联客户：</p>
                     <Input :readonly='true' :value="company" placeholder=""></Input>
                 </li>
-                <li class='li-phone'>
+                <li class="company-li li-phone">
                     <p>
                         <span>*</span> 联系电话：</p>
                     <div style="display:inline-block;vertical-align:middle">
@@ -31,7 +31,7 @@
                     </div>
                     <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
                 </li>
-                <li class='li-phone' v-if='addPhone2'>
+                <li class="company-li li-phone" v-if='addPhone2'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone2' :maxlength=11 @on-keyup='inputPhone(addForm.phone2,2)'>
@@ -43,7 +43,7 @@
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </div>
                 </li>
-                <li class='li-phone' v-if='addPhone3' :maxlength=11 @on-keyup='inputPhone(addForm.phone3,3)'>
+                <li class="company-li li-phone" v-if='addPhone3' :maxlength=11 @on-keyup='inputPhone(addForm.phone3,3)'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone3'>
@@ -55,7 +55,7 @@
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </div>
                 </li>
-                <li class='li-phone' v-if='addPhone4' :maxlength=11 @on-keyup='inputPhone(addForm.phone4,4)'>
+                <li class="company-li li-phone" v-if='addPhone4' :maxlength=11 @on-keyup='inputPhone(addForm.phone4,4)'>
                     <p>&nbsp;</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <Input v-model='addForm.phone4'>
@@ -67,11 +67,11 @@
                         <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
                     </div>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>职务：</p>
                     <Input v-model='addForm.job' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>决策关系：</p>
                     <!-- <Input v-model='addForm.decisionRelation' placeholder=""></Input> -->
                     <Select v-model='addForm.decisionRelation' style="width:300px;text-align:left">
@@ -79,22 +79,22 @@
 
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>邮箱：</p>
                     <Input v-model='addForm.email' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>微信：</p>
                     <Input v-model='addForm.wechat' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>性别：</p>
                     <Select v-model='addForm.sex' style="width:300px;text-align:left">
                         <Option value="1">男</Option>
                         <Option value="2">女</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>生日：</p>
                     <div style="display:inline-block;vertical-align:middle">
                         <!-- <DatePicker type="date" v-model='addForm.birthday' placeholder="Select date" style="width:220px;float:left"></DatePicker> -->
@@ -105,11 +105,11 @@
                         </Select>
                     </div>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>爱好：</p>
                     <Input v-model='addForm.hobby' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>备注：</p>
                     <Input v-model='addForm.remark' type="textarea" :rows="4" placeholder=""></Input>
                 </li>
@@ -276,7 +276,7 @@ export default {
 .contact-content {
     height: 400px;
     overflow-y: auto;
-    li {
+    .company-li {
         margin-bottom: 10px;
         p {
             display: inline-block;

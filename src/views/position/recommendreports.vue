@@ -140,7 +140,14 @@
                         <li v-for="(list,index) in experiencelist" :key='index'>{{ list.companyName }} | {{ list.jobTitle }}
                             <!-- <span class="change" @click="experience = true" type="text">
                                         <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>{{ list.startTime.substr(0, 10) }}-
+                            <span>
+                                <template v-if='list.startTime'>
+                                    {{ list.startTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>-
                                 <template v-if='list.endTime'>
                                     {{ list.endTime.substr(0, 10) }}
                                 </template>
@@ -201,7 +208,14 @@
                             <p>{{ list.companyName }} | {{ list.jobTitle }}
                                 <span class="change" @click="experiencechange(index)" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
-                                <span>{{ list.startTime.substr(0, 10) }}-
+                                <span>
+                                    <template v-if='list.startTime'>
+                                        {{ list.startTime.substr(0, 10) }}
+                                    </template>
+
+                                    <template v-else>
+                                        无
+                                    </template>-
                                     <template v-if='list.endTime'>
                                         {{ list.endTime.substr(0, 10) }}
                                     </template>
@@ -216,7 +230,7 @@
                             <p>下属人数：14人</p>
                             <p>工资职责：{{ list.description }}
                             </p>
-                            <p>离职原因：集团撤离中国市场</p>
+                            <p>离职原因：{{ list.description }}</p>
                         </li>
                     </ul>
                     <Modal width="820px" v-model="experience" title="工作经历（由近及远）" @on-ok="ok" @on-cancel="cancel">
@@ -284,7 +298,14 @@
                             {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
                             <span class="change" @click="educationchange(index)" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
-                            <span>{{ list.startTime.substr(0, 10) }}-
+                            <span>
+                                <template v-if='list.startTime'>
+                                    {{ list.startTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>-
                                 <template v-if='list.endTime'>
                                     {{ list.endTime.substr(0, 10) }}
                                 </template>
@@ -300,8 +321,8 @@
                             <li>
                                 <p>
                                     <span>*</span> 起止时间：</p>
-                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.startTime"></DatePicker>-
-                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.endTime"></DatePicker>
+                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.startTime" @on-change='seltime3'></DatePicker>-
+                                <DatePicker type="date" placeholder="Select date" format="yyyy-MM-dd HH:mm:ss" v-model="educationForm.endTime" @on-change='seltime4'></DatePicker>
                                 <!-- <Button type="primary" shape="circle" size='small' icon="plus" class='addNewContact' @click='addexnum'></Button> -->
                             </li>
                             <li>
@@ -354,7 +375,7 @@
                     <ul class="messagechange">
                         <li style="width:100%;">
                             <p>
-                                <span>*</span> 工作业绩：</p>
+                                <span>*</span> 推荐建议：</p>
                             <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
                         </li>
                     </ul>
@@ -373,8 +394,8 @@
                         <div class="changecad">
                             <Select v-model="candidate" @change="changeone()" size="small" style="width:100px">
                                 <!-- <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option> -->
-                                <Option value="1">1</Option>
-                                <Option value="2">2</Option>
+                                <Option value="1">郎超群</Option>
+                                <Option value="2">郎超群</Option>
                             </Select>
                             <p>0571-89301267</p>
                             <p>lcq8848rc.com</p>
@@ -424,7 +445,7 @@
                     <ul class="messagechange">
                         <li style="width:100%;">
                             <p>
-                                <span>*</span> 工作业绩：</p>
+                                <span>*</span> 推荐建议：</p>
                             <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
                         </li>
                     </ul>
@@ -437,7 +458,14 @@
                         <li v-for="(list,index) in experiencelist" :key='index'>{{ list.companyName }}} | {{ list.jobTitle }}}
                             <!-- <span class="change" @click="experience = true" type="text">
                                     <Icon type="document-text"></Icon>编辑</span> -->
-                            <span>{{ list.startTime.substr(0, 10) }}-
+                            <span>
+                                <template v-if='list.startTime'>
+                                    {{ list.startTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>-
                                 <template v-if='list.endTime'>
                                     {{ list.endTime.substr(0, 10) }}
                                 </template>
@@ -458,7 +486,14 @@
                             <p>{{ list.companyName }} | {{ list.jobTitle }}
                                 <span class="change" @click="experiencechange(index)" type="text">
                                     <Icon type="document-text"></Icon>编辑</span>
-                                <span>{{ list.startTime.substr(0, 10) }}-
+                                <span>
+                                    <template v-if='list.startTime'>
+                                        {{ list.startTime.substr(0, 10) }}
+                                    </template>
+
+                                    <template v-else>
+                                        无
+                                    </template>-
                                     <template v-if='list.endTime'>
                                         {{ list.endTime.substr(0, 10) }}
                                     </template>
@@ -486,7 +521,14 @@
                             {{ list.schoolName }} | {{ list.majorName }} | {{ list.level }}
                             <span class="change" @click="educationchange(index)" type="text">
                                 <Icon type="document-text"></Icon>编辑</span>
-                            <span>{{ list.startTime.substr(0, 10) }}-
+                            <span>
+                                <template v-if='list.startTime'>
+                                    {{ list.startTime.substr(0, 10) }}
+                                </template>
+
+                                <template v-else>
+                                    无
+                                </template>-
                                 <template v-if='list.jobTitle'>
                                     {{ list.jobTitle.substr(0, 10) }}
                                 </template>
@@ -507,7 +549,7 @@
                 </div>
                 <div class="save">
                     <Button type="primary">保存进草稿箱</Button>
-                    <Button type="primary">发送给客户</Button>
+                    <Button type="primary" @click="sendreport()">发送给客户</Button>
                 </div>
             </div>
         </div>
@@ -524,6 +566,8 @@ export default {
     data() {
         return {
             id: this.$route.query.resumeId,
+            status: this.$route.query.status,
+            candidateId: this.$route.query.candidateId,
             srcId: this.$route.query.srcId,
             jobname: ls.get("jobname"),
             jobcompanyname: ls.get("jobcompanyname"),
@@ -611,17 +655,23 @@ export default {
             this.styles3 = "left";
         },
         gonext2() {
-            for (var i = 0; i < this.experiencelist.length; i++) {
-                this.experiencearr.push(this.experiencelist[i].id);
+            if (
+                this.experiencearr.length == 0 ||
+                this.educationarr.length == 0
+            ) {
+                for (var i = 0; i < this.experiencelist.length; i++) {
+                    this.experiencearr.push(this.experiencelist[i].id);
+                }
+                for (var i = 0; i < this.educationlist.length; i++) {
+                    this.educationarr.push(this.educationlist[i].id);
+                }
+                this.experiencearr = JSON.stringify(this.experiencearr);
+                this.educationarr = JSON.stringify(this.educationarr);
             }
-            for (var i = 0; i < this.educationlist.length; i++) {
-                this.educationarr.push(this.educationlist[i].id);
-            }
-            this.experiencearr = JSON.stringify(this.experiencearr);
-            this.educationarr = JSON.stringify(this.educationarr);
+
             api
                 .axs("post", "/resumeReport/saveCandidate", {
-                    candidateId: this.id,
+                    candidateId: this.candidateId,
                     workExperienceId: this.experiencearr,
                     eduId: this.educationarr
                 })
@@ -678,6 +728,12 @@ export default {
         },
         seltime2(date) {
             this.experienceForms.endTime = date;
+        },
+         seltime3(date) {
+            this.educationForm.startTime = date;
+        },
+        seltime4(date) {
+            this.educationForm.endTime = date;
         },
         messagechange() {
             this.message = true;
@@ -910,17 +966,23 @@ export default {
             }
         },
         draftsok() {
-            for (var i = 0; i < this.experiencelist.length; i++) {
-                this.experiencearr.push(this.experiencelist[i].id);
+            if (
+                this.experiencearr.length == 0 ||
+                this.educationarr.length == 0
+            ) {
+                for (var i = 0; i < this.experiencelist.length; i++) {
+                    this.experiencearr.push(this.experiencelist[i].id);
+                }
+                for (var i = 0; i < this.educationlist.length; i++) {
+                    this.educationarr.push(this.educationlist[i].id);
+                }
+                this.experiencearr = JSON.stringify(this.experiencearr);
+                this.educationarr = JSON.stringify(this.educationarr);
             }
-            for (var i = 0; i < this.educationlist.length; i++) {
-                this.educationarr.push(this.educationlist[i].id);
-            }
-            this.experiencearr = JSON.stringify(this.experiencearr);
-            this.educationarr = JSON.stringify(this.educationarr);
+
             api
                 .axs("post", "/resumeReport/saveCandidate", {
-                    candidateId: this.id,
+                    candidateId: this.candidateId,
                     workExperienceId: this.experiencearr,
                     eduId: this.educationarr
                 })
@@ -960,8 +1022,23 @@ export default {
                     }
                 });
         },
-        changeone(){
-            alert(1)
+        sendreport() {
+            api
+                .axs("post", "/resumeReport/sendReportToCustomer", {
+                    candidateId: this.candidateId
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success("发送成功!");
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        changeone() {
+            alert(1);
         },
         ok() {
             this.$Message.info("Clicked ok");
@@ -972,22 +1049,42 @@ export default {
         }
     },
     mounted() {
-        api
-            .axs("post", "/resume/info", {
-                id: this.id
-            })
-            .then(({ data }) => {
-                if (data.code === "SUCCESS") {
-                    console.log(data);
-                    this.resume = data.data.resume;
-                    this.experiencelist = data.data.work;
-                    this.educationlist = data.data.education;
-                    this.$Loading.finish();
-                    this.$store.state.spinShow = false;
-                } else {
-                    this.$Message.error(data.remark);
-                }
-            });
+        if (this.status == 99) {
+            api
+                .axs("post", "/resumeReport/queryResumeReportInfo", {
+                    srcId: this.srcId
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.resume = data.data.resume;
+                        this.experiencelist = data.data.work;
+                        this.educationlist = data.data.education;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        } else {
+            api
+                .axs("post", "/resume/info", {
+                    id: this.id
+                })
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        console.log(data);
+                        this.resume = data.data.resume;
+                        this.experiencelist = data.data.work;
+                        this.educationlist = data.data.education;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        }
+
         this.$store.state.spinShow = false;
     }
 };

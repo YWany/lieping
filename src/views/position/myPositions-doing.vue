@@ -82,36 +82,298 @@
                             <Button type="ghost">他人推荐</Button>
                             <Button type="ghost">智能匹配</Button>
                             <div class="disInb fr">
-                                <Button type="text" disabled>推荐企业(1)</Button>
-                                <Button type="text" disabled>企业面试(25)</Button>
-                                <Button type="text" disabled>Offer(25)</Button>
-                                <Button type="text" disabled>上岗(25)</Button>
-                                <Button type="text" disabled>过保(25)</Button>
+                                <Button type="text">所有人选(1)</Button>
+                                <Button type="text">预推荐(25)</Button>
+                                <Button type="text">推荐(25)</Button>
+                                <Button type="text">简历通过(25)</Button>
+                                <Button type="text">面试(25)</Button>
+                                <Button type="text">面试通过(25)</Button>
+                                <Button type="text">意向录用(25)</Button>
                             </div>
                         </div>
                         <Table border ref="selection" :columns="tableHeader" :data="tableLists"></Table>
                         <div class="tablePage fr">
                             <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
                         </div>
-                        <Modal v-model="ranspond" title="转发简历" >
-                    <Form ref="" :model="transpondform" :label-width="80">
-                        
-                        <FormItem label="顾问" prop="sex">
-                            <Select v-model="transpondform.refereeTo"  placeholder="请选择顾问">
+                        <Modal v-model="ranspond" title="转发简历">
+                            <Form ref="" :model="transpondform" :label-width="80">
 
-                                <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
-                            </Select>
-                        </FormItem>
-                       
-                       
-                    </Form>
-                    <div slot="footer">
+                                <FormItem label="顾问" prop="sex">
+                                    <Select v-model="transpondform.refereeTo" placeholder="请选择顾问">
 
-                        <Button  @click="transmit" type="primary" >保存</Button>
-                        <!-- <Button type="ghost" @click="handleReset('ranspond')" style="margin-left: 8px">清空表格</Button> -->
+                                        <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
+                                    </Select>
+                                </FormItem>
 
-                    </div>
-                </Modal>
+                            </Form>
+                            <div slot="footer">
+
+                                <Button @click="transmit" type="primary">保存</Button>
+                                <!-- <Button type="ghost" @click="handleReset('ranspond')" style="margin-left: 8px">清空表格</Button> -->
+
+                            </div>
+                        </Modal>
+                        <Modal v-model="retroaction" title="候选人报告企业反馈">
+                            <div class="company-content">
+                                <p class="pone">候选人：{{ this.retroactionform.candidateName }}</p>
+                                <p class="pone">企业名称：{{ this.$route.query.companyName }}</p>
+                                <p class="pone">职位名称： {{ this.$route.query.jobName }}</p>
+                                <div class="company-li">
+                                    <p>
+                                        <span>*</span> 客户反馈：</p>
+                                    <Input v-model='retroactionform.customerFeedback' placeholder="请输入" type="textarea" :rows="2"></Input>
+                                </div>
+                                <div class="company-li">
+                                    <p>
+                                        <span>*</span> 反馈结果：</p>
+                                    <Select v-model='retroactionform.feedbackResult' style="width:300px" @on-change="showwing">
+                                        <Option v-for="(feed,index) in this.$store.state.allTrees.feedback" :value="feed.code" :key='index'>{{feed.codeText}}</Option>
+                                    </Select>
+                                </div>
+                                <div v-show="faceshow" class="clearfix">
+                                    <div class="company-li">
+                                        <p>
+                                            <span></span> 安排面试：</p>
+                                        <RadioGroup v-model="retroactionform.interviewStatus">
+                                            <span @click="show = true;">
+                                                <Radio label="1">是</Radio>
+                                            </span>
+                                            <span @click="show = false;">
+                                                <Radio label="2">否</Radio>
+                                            </span>
+                                        </RadioGroup>
+                                    </div>
+                                    <div v-show="show" class="clearfix">
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试时间：</p>
+                                            <DatePicker type="date" placeholder="选择面试时间" format="yyyy-MM-dd HH:mm:ss" v-model="retroactionform.interviewTime" @on-change='seltime'></DatePicker>
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试地点：</p>
+                                            <Input v-model='retroactionform.interviewAddr' placeholder="" placeholder="填写面试地点"></Input>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试流程：</p>
+                                            <Input v-model='retroactionform.interviewProcess' placeholder="" type="textarea" :rows="2" placeholder="填写面试流程"></Input>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview1' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
+                                        </div>
+                                        <div class="company-li" v-if='addPhone2'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview2' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone3'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview3' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone4'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview4' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone5'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview5' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 我司陪面：</p>
+                                            <Select v-model='retroactionform.myInterviewer' style="width:300px">
+                                                <Option v-for="(user,index) in userlist" :key='index' :value="user.id">{{user.userName}}</Option>
+                                            </Select>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 备注：</p>
+                                            <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info' @click="savetickling">确定</Button>
+                                <Button type='info' @click="handleReset">取消</Button>
+                            </div>
+                        </Modal>
+                        <Modal v-model="arrangement" title="面试安排">
+                            <div class="company-content">
+                                <p class="pone">候选人：{{ this.retroactionform.candidateName }}</p>
+                                <p class="pone">企业名称：{{ this.$route.query.companyName }}</p>
+                                <p class="pone">职位名称： {{ this.$route.query.jobName }}</p>
+                                <p class="pone">面试次数： 第一次面试</p>
+                                <div v-show="faceshow" class="clearfix">
+
+                                    <div v-show="show" class="clearfix">
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试时间：</p>
+                                            <DatePicker type="date" placeholder="选择面试时间" format="yyyy-MM-dd HH:mm:ss" v-model="retroactionform.interviewTime" @on-change='seltime'></DatePicker>
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试地点：</p>
+                                            <Input v-model='retroactionform.interviewAddr' placeholder="" placeholder="填写面试地点"></Input>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 面试流程：</p>
+                                            <Input v-model='retroactionform.interviewProcess' placeholder="" type="textarea" :rows="2" placeholder="填写面试流程"></Input>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview1' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="primary" shape="circle" size='small' icon="plus" v-if='addPhoneBtn' @click='addPhones' class='addNewContact'></Button>
+                                        </div>
+                                        <div class="company-li" v-if='addPhone2'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview2' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone3'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview3' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone4'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview4' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+                                        <div class="company-li" v-if='addPhone5'>
+                                            <p>
+                                                <span></span> 企业面试官：</p>
+                                            <Input v-model='interview5' placeholder="" placeholder="填写企业面试官"></Input>
+                                            <Button type="error" shape="circle" size='small' icon="minus-round" @click='delPhones' class='addNewContact'></Button>
+
+                                        </div>
+
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 我司陪面：</p>
+                                            <Select v-model='retroactionform.myInterviewer' style="width:300px">
+                                                <Option v-for="(user,index) in userlist" :key='index' :value="user.id">{{user.userName}}</Option>
+                                            </Select>
+
+                                        </div>
+                                        <div class="company-li">
+                                            <p>
+                                                <span></span> 备注：</p>
+                                            <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info'>确定</Button>
+                                <Button type='info' @click="handleReset">取消</Button>
+                            </div>
+                        </Modal>
+                        <Modal v-model="coupleback" title="面试反馈">
+                            <div class="company-content">
+                                <p class="pone">候选人：{{ this.retroactionform.candidateName }}</p>
+                                <p class="pone">企业名称：{{ this.$route.query.companyName }}</p>
+                                <p class="pone">职位名称： {{ this.$route.query.jobName }}</p>
+                                <p class="pone">面试次数： 第一次面试</p>
+                                <p class="pone">面试时间： 2018-07-15</p>
+                                <p class="pone">面试地点： 杭州市余杭区文一西路利尔达物联网科技园</p>
+                                <p class="pone">面试流程： -</p>
+                                <p class="pone">企业面试官： 郎超群</p>
+                                <p class="pone">我司陪面： 郎超群</p>
+                                <p class="pone">备注： -</p>
+                                <div v-show="faceshow" class="clearfix">
+                                    <div class="company-li">
+                                        <p>
+                                            <span></span> 企业反馈：</p>
+                                        <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+
+                                    </div>
+
+                                </div>
+                                <div v-show="faceshow" class="clearfix">
+                                    <div class="company-li">
+                                        <p>
+                                            <span></span> 入选反馈：</p>
+                                        <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+
+                                    </div>
+
+                                </div>
+                                <div class="company-li">
+                                    <p>
+                                        <span></span> 面试结果：</p>
+                                    <Select v-model='retroactionform.myInterviewer' style="width:300px">
+                                        <Option v-for="(user,index) in userlist" :key='index' :value="user.id">{{user.userName}}</Option>
+                                    </Select>
+
+                                </div>
+                            </div>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info'>确定</Button>
+                                <Button type='info' @click="handleReset">取消</Button>
+                            </div>
+                        </Modal>
+                         <Modal v-model="modal1" title="新增人才备注">
+                            <ul class="company-content">
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 人才姓名：</p>
+                                    <Input disabled v-model='addremark.resumeName' placeholder="请输入"></Input>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 职位：</p>
+                                    <Input disabled v-model='addremark.jobName' placeholder="请输入"></Input>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span></span> 创建人：</p>
+                                    <Select style="width:300px" v-model="addremark.createName" placeholder="请选择创建人">
+                                        <Option v-for="(item,index) in userlist" :key='index' :value="item.userName">{{item.userName}}</Option>
+                                    </Select>
+                                </li>
+                                <li class="company-li">
+                                    <p>
+                                        <span>*</span> 记录内容：</p>
+                                    <Input v-model='addremark.recordContent' placeholder="请输入" type="textarea" :rows="2"></Input>
+                                </li>
+                            </ul>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info' @click='subSaveremark'>确定</Button>
+                            </div>
+                        </Modal>
                     </TabPane>
                     <TabPane label="职位日志" name="xiangqing">
                         职位日志
@@ -136,6 +398,7 @@
 import api from "@/api";
 import ls from "store2";
 import Menu from "@/components/Menu.vue";
+import { UTC2Date } from "@/assets/js/utils.js";
 import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
@@ -143,7 +406,53 @@ export default {
     data() {
         return {
             jodId: this.$route.query.jodId,
+            feedback: this.$store.state.allTrees.feedback,
+            modal1: false, //新增备注
+             addremark: {
+                resumeId: ls.get("resumeid"),
+                resumeName: ls.get("resumeName"),
+                jobName:
+                    this.$route.query.jobName +
+                    "-" +
+                    this.$route.query.companyName,
+                recordContent: "",
+                resumeStatus: "2",
+                createName: ""
+            },
             userlist: [],
+            show: true,
+            phoneNum: 1,
+            addPhoneBtn: true,
+            addPhone2: false,
+            addPhone3: false,
+            addPhone4: false,
+            addPhone5: false,
+            interview1: "",
+            interview2: "",
+            interview3: "",
+            interview4: "",
+            interview5: "",
+            retroaction: false,
+            arrangement: false, //安排面试按钮
+            coupleback: true, //面试反馈按钮
+            faceshow: true,
+            retroactionform: {
+                jobId: this.$route.query.jobId,
+                jobName: this.$route.query.jobName,
+                candidateId: "", //候选人id
+                candidateName: "", //候选人名字
+                customerFeedback: "", //客户反馈
+                feedbackResult: "1", //反馈结果
+                interviewStatus: "1", //面试状态是否安排面试1是2否
+                companyId: this.$route.query.companyid, //企业id
+                companyName: this.$route.query.companyName, //公司名字
+                interviewProcess: "", //面试流程
+                interviewAddr: "", //面试地点
+                interviewTime: "", //面试时间
+                interviewer: "", //企业面试人
+                myInterviewer: "", //我司陪面人
+                remarks: "" //备zhu
+            },
             form: {
                 searchVal: "",
                 selVal: "候选人名",
@@ -153,16 +462,19 @@ export default {
                 sel4: "",
                 sel5: "",
                 sel6: "",
+                orderBy: "",
+                jobId: this.$route.query.jodId,
                 createDate: "",
                 signDate: "",
                 total: 120,
                 current: 1,
                 pageSize: 20
             },
-            ranspond:false,
-            transpondform:{//转发简历参数
-                refereeTo:"",
-                id:ls.get("candidateId")
+            ranspond: false,
+            transpondform: {
+                //转发简历参数
+                refereeTo: "",
+                id: ls.get("candidateId")
             },
 
             jodId: this.$route.query.jodId,
@@ -184,7 +496,13 @@ export default {
                                 attrs: {
                                     to:
                                         "/customer/jobDoing/personalDetails?id=" +
-                                        row.id
+                                        row.resumeId+
+                                         "&&resumeName=" +
+                                                row.name+
+                                                "&&jobName=" +
+                                                this.$route.query.jobName+
+                                                "&&companyName=" +
+                                                this.$route.query.companyName
                                 }
                             },
                             row.name
@@ -193,7 +511,7 @@ export default {
                 },
                 {
                     title: "性别",
-                    key: "phone",
+                    key: "sex",
                     width: 45,
                     align: "center"
                 },
@@ -238,28 +556,40 @@ export default {
                 },
                 {
                     title: "候选人状态",
-                    key: "jobHuntStatus",
+                    key: "candidateStatus",
                     width: 100,
-                    align: "center"
-                },
-                {
-                    title: "状态",
-                    key: "bbb",
-                    sortable: true,
-                    width: 100,
-                    align: "center"
+                    align: "center",
+                    render: (h, params) => {
+                        const row = params.row;
+
+                        if (
+                            this.$store.state.allTrees.candidateStatus.length &&
+                            this.$store.state.allTrees.candidateStatus[
+                                +row.candidateStatus - 1
+                            ]
+                        ) {
+                            return h(
+                                "span",
+                                this.$store.state.allTrees.candidateStatus[
+                                    +row.candidateStatus - 1
+                                ].codeText
+                            );
+                        }
+                    }
                 },
                 {
                     title: "加入时间",
-                    key: "eee",
+                    key: "createTime",
                     width: 80,
-                    align: "center"
+                    align: "center",
+                   
                 },
                 {
                     title: "更新时间",
-                    key: "eee",
+                    key: "updateTime",
                     width: 80,
-                    align: "center"
+                    align: "center",
+                    
                 },
                 {
                     title: "操作",
@@ -267,92 +597,514 @@ export default {
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
-                        return h("div", [
-                            h(
-                                "router-link",
-                                {
-                                    props: {
-                                        type: "success", //primary、ghost、dashed、text、info、success、warning、error
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                    attrs: {
-                                        to:
-                                            "/position/myPositions/recommendreports?srcId=" +
-                                            row.srcId +
-                                            "&&resumeId=" +
-                                            row.resumeId
-                                    }
-                                },
-                                "推荐企业"
-                            ),
-                            // h(
-                            //     "router-link",
-                            //     {
-                            //         props: {
-                            //             type: "info",
-                            //             size: "small"
-                            //         },
-                            //         style: {
-                            //             marginRight: "6px"
-                            //         },
-                            //         attrs: {
-                            //             to:
-                            //                "/position/myPositions/recommendreports?srcId=" +
-                            //                 row.srcId +
-                            //                 "&&resumeId=" +
-                            //                 row.resumeId
-                            //         }
-                            //     },
-                            //     "推荐职位"
-                            // ),
-                            h(
-                                "a",
-                                {
-                                    props: {
-                                        type: "info",
-                                        size: "small"
-                                    },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                     on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "转发简历!!!" + row.name
-                                            );
-                                            this.ranspond=true
-                                            ls.set("candidateId",row.candidateId)
+                        if (row.status == 1) {
+                            return h("div", [
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "推荐反馈!!!" + row.name
+                                                );
+                                                this.retroaction = true;
+                                                this.retroactionform.candidateId =
+                                                    row.candidateId;
+                                                this.retroactionform.candidateName =
+                                                    row.name;
+                                            }
                                         }
-                                    }
-                                },
-                                "转发简历"
-                            ),
-                            h(
-                                "a",
-                                {
-                                    props: {
-                                        type: "warning",
-                                        size: "small"
                                     },
-                                    style: {
-                                        marginRight: "6px"
-                                    },
-                                     on: {
-                                        click: () => {
-                                            this.$Message.info(
-                                                "转发简历!!!" + row.name
-                                            );
-                                            this.ranspond=true
-                                            ls.set("candidateId",row.candidateId)
+                                    "推荐反馈"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
                                         }
-                                    }
-                                },
-                                "人才备注"
-                            )
-                        ]);
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                               
+                                                ls.set(
+                                                    "candidateId",row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                 ls.set(
+                                                    "resumeName",
+                                                    row.name
+                                                );
+                                                 this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 99) {
+                            return h("div", [
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId +
+                                                "&&candidateId=" +
+                                                row.candidateId +
+                                                "&&status=" +
+                                                row.status
+                                        }
+                                    },
+                                    "继续推荐"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                ls.set(
+                                                    "candidateId",row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                 ls.set(
+                                                    "resumeName",
+                                                    row.name
+                                                );
+                                                 this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 0) {
+                            return h("div", [
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId +
+                                                "&&candidateId=" +
+                                                row.candidateId +
+                                                "&&status=" +
+                                                row.status
+                                        }
+                                    },
+                                    "推荐企业"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                              ls.set(
+                                                    "candidateId",row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                 ls.set(
+                                                    "resumeName",
+                                                    row.name
+                                                );
+                                                 this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 2) {
+                            return h("div", [
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "安排面试!!!" + row.name
+                                                );
+                                                this.arrangement = true;
+                                                this.retroactionform.candidateId =
+                                                    row.candidateId;
+                                                this.retroactionform.candidateName =
+                                                    row.name;
+                                            }
+                                        }
+                                    },
+                                    "安排面试"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                ls.set(
+                                                    "candidateId",row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                 ls.set(
+                                                    "resumeName",
+                                                    row.name
+                                                );
+                                                 this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 3) {
+                            return h("div", [
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "面试反馈!!!" + row.name
+                                                );
+                                                //     this.retroaction = true;
+                                                //    this.retroactionform.candidateId=row.candidateId
+                                                //    this.retroactionform.candidateName=row.name
+                                            }
+                                        }
+                                    },
+                                    "面试反馈"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                               ls.set(
+                                                    "candidateId",row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                 ls.set(
+                                                    "resumeName",
+                                                    row.name
+                                                );
+                                                 this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        }
                     }
                 }
             ],
@@ -365,9 +1117,40 @@ export default {
         Menu,
         HelloWorld
     },
+    computed: {
+        allTrees() {
+            return this.$store.state.allTrees;
+        }
+    },
     methods: {
         toLoading() {
             this.loading = true;
+        },
+         subSaveremark() {
+            if(!this.addremark.recordContent){
+               this.$Message.error("请填写记录");
+               return
+            }
+            api
+                .axs("post", "/talnetRemark/save", this.addremark)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.modal1 = false;
+                        this.$store.state.spinShow = false;
+                        this.$Message.success(data.remark);
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        showwing() {
+            if (this.retroactionform.feedbackResult == 2) {
+                this.retroactionform.interviewStatus=2
+                this.faceshow = false;
+            } else {
+                this.retroactionform.interviewStatus=1
+                this.faceshow = true;
+            }
         },
         loadLists(page) {
             this.$store.state.spinShow = true;
@@ -392,19 +1175,104 @@ export default {
             });
             this.form.selVal = "候选人名";
         },
-        transmit(){
-            api.axs("post", "/jobCandidate/redirectJob",this.transpondform).then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                this.$Message.success(data.remark);
-                this.ranspond=false;
-            } else {
-                this.$Message.error(data.remark);
+        transmit() {
+            api
+                .axs("post", "/jobCandidate/redirectJob", this.transpondform)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.ranspond = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        addPhones() {
+            this.phoneNum += 1;
+            if (this.phoneNum > 4) this.addPhoneBtn = false;
+
+            if (this.phoneNum == 2) this.addPhone2 = true;
+            if (this.phoneNum == 3) this.addPhone3 = true;
+            if (this.phoneNum == 4) this.addPhone4 = true;
+            if (this.phoneNum == 5) this.addPhone5 = true;
+        },
+        delPhones() {
+            this.phoneNum -= 1;
+            if (this.phoneNum < 5) this.addPhoneBtn = true;
+            if (this.phoneNum == 1) {
+                this.addPhone2 = false;
+                this.interview2 = "";
+            } else if (this.phoneNum == 2) {
+                this.addPhone3 = false;
+                this.interview3 = "";
+            } else if (this.phoneNum == 3) {
+                this.addPhone4 = false;
+                this.interview4 = "";
+            } else if (this.phoneNum == 4) {
+                this.addPhone5 = false;
+                this.interview5 = "";
             }
-        }); 
         },
-         handleReset(name) {
-            this.$refs[name].resetFields();
+        seltime(date) {
+            this.retroactionform.interviewTime = date;
         },
+        savetickling() {
+            if (!this.retroactionform.customerFeedback) {
+                this.$Message.error("请填写客户反馈");
+                return;
+            }
+            if (this.interview1) {
+                this.retroactionform.interviewer = this.interview1;
+                if (this.interview2) {
+                    this.retroactionform.interviewer =
+                        this.interview1 + "," + this.interview2;
+                }
+                if (this.interview3) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3;
+                }
+                if (this.interview4) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3 +
+                        "," +
+                        this.interview4;
+                }
+                if (this.interview5) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3 +
+                        "," +
+                        this.interview4 +
+                        "," +
+                        this.interview5;
+                }
+            }
+            api
+                .axs("post", "/companyCandidate/add", this.retroactionform)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.retroaction = false;
+                        this.loadLists();
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleReset() {
+            this.retroaction = false;
+        }
     },
     mounted() {
         this.loadLists();
@@ -423,9 +1291,7 @@ export default {
     beforeRouteLeave(to, from, next) {
         ls.session("lastRouter", this.$route.fullPath);
         next();
-    },
-   
-
+    }
 };
 </script>
 
@@ -748,6 +1614,38 @@ export default {
                     }
                 }
             }
+        }
+    }
+}
+.pone {
+    padding-left: 20px;
+    margin: 10px 0;
+    line-height: 20px;
+}
+.company-content {
+    max-height: 500px;
+    overflow: auto;
+    padding: 0px 0;
+    .company-li {
+        margin-bottom: 10px;
+        .selpro {
+            .ivu-input {
+                text-align: center;
+            }
+        }
+        p {
+            display: inline-block;
+            width: 80px;
+            line-height: 32px;
+            text-align: right;
+            color: #444;
+            margin-right: 10px;
+            span {
+                color: #ff8686;
+            }
+        }
+        .ivu-input-wrapper {
+            width: 300px;
         }
     }
 }

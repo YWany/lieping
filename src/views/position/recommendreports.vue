@@ -280,7 +280,7 @@
                             <li style="width:100%;">
                                 <p>
                                     <span></span> 离职原因：</p>
-                                <Input style="width:600px;" type="textarea" v-model='experienceForms.leaveReason' placeholder="" class='selpro'></Input>
+                                <Input style="width:600px;" type="textarea" v-model='experienceForms.leaveReason' placeholder=""></Input>
                             </li>
                         </ul>
                         <div slot="footer">
@@ -376,7 +376,7 @@
                         <li style="width:100%;">
                             <p>
                                 <span>*</span> 推荐建议：</p>
-                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
+                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder=""></Input>
                         </li>
                     </ul>
                     <div class="save">
@@ -446,7 +446,7 @@
                         <li style="width:100%;">
                             <p>
                                 <span>*</span> 推荐建议：</p>
-                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder="" class='selpro'></Input>
+                            <Input style="width:600px;" type="textarea" v-model='suggestForms.suggest' placeholder=""></Input>
                         </li>
                     </ul>
                     <div class="title">
@@ -786,8 +786,7 @@ export default {
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
-                        console.log(data);
-                        if (data.data.id) {
+                        if (data && data.data) {
                             this.messageForms.id = data.data.id;
                             api
                                 .axs(
@@ -871,6 +870,7 @@ export default {
                         if (data.code === "SUCCESS") {
                             console.log(data);
                             this.$Message.success("新增成功!");
+                            this.experience=false;
                             this.$Loading.finish();
                             this.$store.state.spinShow = false;
                         } else {
@@ -895,6 +895,7 @@ export default {
                         if (data.code === "SUCCESS") {
                             console.log(data);
                             this.$Message.success("编辑成功!");
+                             this.experience=false;
                             this.$Loading.finish();
                             this.$store.state.spinShow = false;
                         } else {
@@ -934,6 +935,7 @@ export default {
                         if (data.code === "SUCCESS") {
                             console.log(data);
                             this.$Message.success("新增成功!");
+                             this.education=false;
                             this.$Loading.finish();
                             this.$store.state.spinShow = false;
                         } else {
@@ -957,6 +959,7 @@ export default {
                         if (data.code === "SUCCESS") {
                             console.log(data);
                             this.$Message.success("编辑成功!");
+                            this.education=false;
                             this.$Loading.finish();
                             this.$store.state.spinShow = false;
                         } else {
@@ -1025,7 +1028,11 @@ export default {
         sendreport() {
             api
                 .axs("post", "/resumeReport/sendReportToCustomer", {
-                    candidateId: this.candidateId
+                    id: this.candidateId,
+                    resumeId:this.$route.query.resumeId,
+                    companyName:this.$route.query.companyName,
+                    candidateName:this.$route.query.candidateName,
+                    jobName:this.$route.query.jobName
                 })
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {

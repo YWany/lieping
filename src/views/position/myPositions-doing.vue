@@ -223,18 +223,18 @@
                                 <p class="pone">候选人：{{ this.retroactionform.candidateName }}</p>
                                 <p class="pone">企业名称：{{ this.$route.query.companyName }}</p>
                                 <p class="pone">职位名称： {{ this.$route.query.jobName }}</p>
-                                <p class="pone">面试次数： 第一次面试</p>
-                                <div v-show="faceshow" class="clearfix">
+                                <p class="pone">面试次数： {{ numangement }}</p>
+                                <div class="clearfix">
 
-                                    <div v-show="show" class="clearfix">
+                                    <div class="clearfix">
                                         <div class="company-li">
                                             <p>
-                                                <span></span> 面试时间：</p>
+                                                <span>*</span> 面试时间：</p>
                                             <DatePicker type="date" placeholder="选择面试时间" format="yyyy-MM-dd HH:mm:ss" v-model="retroactionform.interviewTime" @on-change='seltime'></DatePicker>
                                         </div>
                                         <div class="company-li">
                                             <p>
-                                                <span></span> 面试地点：</p>
+                                                <span>*</span> 面试地点：</p>
                                             <Input v-model='retroactionform.interviewAddr' placeholder="" placeholder="填写面试地点"></Input>
 
                                         </div>
@@ -297,27 +297,27 @@
                                 </div>
                             </div>
                             <div slot='footer' style='text-align:center'>
-                                <Button type='info'>确定</Button>
+                                <Button type='info' @click="savetickling2">确定</Button>
                                 <Button type='info' @click="handleReset">取消</Button>
                             </div>
                         </Modal>
                         <Modal v-model="coupleback" title="面试反馈">
                             <div class="company-content">
-                                <p class="pone">候选人：{{ this.retroactionform.candidateName }}</p>
+                                <p class="pone">候选人：{{ this.interviewfalse.candidateName }}</p>
                                 <p class="pone">企业名称：{{ this.$route.query.companyName }}</p>
                                 <p class="pone">职位名称： {{ this.$route.query.jobName }}</p>
-                                <p class="pone">面试次数： 第一次面试</p>
-                                <p class="pone">面试时间： 2018-07-15</p>
-                                <p class="pone">面试地点： 杭州市余杭区文一西路利尔达物联网科技园</p>
-                                <p class="pone">面试流程： -</p>
-                                <p class="pone">企业面试官： 郎超群</p>
-                                <p class="pone">我司陪面： 郎超群</p>
-                                <p class="pone">备注： -</p>
+                                <p class="pone">面试次数： {{ numangement }}</p>
+                                <p class="pone">面试时间： {{ interviewtime }}</p>
+                                <p class="pone">面试地点： {{ interviewposition }}</p>
+                                <p class="pone">面试流程： {{ interviewdes }}</p>
+                                <p class="pone">企业面试官： {{ interviewcomper }}</p>
+                                <p class="pone">我司陪面：{{ interviewmine }}</p>
+                                <p class="pone">备注： {{ interremark }}</p>
                                 <div v-show="faceshow" class="clearfix">
                                     <div class="company-li">
                                         <p>
                                             <span></span> 企业反馈：</p>
-                                        <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+                                        <Input v-model='interviewfalse.companyFeedback	' placeholder="" type="textarea" :rows="2" placeholder="填写企业反馈"></Input>
 
                                     </div>
 
@@ -326,7 +326,7 @@
                                     <div class="company-li">
                                         <p>
                                             <span></span> 入选反馈：</p>
-                                        <Input v-model='retroactionform.remarks' placeholder="" type="textarea" :rows="2" placeholder="填写面试备注"></Input>
+                                        <Input v-model='interviewfalse.userFeedback' placeholder="" type="textarea" :rows="2" placeholder="填写入选反馈"></Input>
 
                                     </div>
 
@@ -334,18 +334,18 @@
                                 <div class="company-li">
                                     <p>
                                         <span></span> 面试结果：</p>
-                                    <Select v-model='retroactionform.myInterviewer' style="width:300px">
-                                        <Option v-for="(user,index) in userlist" :key='index' :value="user.id">{{user.userName}}</Option>
+                                    <Select v-model='interviewfalse.interviewResult' style="width:300px">
+                                        <Option v-for="(result,index) in interviewResultlist" :key='index' :value="result.code">{{result.codeText}}</Option>
                                     </Select>
 
                                 </div>
                             </div>
                             <div slot='footer' style='text-align:center'>
-                                <Button type='info'>确定</Button>
+                                <Button type='info' @click="confirmed">确定</Button>
                                 <Button type='info' @click="handleReset">取消</Button>
                             </div>
                         </Modal>
-                         <Modal v-model="modal1" title="新增人才备注">
+                        <Modal v-model="modal1" title="新增人才备注">
                             <ul class="company-content">
                                 <li class="company-li">
                                     <p>
@@ -372,6 +372,30 @@
                             </ul>
                             <div slot='footer' style='text-align:center'>
                                 <Button type='info' @click='subSaveremark'>确定</Button>
+                            </div>
+                        </Modal>
+                        <Modal v-model="undetermined" title="面试待定">
+                            <div class="company-content">
+                                <p v-for="(internum,index) in internumlist" :key='index' class="pone">面试：{{internum.interviewTime}} |
+                                    <template v-if='internum.interviewNum'>
+                                        {{ allTrees.interviewNum[ +internum.interviewNum-1 ].codeText }}
+                                    </template>
+                                    <template v-else>
+                                        无
+                                    </template>
+                                </p>
+                                <div class="company-li">
+                                    <p>
+                                        <span></span> 本次反馈：</p>
+                                    <Select v-model='indeterminate.feedbackStatus' style="width:300px">
+                                        <Option v-for="(result,index) in interviewResultlist" :key='index' :value="result.code">{{result.codeText}}</Option>
+                                    </Select>
+
+                                </div>
+                            </div>
+                            <div slot='footer' style='text-align:center'>
+                                <Button type='info' @click="confirmed">确定</Button>
+                                <Button type='info' @click="handleReset">取消</Button>
                             </div>
                         </Modal>
                     </TabPane>
@@ -407,8 +431,9 @@ export default {
         return {
             jodId: this.$route.query.jodId,
             feedback: this.$store.state.allTrees.feedback,
+            interviewResultlist: this.$store.state.allTrees.interviewResult,
             modal1: false, //新增备注
-             addremark: {
+            addremark: {
                 resumeId: ls.get("resumeid"),
                 resumeName: ls.get("resumeName"),
                 jobName:
@@ -434,8 +459,34 @@ export default {
             interview5: "",
             retroaction: false,
             arrangement: false, //安排面试按钮
-            coupleback: true, //面试反馈按钮
+            undetermined: false, //面试待定按钮
+            internumlist: [], //面试list
+            numangement: "", //第几次面试
+            interviewtime: "", //面试时间
+            interviewposition: "", //面试地点
+            interviewdes: "", //面试流程
+            interviewcomper: "", //企业面试官
+            interviewmine: "", //我司面试官
+            interremark: "", //面试备注
+            coupleback: false, //面试反馈按钮
             faceshow: true,
+            indeterminate:{
+               candidateId:"" ,//
+               feedbackStatus:"",
+            },
+            interviewfalse: {
+                //面试反馈参数
+                jobId: this.$route.query.jobId,
+                jobName: this.$route.query.jobName,
+                companyId: this.$route.query.companyid, //企业id
+                companyName: this.$route.query.companyName, //公司名字
+                candidateId: "", //候选人id
+                candidateName: "", //候选人名字
+                companyFeedback: "", //企业反馈
+                userFeedback: "", //人才反馈
+                interviewNum: "", //面试次数
+                interviewResult: "" //面试结果
+            },
             retroactionform: {
                 jobId: this.$route.query.jobId,
                 jobName: this.$route.query.jobName,
@@ -496,13 +547,13 @@ export default {
                                 attrs: {
                                     to:
                                         "/customer/jobDoing/personalDetails?id=" +
-                                        row.resumeId+
-                                         "&&resumeName=" +
-                                                row.name+
-                                                "&&jobName=" +
-                                                this.$route.query.jobName+
-                                                "&&companyName=" +
-                                                this.$route.query.companyName
+                                        row.resumeId +
+                                        "&&resumeName=" +
+                                        row.name +
+                                        "&&jobName=" +
+                                        this.$route.query.jobName +
+                                        "&&companyName=" +
+                                        this.$route.query.companyName
                                 }
                             },
                             row.name
@@ -581,15 +632,13 @@ export default {
                     title: "加入时间",
                     key: "createTime",
                     width: 80,
-                    align: "center",
-                   
+                    align: "center"
                 },
                 {
                     title: "更新时间",
                     key: "updateTime",
                     width: 80,
-                    align: "center",
-                    
+                    align: "center"
                 },
                 {
                     title: "操作",
@@ -619,6 +668,26 @@ export default {
                                                     row.candidateId;
                                                 this.retroactionform.candidateName =
                                                     row.name;
+                                                api
+                                                    .axs(
+                                                        "post",
+                                                        "/job/queryById",
+                                                        { id: this.jodId }
+                                                    )
+                                                    .then(({ data }) => {
+                                                        if (
+                                                            data.code ===
+                                                            "SUCCESS"
+                                                        ) {
+                                                            this.retroactionform.interviewProcess =
+                                                                data.data.processDescriber;
+                                                            this.$store.state.spinShow = false;
+                                                        } else {
+                                                            this.$Message.error(
+                                                                data.remark
+                                                            );
+                                                        }
+                                                    });
                                             }
                                         }
                                     },
@@ -681,19 +750,16 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                               
                                                 ls.set(
-                                                    "candidateId",row.candidateId
+                                                    "candidateId",
+                                                    row.candidateId
                                                 );
                                                 ls.set(
                                                     "resumeid",
                                                     row.resumeId
                                                 );
-                                                 ls.set(
-                                                    "resumeName",
-                                                    row.name
-                                                );
-                                                 this.modal1 = true;
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
                                             }
                                         }
                                     },
@@ -784,17 +850,15 @@ export default {
                                         on: {
                                             click: () => {
                                                 ls.set(
-                                                    "candidateId",row.candidateId
+                                                    "candidateId",
+                                                    row.candidateId
                                                 );
                                                 ls.set(
                                                     "resumeid",
                                                     row.resumeId
                                                 );
-                                                 ls.set(
-                                                    "resumeName",
-                                                    row.name
-                                                );
-                                                 this.modal1 = true;
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
                                             }
                                         }
                                     },
@@ -884,18 +948,16 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                              ls.set(
-                                                    "candidateId",row.candidateId
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
                                                 );
                                                 ls.set(
                                                     "resumeid",
                                                     row.resumeId
                                                 );
-                                                 ls.set(
-                                                    "resumeName",
-                                                    row.name
-                                                );
-                                                 this.modal1 = true;
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
                                             }
                                         }
                                     },
@@ -924,6 +986,76 @@ export default {
                                                     row.candidateId;
                                                 this.retroactionform.candidateName =
                                                     row.name;
+                                                api
+                                                    .axs(
+                                                        "post",
+                                                        "/interview/queryLastData",
+                                                        {
+                                                            candidateId:
+                                                                row.candidateId,
+                                                            jobId: this.jodId,
+                                                            companyId: this
+                                                                .$route.query
+                                                                .companyid
+                                                        }
+                                                    )
+                                                    .then(({ data }) => {
+                                                        if (
+                                                            data.code ===
+                                                            "SUCCESS"
+                                                        ) {
+                                                            // this.numangement=data.data.interviewNum
+                                                            console.log(data);
+                                                            if (
+                                                                this.$store
+                                                                    .state
+                                                                    .allTrees
+                                                                    .interviewNum
+                                                                    .length &&
+                                                                this.$store
+                                                                    .state
+                                                                    .allTrees
+                                                                    .interviewNum[
+                                                                    +data.data
+                                                                        .interviewNum -
+                                                                        1
+                                                                ]
+                                                            ) {
+                                                                this.numangement = this.$store.state.allTrees.interviewNum[
+                                                                    +data.data
+                                                                        .interviewNum -
+                                                                        1
+                                                                ].codeText;
+                                                            }
+                                                            console.log(
+                                                                this.numangement
+                                                            );
+                                                        } else {
+                                                            this.$Message.error(
+                                                                data.remark
+                                                            );
+                                                        }
+                                                    });
+                                                api
+                                                    .axs(
+                                                        "post",
+                                                        "/job/queryById",
+                                                        { id: this.jodId }
+                                                    )
+                                                    .then(({ data }) => {
+                                                        if (
+                                                            data.code ===
+                                                            "SUCCESS"
+                                                        ) {
+                                                            this.retroactionform.interviewProcess =
+                                                                data.data.processDescriber;
+                                                            this.$store.state.spinShow = false;
+                                                        } else {
+                                                            this.$Message.error(
+                                                                data.remark
+                                                            );
+                                                        }
+                                                    });
                                             }
                                         }
                                     },
@@ -987,17 +1119,15 @@ export default {
                                         on: {
                                             click: () => {
                                                 ls.set(
-                                                    "candidateId",row.candidateId
+                                                    "candidateId",
+                                                    row.candidateId
                                                 );
                                                 ls.set(
                                                     "resumeid",
                                                     row.resumeId
                                                 );
-                                                 ls.set(
-                                                    "resumeName",
-                                                    row.name
-                                                );
-                                                 this.modal1 = true;
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
                                             }
                                         }
                                     },
@@ -1021,9 +1151,77 @@ export default {
                                                 this.$Message.info(
                                                     "面试反馈!!!" + row.name
                                                 );
-                                                //     this.retroaction = true;
+                                                this.coupleback = true;
                                                 //    this.retroactionform.candidateId=row.candidateId
-                                                //    this.retroactionform.candidateName=row.name
+
+                                                this.interviewfalse.candidateId =
+                                                    row.candidateId;
+                                                this.interviewfalse.candidateName =
+                                                    row.name;
+                                                api
+                                                    .axs(
+                                                        "post",
+                                                        "/interview/queryLastData",
+                                                        {
+                                                            candidateId:
+                                                                row.candidateId,
+                                                            jobId: this.jodId,
+                                                            companyId: this
+                                                                .$route.query
+                                                                .companyid
+                                                        }
+                                                    )
+                                                    .then(({ data }) => {
+                                                        if (
+                                                            data.code ===
+                                                            "SUCCESS"
+                                                        ) {
+                                                            // this.numangement=data.data.interviewNum
+
+                                                            if (
+                                                                this.$store
+                                                                    .state
+                                                                    .allTrees
+                                                                    .interviewNum
+                                                                    .length &&
+                                                                this.$store
+                                                                    .state
+                                                                    .allTrees
+                                                                    .interviewNum[
+                                                                    +data.data
+                                                                        .interviewNum -
+                                                                        1
+                                                                ]
+                                                            ) {
+                                                                this.numangement = this.$store.state.allTrees.interviewNum[
+                                                                    +data.data
+                                                                        .interviewNum -
+                                                                        1
+                                                                ].codeText;
+                                                            }
+                                                            this.interviewtime =
+                                                                data.data.interviewTime;
+                                                            this.interviewposition =
+                                                                data.data.interviewAddr;
+                                                            this.interviewdes =
+                                                                data.data.interviewProcess;
+                                                            this.interviewcomper =
+                                                                data.data.interviewer;
+                                                            this.interviewmine =
+                                                                data.data.myInterviewer;
+                                                            this.interremark =
+                                                                data.data.remarks;
+                                                            this.interviewfalse.interviewNum =
+                                                                data.data.interviewNum;
+                                                            console.log(
+                                                                this.numangement
+                                                            );
+                                                        } else {
+                                                            this.$Message.error(
+                                                                data.remark
+                                                            );
+                                                        }
+                                                    });
                                             }
                                         }
                                     },
@@ -1086,18 +1284,238 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                               ls.set(
-                                                    "candidateId",row.candidateId
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
                                                 );
                                                 ls.set(
                                                     "resumeid",
                                                     row.resumeId
                                                 );
-                                                 ls.set(
-                                                    "resumeName",
-                                                    row.name
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 4) {
+                            return h("div", [
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "面试待定!!!" + row.name
                                                 );
-                                                 this.modal1 = true;
+                                                this.undetermined = true;
+                                                 this.indeterminate.candidateId =
+                                                    row.candidateId;
+                                                api
+                                                    .axs(
+                                                        "post",
+                                                        "/interview/queryInterviewList",
+                                                        {
+                                                            candidateId:
+                                                                row.candidateId,
+                                                            jobId: this.jodId,
+                                                            companyId: this
+                                                                .$route.query
+                                                                .companyid
+                                                        }
+                                                    )
+                                                    .then(({ data }) => {
+                                                        if (
+                                                            data.code ===
+                                                            "SUCCESS"
+                                                        ) {
+                                                            // this.numangement=data.data.interviewNum
+                                                            console.log(data);
+                                                            this.internumlist =
+                                                                data.data;
+                                                        } else {
+                                                            this.$Message.error(
+                                                                data.remark
+                                                            );
+                                                        }
+                                                    });
+                                            }
+                                        }
+                                    },
+                                    "面试待定"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
+                                            }
+                                        }
+                                    },
+                                    "人才备注"
+                                )
+                            ]);
+                        } else if (row.status == 5) {
+                            return h("div", [
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "success", //primary、ghost、dashed、text、info、success、warning、error
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "拟定offer!!!" + row.name
+                                                );
+                                               
+                                            }
+                                        }
+                                    },
+                                    "拟定offer"
+                                ),
+                                h(
+                                    "router-link",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        attrs: {
+                                            to:
+                                                "/position/myPositions/recommendreports?srcId=" +
+                                                row.srcId +
+                                                "&&resumeId=" +
+                                                row.resumeId
+                                        }
+                                    },
+                                    "推荐职位"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "info",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.info(
+                                                    "转发简历!!!" + row.name
+                                                );
+                                                this.ranspond = true;
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                            }
+                                        }
+                                    },
+                                    "转发简历"
+                                ),
+                                h(
+                                    "a",
+                                    {
+                                        props: {
+                                            type: "warning",
+                                            size: "small"
+                                        },
+                                        style: {
+                                            marginRight: "6px"
+                                        },
+                                        on: {
+                                            click: () => {
+                                                ls.set(
+                                                    "candidateId",
+                                                    row.candidateId
+                                                );
+                                                ls.set(
+                                                    "resumeid",
+                                                    row.resumeId
+                                                );
+                                                ls.set("resumeName", row.name);
+                                                this.modal1 = true;
                                             }
                                         }
                                     },
@@ -1126,10 +1544,10 @@ export default {
         toLoading() {
             this.loading = true;
         },
-         subSaveremark() {
-            if(!this.addremark.recordContent){
-               this.$Message.error("请填写记录");
-               return
+        subSaveremark() {
+            if (!this.addremark.recordContent) {
+                this.$Message.error("请填写记录");
+                return;
             }
             api
                 .axs("post", "/talnetRemark/save", this.addremark)
@@ -1145,10 +1563,10 @@ export default {
         },
         showwing() {
             if (this.retroactionform.feedbackResult == 2) {
-                this.retroactionform.interviewStatus=2
+                this.retroactionform.interviewStatus = 2;
                 this.faceshow = false;
             } else {
-                this.retroactionform.interviewStatus=1
+                this.retroactionform.interviewStatus = 1;
                 this.faceshow = true;
             }
         },
@@ -1216,6 +1634,101 @@ export default {
         seltime(date) {
             this.retroactionform.interviewTime = date;
         },
+        confirmed(){//面试待定
+            if (!this.indeterminate.feedbackStatus) {
+                this.$Message.error("请选择本次反馈结果");
+                return;
+            } 
+             api
+                .axs("post", "/jobCandidate/updatenterviewStatus", this.indeterminate)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.undetermined = false;
+                        this.loadLists();
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        interresult() {
+            //面试反馈
+            if (!this.interviewfalse.feedbackStatus) {
+                this.$Message.error("请选择面试结果");
+                return;
+            }
+            api
+                .axs("post", "/interview/add", this.interviewfalse)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.coupleback = false;
+                        this.loadLists();
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        savetickling2() {
+            //安排面试
+            if (!this.retroactionform.interviewTime) {
+                this.$Message.error("请选择面试时间");
+                return;
+            }
+            if (!this.retroactionform.interviewAddr) {
+                this.$Message.error("请填写面试地点");
+                return;
+            }
+
+            if (this.interview1) {
+                this.retroactionform.interviewer = this.interview1;
+                if (this.interview2) {
+                    this.retroactionform.interviewer =
+                        this.interview1 + "," + this.interview2;
+                }
+                if (this.interview3) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3;
+                }
+                if (this.interview4) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3 +
+                        "," +
+                        this.interview4;
+                }
+                if (this.interview5) {
+                    this.retroactionform.interviewer =
+                        this.interview1 +
+                        "," +
+                        this.interview2 +
+                        "," +
+                        this.interview3 +
+                        "," +
+                        this.interview4 +
+                        "," +
+                        this.interview5;
+                }
+            }
+            api
+                .axs("post", "/interview/add", this.retroactionform)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.arrangement = false;
+                        this.loadLists();
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
         savetickling() {
             if (!this.retroactionform.customerFeedback) {
                 this.$Message.error("请填写客户反馈");
@@ -1272,6 +1785,8 @@ export default {
         },
         handleReset() {
             this.retroaction = false;
+            this.arrangemen = false;
+            this.coupleback = false;
         }
     },
     mounted() {

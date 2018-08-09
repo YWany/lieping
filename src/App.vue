@@ -134,6 +134,14 @@ export default {
                         //候选人状态
                         this.$store.state.allTrees.candidateStatus =
                             allTress[i].children;
+                    else if (allTress[i].code === "interviewNum")
+                        //面试次数
+                        this.$store.state.allTrees.interviewNum =
+                            allTress[i].children;
+                    else if (allTress[i].code === "interviewResult")
+                        //面试结果
+                        this.$store.state.allTrees.interviewResult =
+                            allTress[i].children;
                 }
             }
         });

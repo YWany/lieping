@@ -50,7 +50,41 @@
         </div>
 
         <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+        <Modal v-model="workbut" :closable='false' :mask-closable='false' style='text-align:center;'>
+            <div slot='header' style='font-size:14px;color:#444'>
+                加入职位
+                <a href="javascript:;" @click='workbut=false'>
+                    <Icon type="close" class='fr'></Icon>
+                </a>
+            </div>
+            <ul class="re-listpage">
+                <!-- <li v-for="(remarks,index) in remarklistpage" :key='index'>
+                            <p>{{ remarks.recordContent }}</p>
+                            <p>
+                                <span>
+                                    {{ remarks.createTime }} 来自{{ remarks.createName }}</span>
+                            </p>
+                        </li> -->
+                <li>
+                    <RadioGroup v-model="vertical" vertical>
+                        <Radio v-for="(alljob,index) in alljoblist" :key='index' :label='alljob.id+","+alljob.companyName+","+alljob.jobName'>
 
+                            <span>{{ alljob.jobName }}</span>/
+                            <span>{{ alljob.name }}</span>/
+                            <span>{{ alljob.companyName }}</span>
+                        </Radio>
+
+                    </RadioGroup>
+                </li>
+                <div class="tablePage fr">
+                    <Page :total='form1.total' :page-size='form1.pageSize' show-total @on-change='loadLists1'></Page>
+                </div>
+            </ul>
+
+            <div slot='footer' style='text-align:center'>
+                <Button type='info' @click='addjob'>确认</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 
@@ -72,6 +106,22 @@ export default {
             companyname: this.$route.query.companyname || "",
             job: this.$route.query.job || "",
             pageTag: 1, //内网
+            alljoblist: [], //所有职位
+            vertical: "",
+            workbut: false,
+            verticalform: {
+                resumeId: "",
+                jobId: "",
+                companyName: "",
+                candidateName: "",
+                jobName: ""
+            }, //职位选择
+            form1: {
+                //加入职位分页
+                total: 100,
+                pageNum: 1,
+                pageSize: 10
+            },
             showif: false,
             serachitemsShow: false,
             professPop: false, //职位弹窗
@@ -95,6 +145,7 @@ export default {
                 pageNum: 1,
                 pageSize: 10
             },
+
             columns4: [
                 {
                     type: "selection",
@@ -207,8 +258,10 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.professPop = true;
-                                            this.$Message.info(row.id);
+                                            this.workbut = true;
+                                            this.verticalform.resumeId = row.id;
+                                            this.verticalform.candidateName =
+                                                row.name;
                                         }
                                     }
                                 },
@@ -235,6 +288,21 @@ export default {
                 if (data.code === "SUCCESS") {
                     this.searchLists = data.data.list;
                     this.form.total = data.data.total;
+                    this.$Loading.finish();
+                    this.$store.state.spinShow = false;
+                } else {
+                    this.$Message.error(data.remark);
+                }
+            });
+        },
+        loadLists1(page) {
+            //职位分页
+            this.$store.state.spinShow = true;
+            this.form.pageNum = page;
+            api.axs("post", "/job/jobPages", this.form1).then(({ data }) => {
+                if (data.code === "SUCCESS") {
+                    this.alljoblist = data.data.list;
+                    this.form1.total = data.data.total;
                     this.$Loading.finish();
                     this.$store.state.spinShow = false;
                 } else {
@@ -281,6 +349,30 @@ export default {
                 content: content
             });
         },
+        addjob() {
+            //加入职位
+            if (!this.vertical) {
+                this.$Message.warning("您还未选择职位");
+                return;
+            }
+            var arrjob = this.vertical.split(",");
+            console.log(arrjob);
+            this.verticalform.jobId = arrjob[0];
+            this.verticalform.companyName = arrjob[1];
+            this.verticalform.jobName = arrjob[2];
+            api
+                .axs("post", "/jobCandidate/save", this.verticalform)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.workbut = false;
+                        this.$Loading.finish();
+                        this.$store.state.spinShow = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
         handleRowChange(currentRow, oldCurrentRow) {
             this.resumelist = currentRow;
         },
@@ -295,6 +387,7 @@ export default {
     },
     mounted() {
         this.loadLists();
+        this.loadLists1();
     }
 };
 </script>
@@ -328,6 +421,24 @@ export default {
         margin-bottom: 10px;
         span {
             margin-left: 10px;
+        }
+    }
+}
+.re-listpage {
+    width: 100%;
+    overflow: auto;
+    li {
+        float: right;
+        width: 100%;
+        padding: 0.5rem 0.3rem;
+        background: rgb(228, 226, 226);
+        margin-top: 0.75rem;
+        p {
+            text-align: left;
+            overflow: auto;
+            span {
+                float: right;
+            }
         }
     }
 }

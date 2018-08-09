@@ -6,17 +6,17 @@
                 <div class="title">
                     <span>1</span> 基本信息
                 </div>
-                <FormItem label="关联企业：" class="half fl">
-                    <Select v-model="formValidate.companyId" filterable remote :remote-method="searchCompany" :loading="comLoading" @on-change="searchHetong" placeholder="请输入关键词并搜索">
-                        <Option v-for="(item, index) in comLists" :value="item.id" :key="index">{{item.companyName}}</Option>
+                <FormItem label="关联企业：" prop="companyName" class="half fl">
+                    <Select v-model="formValidate.companyName" filterable remote :remote-method="searchCompany" :loading="comLoading" @on-change="searchHetong" placeholder="请输入关键词并搜索">
+                        <Option v-for="(item, index) in comLists" :value="item.companyName+'&'+item.id" :key="index">{{item.companyName}}</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="保证期：" prop="jobName" class="half fl">
-                    <Input v-model="formValidate.jobName"></Input>
+                <FormItem label="保证期：" prop="guaranteePeriod" class="half fl">
+                    <Input v-model="formValidate.guaranteePeriod"></Input>
                 </FormItem>
-                <FormItem label="所属合同：" prop="contractId" v-if="formValidate.companyId" class="half fl">
+                <FormItem label="所属合同：" prop="companyName" v-if="formValidate.companyId" class="half fl">
                     <Select v-model="formValidate.contractId">
-                        <Option v-for="list in htLists" :key="list.id" :value="list.id">{{list.num}}</Option>
+                        <Option v-for="list in htLists" :value="list.num" :key="list.id">{{list.num}}</Option>
                     </Select>
                 </FormItem>
             </div>
@@ -35,12 +35,8 @@
                 <FormItem label="工作地点：" prop="jobAddrId" class="half fl">
                     <Citysels ref='proCity' />
                 </FormItem>
-                <FormItem label="职能分类：" prop="jobType" class="half fl">
-                    <Select v-model="formValidate.jobType">
-                        <Option value="1">New York</Option>
-                        <Option value="2">London</Option>
-                        <Option value="3">Sydney</Option>
-                    </Select>
+                <FormItem label="职能分类：" prop="jobType" class="half fl" style='height:33px;'>
+                    <Input type="text" @on-focus='functionPop=true' v-model="formValidate.jobType" :readonly='true' placeholder="请选择"></Input>
                 </FormItem>
                 <FormItem label="汇报对象：" prop="reportTarget" class="half fl">
                     <Input v-model="formValidate.reportTarget"></Input>
@@ -118,7 +114,7 @@
                 <FormItem label="年龄要求：" prop="ageRequireUpper" class="half fl">
                     <Row>
                         <Col span="11">
-                        <FormItem>
+                        <FormItem prop='ageRequireLower'>
                             <Input style="width:80%;" v-model="formValidate.ageRequireLower"></Input> 周岁
                         </FormItem>
 
@@ -238,7 +234,7 @@
             </FormItem>
         </Form>
         <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
-
+        <Functions ref='FunctionsP' @selFunc='selFunc' :functionPop='functionPop' />
     </div>
 
 </template>
@@ -248,16 +244,18 @@ import api from "@/api";
 import ls from "store2";
 import Citysels from "@/components/common/citysels.vue";
 import Professions from "@/components/common/professions.vue";
-
+import Functions from "@/components/common/functions.vue";
 export default {
     name: "addNewPosition",
     components: {
         Citysels,
-        Professions
+        Professions,
+        Functions
     },
     data() {
         return {
             professPop: false, //职位弹窗
+            functionPop: false, //职能
             professId: "",
             professName: "",
             comLists: [],
@@ -265,8 +263,10 @@ export default {
             comLoading: false,
             formValidate: {
                 companyId: "", //公司id
+                companyName: "",
                 contractId: "", //合同id
                 jobName: "", //职位名称
+                guaranteePeriod: "", //保证期
                 jobAddrId: "540", //工作地址
                 jobStatus: 1, //0保存草稿1创建职位
                 jobType: "", //职能分类
@@ -301,11 +301,32 @@ export default {
                 shareUser: "" //共享到XXX
             },
             ruleValidate: {
+                companyName: [
+                    {
+                        required: true,
+                        message: "请选择关联企业",
+                        trigger: "change"
+                    }
+                ],
                 jobName: [
                     {
                         required: true,
                         message: "请填写职位名称",
                         trigger: "blur"
+                    }
+                ],
+                guaranteePeriod: [
+                    {
+                        required: true,
+                        message: "请填写保证期",
+                        trigger: "blur"
+                    }
+                ],
+                contractId: [
+                    {
+                        required: true,
+                        message: "请选择合同",
+                        trigger: "change"
                     }
                 ],
                 jobAddrId: [
@@ -451,9 +472,13 @@ export default {
             }
         },
         searchHetong(hId) {
-            console.log(hId)
+            if (hId.indexOf('&') > 0) {
+                var comp = hId.split('&')
+                this.formValidate.companyId = comp[1]
+                this.formValidate.companyName = comp[0]
+            }
             api
-                .axs("post", "/contract/page", {companyId: hId})
+                .axs("post", "/contract/page", {companyId: comp[1]})
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.htLists = data.data.list;
@@ -502,6 +527,10 @@ export default {
             this.professName = idName.split("&")[1];
             this.formValidate.industryId = idName.split("&")[0];
             this.professPop = false;
+        },
+        selFunc(name) {
+            this.formValidate.jobType = name
+            this.functionPop = false
         }
     },
     mounted() {

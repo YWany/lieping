@@ -142,6 +142,10 @@ export default {
                         //面试结果
                         this.$store.state.allTrees.interviewResult =
                             allTress[i].children;
+                    else if (allTress[i].code === "functionType")
+                        //职能分类
+                        this.$store.state.allTrees.functionType =
+                            allTress[i].children;
                 }
             }
         });

@@ -63,8 +63,9 @@ export default {
 
 <style lang="less">
 .profess-content {
-    max-height: 360px;
+    max-height: 422px;
     overflow-y: auto;
+    overflow-x: hidden;
     li {
         display: flex;
         border: 1px solid #eee;

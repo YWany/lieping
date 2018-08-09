@@ -240,7 +240,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="less">
+<style lang="less" scoped>
 .jodDesc {
     border: 1px solid #eee;
     padding: 10px 15px;

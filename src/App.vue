@@ -122,6 +122,18 @@ export default {
                         //企业规模
                         this.$store.state.allTrees.scalelist =
                             allTress[i].children;
+                    else if (allTress[i].code === "proposedParty")
+                        //提出方
+                        this.$store.state.allTrees.proposedParty =
+                            allTress[i].children;
+                    else if (allTress[i].code === "feedback")
+                        //反馈结果
+                        this.$store.state.allTrees.feedback =
+                            allTress[i].children;
+                    else if (allTress[i].code === "candidateStatus")
+                        //候选人状态
+                        this.$store.state.allTrees.candidateStatus =
+                            allTress[i].children;
                 }
             }
         });

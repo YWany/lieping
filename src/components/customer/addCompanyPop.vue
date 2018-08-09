@@ -9,12 +9,12 @@
                 </a>
             </div>
             <ul class="company-content">
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 客户名称：</p>
                     <Input v-model='companyForm.companyName' placeholder="" class='selpro'></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 客户来源：</p>
 
@@ -23,22 +23,22 @@
 
                     </Select>
                 </li>
-                <li style='text-align:left'>
+                <li class="company-li" style='text-align:left;margin-bottom:0;'>
                     <p style='width:130px'>
                         <span>*</span> 客户对外显示名称：</p>
                     <Input v-model='companyForm.outerName' placeholder="" class='selpro'></Input>
                 </li>
-                <li>
-                    <div style='color:#ff8686'>为保障企业及猎头公司的隐私，我们不会将企业的真实名称展示给经理人</div>
+                <li class="company-li" style='margin-bottom:0;'>
+                    <div style='color:red'>对外显示名称主要用于共享发布系统平台或朋友圈等其他渠道</div>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 重要程度：</p>
                     <Select v-model="companyForm.importantLevel" style="width:300px">
                         <Option v-for="(importance,index) in importancelist" :value="importance.code" :key='index'>{{importance.codeText}}</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 客户状态：</p>
                     <Select v-model="companyForm.companyStatus" style="width:300px">
@@ -46,20 +46,20 @@
 
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 所属行业：</p>
                     <Input v-model='professName' @on-focus='professPop=true' :readonly='true' placeholder="选择行业" class='selpro'></Input>
                     <Professions ref='pfoFess' />
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 所在地：</p>
                     <!-- <Input v-model='companyForm.outerName' placeholder=""></Input> -->
                     <Citysels ref='proCity' />
                     <!-- this.$refs.proCity.cityId -->
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 企业性质：</p>
 
@@ -68,7 +68,7 @@
 
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 企业规模：</p>
 
@@ -77,14 +77,14 @@
 
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>企业官网：</p>
                     <Input v-model='companyForm.network' placeholder="" class='selpro'></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 企业介绍：</p>
-                    <Input v-model='companyForm.introduction' type="textarea" :rows="2" placeholder=""></Input>
+                    <Input v-model='companyForm.introduction' type="textarea" :rows="2" placeholder="突出企业亮点，不要在此透漏企业真实名称，不少于30字"></Input>
                 </li>
             </ul>
             <div slot='footer' style='text-align:center'>
@@ -129,7 +129,7 @@ export default {
                 outerName: "",
                 importantLevel: "",
                 companyStatus: "",
-                companyType: "",
+                companyType: "3",
                 industryId: "",
                 companyScope: "",
                 introduction: "",
@@ -277,7 +277,7 @@ export default {
 <style lang="less">
 .company-content {
     height: 510px;
-    li {
+    .company-li {
         margin-bottom: 10px;
         .selpro {
             .ivu-input {

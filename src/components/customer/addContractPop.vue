@@ -8,14 +8,14 @@
                 </a>
             </div>
             <ul class="contract-content">
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 合同类型：</p>
                     <Select v-model="contractForm.contractType">
                         <Option :value='tree.code' v-for='tree in hetongTrees'>{{tree.codeText}}</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 合同模板：</p>
                     <Select v-model='contractForm.templateId'>
@@ -23,74 +23,74 @@
                         <Option value="2">模板2</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 客户名称：</p>
                     <Input v-model='contractForm.companyName' :readonly='true'></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 客户来源：</p>
                     <Select v-model="contractForm.companySource">
                         <Option :value='tree.code' v-for='tree in sourceTrees'>{{tree.codeText}}</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 付款方式：</p>
                     <Select v-model="contractForm.payType">
                         <Option :value='tree.code' v-for='tree in payTrees'>{{tree.codeText}}</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 前期服务费：</p>
                     <Input v-model='contractForm.preFee' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 付款比例：</p>
                     <Input v-model='contractForm.payRatio' placeholder="例如: 10%"></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 最低收费：</p>
                     <Input v-model='contractForm.minCharge' placeholder=""></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 合同开始时间：</p>
                     <DatePicker v-model='contractForm.strartTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime1' type="date" placeholder="请选择日期"></DatePicker>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 合同开始结束：</p>
                     <DatePicker :value='contractForm.endTime' format="yyyy-MM-dd HH:mm:ss" @on-change='seltime2' type="date" placeholder="请选择日期"></DatePicker>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> 保证期：</p>
                     <Select v-model="contractForm.ensurePeriod">
                         <Option :value='tree.code' v-for='tree in ensurePeriodtree'>{{tree.codeText}}</Option>
                     </Select>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>甲方在职人员保护期：</p>
                     <Select v-model="contractForm.protectPeriod">
                         <Option :value='tree.code' v-for='tree in protectPeriodtree'>{{tree.codeText}}</Option>
                     </Select>
                 </li>
 
-                <li class='line-all'>
+                <li class='company-li line-all'>
                     <p>特殊说明：</p>
                     <Input v-model='contractForm.instruction' type="textarea" :rows="2" placeholder="" style='width:696px'></Input>
                 </li>
-                <li>
+                <li class="company-li">
                     <p>
                         <span>*</span> BD顾问：</p>
                     <Input v-model='contractForm.bdName' placeholder=""></Input>
                 </li>
-                <li>&nbsp;</li>
+                <li class="company-li">&nbsp;</li>
                 <!-- <li>
                         <p>
                             <span>*</span> 回款计划：</p>
@@ -321,7 +321,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .contract-content {
-    & > li {
+    & > .company-li{
         margin-bottom: 10px;
         width: 50%;
         display: inline-block;

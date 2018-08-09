@@ -40,7 +40,7 @@
                         <div class="add-content">
                             <p style='padding: 15px 0 5px'>
                                 <span class='xing'>*</span>跟进记录:</p>
-                            <Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 6,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
+                            <Input v-model="recordsForm.followRecord" type="textarea" :autosize="{minRows: 2,maxRows: 10}" placeholder="请输入跟近记录..."></Input>
                         </div>
                         <div class="add-sub" style='margin:10px 0 0'>
                             <Upload class='up-img' action="//jsonplaceholder.typicode.com/posts/" :format="['jpg','jpeg','png']" :max-size="2048">
@@ -343,7 +343,7 @@ export default {
             recordsForm: {
                 contactId: "",
                 companyId: this.$route.query.id,
-                followType: "",
+                followType: "2",
                 followTime: UTC2Date(new Date(), "y-m-d h:i:s"),
                 followRecord: "",
                 contactRecord: [],

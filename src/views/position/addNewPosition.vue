@@ -14,7 +14,7 @@
                 <FormItem label="保证期：" prop="jobName" class="half fl">
                     <Input v-model="formValidate.jobName"></Input>
                 </FormItem>
-                <FormItem label="所属合同：" prop="contractId" class="half fl">
+                <FormItem label="所属合同：" prop="contractId" v-if="formValidate.companyId" class="half fl">
                     <Select v-model="formValidate.contractId">
                         <Option v-for="list in htLists" :key="list.id" :value="list.id">{{list.num}}</Option>
                     </Select>

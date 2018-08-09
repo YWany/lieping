@@ -570,7 +570,6 @@ export default {
                     title: "目前公司",
                     key: "currentCompanyName",
                     ellipsis: true,
-                    width: 140,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -597,7 +596,6 @@ export default {
                 {
                     title: "邮箱",
                     key: "email",
-                    sortable: true,
                     width: 150,
                     align: "center",
                     render: (h, params) => {
@@ -643,6 +641,7 @@ export default {
                 {
                     title: "操作",
                     key: "iii",
+                    width: 130,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;

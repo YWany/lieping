@@ -93,25 +93,24 @@
                         <div class="tablePage fr">
                             <Page :total='form.total' :page-size='form.pageSize' show-total @on-change='loadLists'></Page>
                         </div>
-                        <Modal v-model="ranspond" title="转发简历" >
-                    <Form ref="" :model="transpondform" :label-width="80">
-                        
-                        <FormItem label="顾问" prop="sex">
-                            <Select v-model="transpondform.refereeTo"  placeholder="请选择顾问">
+                        <Modal v-model="ranspond" title="转发简历">
+                            <Form ref="" :model="transpondform" :label-width="80">
 
-                                <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
-                            </Select>
-                        </FormItem>
-                       
-                       
-                    </Form>
-                    <div slot="footer">
+                                <FormItem label="顾问" prop="sex">
+                                    <Select v-model="transpondform.refereeTo" placeholder="请选择顾问">
 
-                        <Button  @click="transmit" type="primary" >保存</Button>
-                        <!-- <Button type="ghost" @click="handleReset('ranspond')" style="margin-left: 8px">清空表格</Button> -->
+                                        <Option v-for="(item,index) in userlist" :key='index' :value="item.id">{{item.userName}}</Option>
+                                    </Select>
+                                </FormItem>
 
-                    </div>
-                </Modal>
+                            </Form>
+                            <div slot="footer">
+
+                                <Button @click="transmit" type="primary">保存</Button>
+                                <!-- <Button type="ghost" @click="handleReset('ranspond')" style="margin-left: 8px">清空表格</Button> -->
+
+                            </div>
+                        </Modal>
                     </TabPane>
                     <TabPane label="职位日志" name="xiangqing">
                         职位日志
@@ -159,10 +158,11 @@ export default {
                 current: 1,
                 pageSize: 20
             },
-            ranspond:false,
-            transpondform:{//转发简历参数
-                refereeTo:"",
-                id:ls.get("candidateId")
+            ranspond: false,
+            transpondform: {
+                //转发简历参数
+                refereeTo: "",
+                id: ls.get("candidateId")
             },
 
             jodId: this.$route.query.jodId,
@@ -201,7 +201,6 @@ export default {
                     title: "目前公司",
                     key: "currentCompanyName",
                     ellipsis: true,
-                    width: 140,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -228,7 +227,6 @@ export default {
                 {
                     title: "邮箱",
                     key: "email",
-                    sortable: true,
                     width: 150,
                     align: "center",
                     render: (h, params) => {
@@ -239,13 +237,12 @@ export default {
                 {
                     title: "候选人状态",
                     key: "jobHuntStatus",
-                    width: 100,
+                    width: 130,
                     align: "center"
                 },
                 {
                     title: "状态",
                     key: "bbb",
-                    sortable: true,
                     width: 100,
                     align: "center"
                 },
@@ -264,6 +261,7 @@ export default {
                 {
                     title: "操作",
                     key: "iii",
+                    width: 130,
                     align: "center",
                     render: (h, params) => {
                         const row = params.row;
@@ -300,7 +298,7 @@ export default {
                                     },
                                     attrs: {
                                         to:
-                                           "/position/myPositions/recommendreports?srcId=" +
+                                            "/position/myPositions/recommendreports?srcId=" +
                                             row.srcId +
                                             "&&resumeId=" +
                                             row.resumeId
@@ -318,13 +316,16 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                     on: {
+                                    on: {
                                         click: () => {
                                             this.$Message.info(
                                                 "转发简历!!!" + row.name
                                             );
-                                            this.ranspond=true
-                                            ls.set("candidateId",row.candidateId)
+                                            this.ranspond = true;
+                                            ls.set(
+                                                "candidateId",
+                                                row.candidateId
+                                            );
                                         }
                                     }
                                 },
@@ -340,13 +341,16 @@ export default {
                                     style: {
                                         marginRight: "6px"
                                     },
-                                     on: {
+                                    on: {
                                         click: () => {
                                             this.$Message.info(
                                                 "转发简历!!!" + row.name
                                             );
-                                            this.ranspond=true
-                                            ls.set("candidateId",row.candidateId)
+                                            this.ranspond = true;
+                                            ls.set(
+                                                "candidateId",
+                                                row.candidateId
+                                            );
                                         }
                                     }
                                 },
@@ -392,19 +396,21 @@ export default {
             });
             this.form.selVal = "候选人名";
         },
-        transmit(){
-            api.axs("post", "/jobCandidate/redirectJob",this.transpondform).then(({ data }) => {
-            if (data.code === "SUCCESS") {
-                this.$Message.success(data.remark);
-                this.ranspond=false;
-            } else {
-                this.$Message.error(data.remark);
-            }
-        }); 
+        transmit() {
+            api
+                .axs("post", "/jobCandidate/redirectJob", this.transpondform)
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.$Message.success(data.remark);
+                        this.ranspond = false;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
         },
-         handleReset(name) {
+        handleReset(name) {
             this.$refs[name].resetFields();
-        },
+        }
     },
     mounted() {
         this.loadLists();
@@ -423,9 +429,7 @@ export default {
     beforeRouteLeave(to, from, next) {
         ls.session("lastRouter", this.$route.fullPath);
         next();
-    },
-   
-
+    }
 };
 </script>
 

@@ -1,26 +1,22 @@
 <template>
     <div class="addNewPosition">
-        新增职位
-        <Form ref="formValidate" :model="formValidate"  :label-width="100">
+        <div class='currentNav'>当前位置: 新增职位</div>
+        <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
             <div class="number1">
                 <div class="title">
                     <span>1</span> 基本信息
                 </div>
-                <FormItem label="关联企业：" class="half">
-                    <Input slot="append" type="text" @on-focus='professPop=true' v-model="formValidate.companyId" :readonly='true' placeholder="Enter your name"></Input>
-
-                    <!-- <Select v-model="formValidate.companyId" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
-                    </Select> -->
-                    <!-- <Input slot="append" @on-focus='professPop=true'  v-model='formValidate.companyId' :readonly='true' placeholder="请选择" style='width:200px;'></Input> -->
+                <FormItem label="关联企业：" class="half fl">
+                    <Select v-model="formValidate.companyId" filterable remote :remote-method="searchCompany" :loading="comLoading" @on-change="searchHetong" placeholder="请输入关键词并搜索">
+                        <Option v-for="(item, index) in comLists" :value="item.id" :key="index">{{item.companyName}}</Option>
+                    </Select>
                 </FormItem>
-                <FormItem label="所属合同：" prop="contractId" class="half">
-                    <Select v-model="formValidate.contractId" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                <FormItem label="保证期：" prop="jobName" class="half fl">
+                    <Input v-model="formValidate.jobName"></Input>
+                </FormItem>
+                <FormItem label="所属合同：" prop="contractId" class="half fl">
+                    <Select v-model="formValidate.contractId">
+                        <Option v-for="list in htLists" :key="list.id" :value="list.id">{{list.num}}</Option>
                     </Select>
                 </FormItem>
             </div>
@@ -34,51 +30,46 @@
                     </div>
                 </div>
                 <FormItem label="职位名称：" prop="jobName" class="half fl">
-                    <Input v-model="formValidate.jobName" placeholder="Enter your name"></Input>
+                    <Input v-model="formValidate.jobName"></Input>
                 </FormItem>
                 <FormItem label="工作地点：" prop="jobAddrId" class="half fl">
-                    <Select v-model="formValidate.jobAddrId" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
-                    </Select>
+                    <Citysels ref='proCity' />
                 </FormItem>
-                <FormItem label="职能分类：" prop="jobStatus" class="half fl">
-                    <Select v-model="formValidate.jobStatus" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                <FormItem label="职能分类：" prop="jobType" class="half fl">
+                    <Select v-model="formValidate.jobType">
+                        <Option value="1">New York</Option>
+                        <Option value="2">London</Option>
+                        <Option value="3">Sydney</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="汇报对象：" prop="reportTarget" class="half fl">
-                    <Input v-model="formValidate.reportTarget" placeholder="Enter your e-mail"></Input>
+                    <Input v-model="formValidate.reportTarget"></Input>
                 </FormItem>
                 <FormItem label="下属人数：" prop="subordinateNum" class="half fl">
-                    <Input v-model="formValidate.subordinateNum" placeholder="Enter your e-mail"></Input>
+                    <Input v-model="formValidate.subordinateNum"></Input>
                 </FormItem>
                 <div class="minbox fl">
                     <div class="mintitle">
                         薪资福利
                     </div>
                 </div>
-                <FormItem label="税前年薪：" prop="mail" class="half fl">
+                <FormItem label="税前年薪：" prop="taxBeforeLower" class="half fl">
                     <Row>
                         <Col span="11">
-                        <FormItem>
-                            <Input style="width:80%;" v-model="formValidate.taxBeforeLower" placeholder="Enter your e-mail"></Input>万元
+                        <FormItem prop="taxBeforeLower">
+                            <Input style="width:80%;" v-model="formValidate.taxBeforeLower"></Input> 万元
                         </FormItem>
-
                         </Col>
                         <Col span="2" style="text-align: center">-</Col>
                         <Col span="11">
-                        <FormItem prop="mail">
-                            <Input style="width:80%;" v-model="formValidate.taxBeforeUpper" placeholder="Enter your e-mail"></Input>万元
+                        <FormItem prop="taxBeforeUpper">
+                            <Input style="width:80%;" v-model="formValidate.taxBeforeUpper"></Input> 万元
                         </FormItem>
                         </Col>
                     </Row>
                 </FormItem>
                 <FormItem label="通讯交通：" prop="communicationTraffic" class="half fl">
-                    <Select v-model="formValidate.communicationTraffic" placeholder="Select your city">
+                    <Select v-model="formValidate.communicationTraffic">
                         <Option value="beijing">New York</Option>
                         <Option value="shanghai">London</Option>
                         <Option value="shenzhen">Sydney</Option>
@@ -124,55 +115,50 @@
                         基本信息
                     </div>
                 </div>
-                 <FormItem label="年龄要求：" prop="mail"  class="half fl">
+                <FormItem label="年龄要求：" prop="ageRequireUpper" class="half fl">
                     <Row>
                         <Col span="11">
                         <FormItem>
-                            <Input style="width:80%;" v-model="formValidate.ageRequireLower" placeholder="Enter your e-mail"></Input>万元
+                            <Input style="width:80%;" v-model="formValidate.ageRequireLower"></Input> 周岁
                         </FormItem>
 
                         </Col>
                         <Col span="2" style="text-align: center">-</Col>
                         <Col span="11">
                         <FormItem prop="ageRequireUpper">
-                            <Input style="width:80%;" v-model="formValidate.ageRequireUpper" placeholder="Enter your e-mail"></Input>万元
+                            <Input style="width:80%;" v-model="formValidate.ageRequireUpper"></Input> 周岁
                         </FormItem>
                         </Col>
                     </Row>
                 </FormItem>
-                <FormItem label="性别要求：" class="half fl">
-                    <Select v-model="formValidate.sexRequire" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                <FormItem label="性别要求：" prop="sexRequire" class="half fl">
+                    <Select v-model="formValidate.sexRequire">
+                        <Option value="1">男</Option>
+                        <Option value="2">女</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="专业要求：" class="half fl">
-                    <Select v-model="formValidate.professionRequire" placeholder="Select your city">
+                    <Select v-model="formValidate.professionRequire">
                         <Option value="beijing">New York</Option>
                         <Option value="shanghai">London</Option>
                         <Option value="shenzhen">Sydney</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="工作年限：" prop="workYear" class="half fl">
-                    <Select v-model="formValidate.workYear" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                    <Input v-model="formValidate.workYear" :maxlength="2"></Input>
+                    <span style='position:absolute;top:0;right:10px'>年以上</span>
+                </FormItem>
+                <FormItem label="学历要求：" prop="educationalRequire" class="half fl">
+                    <Select v-model="formValidate.educationalRequire">
+                        <Option value="1">New York</Option>
+                        <Option value="2">London</Option>
+                        <Option value="3">Sydney</Option>
                     </Select>
                 </FormItem>
-                <FormItem label="学历要求：" class="half fl">
-                    <Select v-model="formValidate.educationalRequire" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                </FormItem>
-                <FormItem label="是否统招全日制：" class="half fl">
-                    <Select v-model="formValidate.sundaySystem" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                <FormItem label="是否全日制：" prop="sundaySystem" class="half fl">
+                    <Select v-model="formValidate.sundaySystem">
+                        <Option value="1">是</Option>
+                        <Option value="2">否</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="语言要求：" class="half fl">
@@ -181,28 +167,24 @@
                         <Checkbox label="日语"></Checkbox>
                         <Checkbox label="法语"></Checkbox>
                         <Checkbox label="普通话"></Checkbox>
-                         <Checkbox label="粤语"></Checkbox>
+                        <Checkbox label="粤语"></Checkbox>
                         <Checkbox label="其他"></Checkbox>
                     </CheckboxGroup>
                 </FormItem>
-                <FormItem label="所属行业：" class="half fl">
-                    <Select v-model="formValidate.industryId" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                </FormItem> 
+                <FormItem label="所属行业：" prop="industryId" class="half fl">
+                    <Input type="text" @on-focus='professPop=true' v-model="professName" :readonly='true' placeholder="请选择"></Input>
+                </FormItem>
                 <div class="minbox fl">
                     <div class="mintitle">
                         职位描述
                     </div>
                 </div>
 
-                <FormItem label="职位描述：" style="width:100%" class="fl">
-                    <Input v-model="formValidate.jobDescriber" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="岗位职能和能力要力求，最低不能低于60字"></Input>
+                <FormItem label="职位描述：" prop="jobDescriber" style="width:100%" class="fl">
+                    <Input v-model="formValidate.jobDescriber" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="岗位职能和能力要力求，最低不能低于60字" style='width:98%'></Input>
                 </FormItem>
                 <FormItem label="补充说明：" style="width:100%" class="fl">
-                    <Input v-model="formValidate.additional" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明"></Input>
+                    <Input v-model="formValidate.additional" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明" style='width:98%'></Input>
                 </FormItem>
             </div>
             <div class="number1">
@@ -210,66 +192,52 @@
                     <span>4</span> 职位备注
                 </div>
                 <FormItem label="紧急程度：" prop="importantLevel" class="half">
-                    <Select v-model="formValidate.importantLevel" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
+                    <Select v-model="formValidate.importantLevel">
+                        <Option value="1">1</Option>
+                        <Option value="2">2</Option>
+                        <Option value="3">3</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="招聘原因：" prop="reason">
-                    <Input v-model="formValidate.reason" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="岗位职能和能力要力求，最低不能低于60字"></Input>
+                    <Input v-model="formValidate.reason" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="岗位职能和能力要力求，最低不能低于60字" style='width:98%'></Input>
                 </FormItem>
                 <FormItem label="寻访方向：">
-                    <Input v-model="formValidate.lookForAspect" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明"></Input>
+                    <Input v-model="formValidate.lookForAspect" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明" style='width:98%'></Input>
                 </FormItem>
             </div>
             <div class="number1">
                 <div class="title">
                     <span>5</span> 面试流程
                 </div>
-                <FormItem label="流程描述：">
-                    <Input v-model="formValidate.processDescriber" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明"></Input>
+                <FormItem label="流程描述：" prop="processDescriber">
+                    <Input v-model="formValidate.processDescriber" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="注：客户的特殊需求，如生肖属相等可进行属相说明" style='width:98%'></Input>
                 </FormItem>
                 <FormItem label="面试决策人：" prop="decisionMaker" class="half fl">
-                    <Input v-model="formValidate.decisionMaker" placeholder="Enter your e-mail"></Input>
+                    <Input v-model="formValidate.decisionMaker"></Input>
                 </FormItem>
             </div>
             <div class="number1">
                 <div class="title">
-                    <span>6</span> 发布渠道设置
+                    <span>6</span> 其它
                 </div>
-                <FormItem label="是否定向顾问操作" prop="channelType">
-                    <RadioGroup v-model="formValidate.channelType">
-                        <Radio label="定向顾问操作" class="fl">定向顾问操作</Radio>
-                        <!-- <Select style="width:20%;" class="fl" v-model="formValidate.city" placeholder="Select your city">
-                            <Option value="beijing">New York</Option>
-                            <Option value="shanghai">London</Option>
-                            <Option value="shenzhen">Sydney</Option>
-                        </Select> -->
-                        <Radio class="fl" label="通过共享发布职位">通过共享发布职位</Radio>
+                <div class='clearfix' style='padding: 10px 0 30px'>
+                    <RadioGroup v-model="formValidate.channelType" class="half fl" style='width:220px;margin:8px 0 8px 20px'>
+                        <Radio label="1" class="fl" style='margin-right:60px'>职位公海池</Radio>
+                        <Radio label="2" class="fl">定向顾问</Radio>
                     </RadioGroup>
-                </FormItem>
-                <FormItem label="截止时间：" prop="endTime" class="half">
-                    <Select v-model="formValidate.endTime" placeholder="Select your city">
+                    <Select v-model="formValidate.channelBd" class="half fl" v-if='formValidate.channelType == 2' style='width:120px'>
                         <Option value="beijing">New York</Option>
                         <Option value="shanghai">London</Option>
                         <Option value="shenzhen">Sydney</Option>
                     </Select>
-                </FormItem>
-                <FormItem label="共享至：" prop="shareUser" class="half">
-                    <Select v-model="formValidate.shareUser" placeholder="Select your city">
-                        <Option value="beijing">New York</Option>
-                        <Option value="shanghai">London</Option>
-                        <Option value="shenzhen">Sydney</Option>
-                    </Select>
-                </FormItem>
+                </div>
             </div>
             <FormItem style="margin-left:35%">
-                <Button type="primary" @click="handleSubmit('formValidate')">创建职位</Button>
-                <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">保存至草稿箱</Button>
+                <Button type="primary" @click="handleSubmit('formValidate',1)">创建职位</Button>
+                <Button type="ghost" @click="handleSubmit('formValidate',2)" style="margin-left: 8px">保存至草稿箱</Button>
             </FormItem>
         </Form>
-     <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
+        <Professions ref='professionComp' @selPro='selPro' :professPop='professPop' />
 
     </div>
 
@@ -278,147 +246,245 @@
 <script>
 import api from "@/api";
 import ls from "store2";
-// import Investment from "@/components/common/Investment.vue";
+import Citysels from "@/components/common/citysels.vue";
 import Professions from "@/components/common/professions.vue";
 
 export default {
     name: "addNewPosition",
     components: {
-        // Investment,
+        Citysels,
         Professions
     },
     data() {
         return {
             professPop: false, //职位弹窗
-
+            professId: "",
+            professName: "",
+            comLists: [],
+            htLists: [],
+            comLoading: false,
             formValidate: {
-                companyId: "",//公司id
-                contractId: "",//合同id
-                jobName: "",//职位名称
-                jobAddrId: "",//工作地址
-                jobStatus: "",//0保存草稿1创建职位
-                jobType: "",//职能分类
-                reportTarget: "",//汇报对象
-                subordinateNum: "",//下属人数
-                taxBeforeLower: "",//税前年薪最小值
-                taxBeforeUpper: "",//税前年薪最大值
-                communicationTraffic: "",//通讯交通
-                salaryType: [],//薪资构成
-                liveWelfare: [],//居住福利
-                socialWelfare: [],//社保福利
-                annualLeaveWelfare: [],//年假福利
-                ageRequireLower: "",//年龄要求最小值
-                ageRequireUpper: "",//年龄要求最大值
-                sexRequire: "",//性别要求
-                professionRequire: "",//专业要求
-                workYear: "",//工作年限
-                educationalRequire: "",//学历要求
-                sundaySystem: "",//是否全日制统招
-                languageRequire: [],//语言要求
-                industryId: "",//所属行业
-                jobDescriber: "",//职位描述
-                additional: "",//补充说明
-                importantLevel: "",//紧急程度
-                reason: "",//招聘原因
-                lookForAspect: "",//寻访方向
-                processDescriber: "",//流程描述
-                decisionMaker: "",//面试决策人
-                channelType: "",//渠道设置
-                channelBd: "",//渠道顾问
-                endTime: "",//截止时间
-                shareUser: ""//共享到XXX
+                companyId: "", //公司id
+                contractId: "", //合同id
+                jobName: "", //职位名称
+                jobAddrId: "540", //工作地址
+                jobStatus: 1, //0保存草稿1创建职位
+                jobType: "", //职能分类
+                reportTarget: "", //汇报对象
+                subordinateNum: "", //下属人数
+                taxBeforeLower: "", //税前年薪最小值
+                taxBeforeUpper: "", //税前年薪最大值
+                communicationTraffic: "", //通讯交通
+                salaryType: [], //薪资构成
+                liveWelfare: [], //居住福利
+                socialWelfare: [], //社保福利
+                annualLeaveWelfare: [], //年假福利
+                ageRequireLower: "", //年龄要求最小值
+                ageRequireUpper: "", //年龄要求最大值
+                sexRequire: "", //性别要求
+                professionRequire: "", //专业要求
+                workYear: "", //工作年限
+                educationalRequire: "", //学历要求
+                sundaySystem: "", //是否全日制统招
+                languageRequire: [], //语言要求
+                industryId: "", //所属行业
+                jobDescriber: "", //职位描述
+                additional: "", //补充说明
+                importantLevel: "", //紧急程度
+                reason: "", //招聘原因
+                lookForAspect: "", //寻访方向
+                processDescriber: "", //流程描述
+                decisionMaker: "", //面试决策人
+                channelType: "1", //渠道设置
+                channelBd: "", //渠道顾问
+                endTime: "", //截止时间
+                shareUser: "" //共享到XXX
             },
             ruleValidate: {
-                // companyId: [
-                //     {
-                //         required: true,
-                //         message: "The name cannot be empty",
-                //         trigger: "change"
-                //     }
-                // ],
-                // contractId: [
-                //     {
-                //         required: true,
-                //         message: "Mailbox cannot be empty",
-                //         trigger: "change"
-                //     }
-                // ],
-                // jobName: [
-                //     {
-                //         required: true,
-                //         message: "Please select the city",
-                //         trigger: "blur"
-                //     }
-                // ],
-                // gender: [
-                //     {
-                //         required: true,
-                //         message: "Please select gender",
-                //         trigger: "change"
-                //     }
-                // ],
-                // interest: [
-                //     {
-                //         required: true,
-                //         type: "array",
-                //         min: 1,
-                //         message: "Choose at least one hobby",
-                //         trigger: "change"
-                //     },
-                //     {
-                //         type: "array",
-                //         max: 2,
-                //         message: "Choose two hobbies at best",
-                //         trigger: "change"
-                //     }
-                // ],
-                // date: [
-                //     {
-                //         required: true,
-                //         type: "date",
-                //         message: "Please select the date",
-                //         trigger: "change"
-                //     }
-                // ],
-                // time: [
-                //     {
-                //         required: true,
-                //         type: "string",
-                //         message: "Please select time",
-                //         trigger: "change"
-                //     }
-                // ],
-                // professionRequire: [
-                //     {
-                //         required: true,
-                //         type: "string",
-                //         message: "Please select time",
-                //         trigger: "change"
-                //     }
-                // ],
-                // desc: [
-                //     {
-                //         required: true,
-                //         message: "Please enter a personal introduction",
-                //         trigger: "blur"
-                //     },
-                //     {
-                //         type: "string",
-                //         min: 20,
-                //         message: "Introduce no less than 20 words",
-                //         trigger: "blur"
-                //     }
-                // ]
+                jobName: [
+                    {
+                        required: true,
+                        message: "请填写职位名称",
+                        trigger: "blur"
+                    }
+                ],
+                jobAddrId: [
+                    {
+                        required: true,
+                        message: "请选择地址",
+                        trigger: "change"
+                    }
+                ],
+                jobType: [
+                    {
+                        required: true,
+                        message: "请选择职能分类",
+                        trigger: "change"
+                    }
+                ],
+                reportTarget: [
+                    {
+                        required: true,
+                        message: "请填写回报对象",
+                        trigger: "blur"
+                    }
+                ],
+                taxBeforeLower: [
+                    {
+                        required: true,
+                        message: "请填写最小年薪",
+                        trigger: "blur"
+                    }
+                ],
+                taxBeforeUpper: [
+                    {
+                        required: true,
+                        message: "请填写最大年薪",
+                        trigger: "blur"
+                    }
+                ],
+                salaryType: [
+                    {
+                        required: true,
+                        message: "请选择薪资构成",
+                        type: "array",
+                        min: 1,
+                        trigger: "change"
+                    }
+                ],
+                ageRequireLower: [
+                    {
+                        required: true,
+                        message: "请填写最小年龄",
+                        trigger: "blur"
+                    }
+                ],
+                ageRequireUpper: [
+                    {
+                        required: true,
+                        message: "请填写最大年龄",
+                        trigger: "blur"
+                    }
+                ],
+                sexRequire: [
+                    {
+                        required: true,
+                        message: "请选择性别",
+                        trigger: "change"
+                    }
+                ],
+                workYear: [
+                    {
+                        required: true,
+                        message: "请填写工作年限",
+                        trigger: "blur"
+                    }
+                ],
+                educationalRequire: [
+                    {
+                        required: true,
+                        message: "请选择学历",
+                        trigger: "change"
+                    }
+                ],
+                sundaySystem: [
+                    {
+                        required: true,
+                        message: "请选择是否全日制",
+                        trigger: "change"
+                    }
+                ],
+                industryId: [
+                    {
+                        required: true,
+                        message: "请选择行业",
+                        trigger: "change"
+                    }
+                ],
+                jobDescriber: [
+                    {
+                        required: true,
+                        message: "请填写职位描述",
+                        trigger: "blur"
+                    }
+                ],
+                importantLevel: [
+                    {
+                        required: true,
+                        message: "请选择紧急程度",
+                        trigger: "change"
+                    }
+                ],
+                processDescriber: [
+                    {
+                        required: true,
+                        message: "请填写流程描述",
+                        trigger: "blur"
+                    }
+                ],
+                decisionMaker: [
+                    {
+                        required: true,
+                        message: "请填写面试决策人",
+                        trigger: "blur"
+                    }
+                ]
             }
         };
     },
     methods: {
-        handleSubmit(name) {
+        searchCompany(query) { //搜索关联企业
+            if (query !== "") {
+                this.comLoading = true;
+                api
+                    .axs("post", "/company/queryCompanyInfo", {companyName: query})
+                    .then(({ data }) => {
+                        if (data.code === "SUCCESS") {
+                            this.comLists = data.data;
+                            this.comLoading = false;
+                        } else {
+                            this.$Message.error(data.remark);
+                        }
+                    });
+            } else {
+                this.comLists = [];
+            }
+        },
+        searchHetong(hId) {
+            console.log(hId)
+            api
+                .axs("post", "/contract/page", {companyId: hId})
+                .then(({ data }) => {
+                    if (data.code === "SUCCESS") {
+                        this.htLists = data.data.list;
+                    } else {
+                        this.$Message.error(data.remark);
+                    }
+                });
+        },
+        handleSubmit(name, tag) {
             this.$refs[name].validate(valid => {
                 if (valid) {
-                    this.$Message.success("Success!");
+                    this.$store.state.spinShow = true;
+                    this.formValidate.salaryType = JSON.stringify(
+                        this.formValidate.salaryType
+                    );
+                    if (tag == 2) this.formValidate.jobStatus = 0;
+                    api
+                        .axs("post", "/job/createJob", this.formValidate)
+                        .then(({ data }) => {
+                            if (data.code === "SUCCESS") {
+                                if (tag == 1)
+                                    this.$Message.success("新增成功!");
+                                else this.$Message.success("保存草稿成功!");
+                                this.$Loading.finish();
+                                this.$store.state.spinShow = false;
+                            } else {
+                                this.$Message.error(data.remark);
+                            }
+                        });
                 } else {
-                    this.$Message.error("Fail!");
+                    this.$Message.error("请填写完整");
                 }
             });
         },
@@ -434,9 +500,9 @@ export default {
             }
             this.professId = idName.split("&")[0];
             this.professName = idName.split("&")[1];
-            this.form.industryId = idName.split("&")[0];
+            this.formValidate.industryId = idName.split("&")[0];
             this.professPop = false;
-        },
+        }
     },
     mounted() {
         this.$store.state.spinShow = false;
@@ -447,7 +513,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .half {
-    width: 50%;
+    width: 406px;
+    margin-right: 100px;
 }
 
 .fl {

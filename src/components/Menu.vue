@@ -58,9 +58,6 @@
                     <Icon type="ios-filing"></Icon>
                     职位
                 </template>
-                <router-link to='/position/addNewPosition'>
-                    <MenuItem name="/position/addNewPosition">新增职位</MenuItem>
-                </router-link>
                 <router-link to='/position/myPositions'>
                     <MenuItem name="/position/myPositions">我的职位</MenuItem>
                 </router-link>

@@ -341,7 +341,7 @@
                                 </div>
                             </div>
                             <div slot='footer' style='text-align:center'>
-                                <Button type='info' @click="confirmed">确定</Button>
+                                <Button type='info' @click="interresult">确定</Button>
                                 <Button type='info' @click="handleReset">取消</Button>
                             </div>
                         </Modal>
@@ -480,6 +480,7 @@ export default {
                 jobName: this.$route.query.jobName,
                 companyId: this.$route.query.companyid, //企业id
                 companyName: this.$route.query.companyName, //公司名字
+                  resumeId:"",
                 candidateId: "", //候选人id
                 candidateName: "", //候选人名字
                 companyFeedback: "", //企业反馈
@@ -490,6 +491,7 @@ export default {
             retroactionform: {
                 jobId: this.$route.query.jobId,
                 jobName: this.$route.query.jobName,
+                resumeId:"",
                 candidateId: "", //候选人id
                 candidateName: "", //候选人名字
                 customerFeedback: "", //客户反馈
@@ -502,6 +504,7 @@ export default {
                 interviewTime: "", //面试时间
                 interviewer: "", //企业面试人
                 myInterviewer: "", //我司陪面人
+                interviewNum:"",
                 remarks: "" //备zhu
             },
             form: {
@@ -667,6 +670,8 @@ export default {
                                                     row.candidateId;
                                                 this.retroactionform.candidateName =
                                                     row.name;
+                                                     this.retroactionform.resumeId =
+                                                    row.resumeId;
                                                 api
                                                     .axs(
                                                         "post",
@@ -786,7 +791,13 @@ export default {
                                                 "&&candidateId=" +
                                                 row.candidateId +
                                                 "&&status=" +
-                                                row.status
+                                                row.status+
+                                                 "&&jobName=" +
+                                                this.$route.query.jobName+
+                                                "&&companyName=" +
+                                                this.$route.query.companyName+
+                                                "&&candidateName=" +
+                                                row.name
                                         }
                                     },
                                     "继续推荐"
@@ -885,7 +896,14 @@ export default {
                                                 "&&candidateId=" +
                                                 row.candidateId +
                                                 "&&status=" +
-                                                row.status
+                                                row.status+
+                                                "&&jobName=" +
+                                                this.$route.query.jobName+
+                                                "&&companyName=" +
+                                                this.$route.query.companyName+
+                                                "&&candidateName=" +
+                                                row.name
+
                                         }
                                     },
                                     "推荐企业"
@@ -985,6 +1003,8 @@ export default {
                                                     row.candidateId;
                                                 this.retroactionform.candidateName =
                                                     row.name;
+                                                     this.retroactionform.resumeId =
+                                                    row.resumeId;
                                                 api
                                                     .axs(
                                                         "post",
@@ -1005,7 +1025,8 @@ export default {
                                                         ) {
                                                             // this.numangement=data.data.interviewNum
                                                             console.log(data);
-                                                            if (
+                                                            if(data && data.data){
+  if (
                                                                 this.$store
                                                                     .state
                                                                     .allTrees
@@ -1025,7 +1046,17 @@ export default {
                                                                         .interviewNum -
                                                                         1
                                                                 ].codeText;
+                                                                this.retroactionform.interviewNum=data.data.interviewNum
                                                             }
+                                                            }else{
+                                                                this.retroactionform.interviewNum = "1"
+                                                               this.numangement = this.$store.state.allTrees.interviewNum[
+                                                                    1 -
+                                                                        1
+                                                                ].codeText;
+                                                                
+                                                            }
+                                                            
                                                             console.log(
                                                                 this.numangement
                                                             );
@@ -1055,6 +1086,26 @@ export default {
                                                             );
                                                         }
                                                     });
+                                                    // api
+                                                    // .axs(
+                                                    //     "post",
+                                                    //     "/job/queryById",
+                                                    //     { id: this.jodId }
+                                                    // )
+                                                    // .then(({ data }) => {
+                                                    //     if (
+                                                    //         data.code ===
+                                                    //         "SUCCESS"
+                                                    //     ) {
+                                                    //         this.retroactionform.interviewProcess =
+                                                    //             data.data.processDescriber;
+                                                    //         this.$store.state.spinShow = false;
+                                                    //     } else {
+                                                    //         this.$Message.error(
+                                                    //             data.remark
+                                                    //         );
+                                                    //     }
+                                                    // });
                                             }
                                         }
                                     },
@@ -1157,6 +1208,8 @@ export default {
                                                     row.candidateId;
                                                 this.interviewfalse.candidateName =
                                                     row.name;
+                                                     this.interviewfalse.resumeId =
+                                                    row.resumeId;
                                                 api
                                                     .axs(
                                                         "post",
@@ -1652,12 +1705,12 @@ export default {
         },
         interresult() {
             //面试反馈
-            if (!this.interviewfalse.feedbackStatus) {
+            if (!this.interviewfalse.interviewResult) {
                 this.$Message.error("请选择面试结果");
                 return;
             }
             api
-                .axs("post", "/interview/add", this.interviewfalse)
+                .axs("post", "/interviewFeedback/add", this.interviewfalse)
                 .then(({ data }) => {
                     if (data.code === "SUCCESS") {
                         this.$Message.success(data.remark);
@@ -1678,7 +1731,7 @@ export default {
                 this.$Message.error("请填写面试地点");
                 return;
             }
-
+            this.retroactionform.interviewNum= +this.retroactionform.interviewNum+1
             if (this.interview1) {
                 this.retroactionform.interviewer = this.interview1;
                 if (this.interview2) {
@@ -1716,6 +1769,7 @@ export default {
                         this.interview5;
                 }
             }
+           
             api
                 .axs("post", "/interview/add", this.retroactionform)
                 .then(({ data }) => {

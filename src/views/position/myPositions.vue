@@ -533,13 +533,13 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.companyId +
-                                        "&&jobId=" +
+                                        "&jobId=" +
                                         row.id
                                 }
                             },
@@ -600,7 +600,7 @@ export default {
                         const row = params.row;
                         return h(
                             "span",
-                            (row.updateTime && row.updateTime.substr(0, 10)) ||
+                            (row.updateTime & row.updateTime.substr(0, 10)) ||
                                 "--"
                         );
                     }
@@ -733,11 +733,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -897,11 +897,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -1029,11 +1029,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -1179,11 +1179,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -1329,11 +1329,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -1479,11 +1479,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },
@@ -1629,11 +1629,11 @@ export default {
                                     to:
                                         "/position/myPositions/doing?jodId=" +
                                         row.id +
-                                        "&&jobName=" +
+                                        "&jobName=" +
                                         row.jobName +
-                                        "&&companyName=" +
+                                        "&companyName=" +
                                         row.companyName +
-                                        "&&companyid=" +
+                                        "&companyid=" +
                                         row.company_id
                                 }
                             },

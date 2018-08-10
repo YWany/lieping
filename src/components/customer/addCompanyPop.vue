@@ -29,7 +29,7 @@
                     <Input v-model='companyForm.outerName' placeholder="" class='selpro'></Input>
                 </li>
                 <li class="company-li" style='margin-bottom:0;'>
-                    <div style='color:red'>对外显示名称主要用于共享发布系统平台或朋友圈等其他渠道</div>
+                    <div style='color:red;padding:8px 0'>对外显示名称主要用于共享发布系统平台或朋友圈等其他渠道</div>
                 </li>
                 <li class="company-li">
                     <p>
@@ -84,7 +84,7 @@
                 <li class="company-li">
                     <p>
                         <span>*</span> 企业介绍：</p>
-                    <Input v-model='companyForm.introduction' type="textarea" :rows="2" placeholder="突出企业亮点，不要在此透漏企业真实名称，不少于30字"></Input>
+                    <Input v-model='companyForm.introduction' type="textarea" :autosize="{minRows: 2,maxRows: 10}" placeholder="突出企业亮点，不要在此透漏企业真实名称，不少于30字"></Input>
                 </li>
             </ul>
             <div slot='footer' style='text-align:center'>
@@ -276,7 +276,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
 .company-content {
-    height: 510px;
+    height: 520px;
+    overflow: auto;
     .company-li {
         margin-bottom: 10px;
         .selpro {
